@@ -1,0 +1,38 @@
+﻿@using Therasim.Application.Personas.Queries.GetPersonas
+@using Therasim.Application.PsychProblems.Queries.GetPsychProblems
+@using Therasim.Application.Skills.Queries.GetSkills
+<h3>Create Simulation</h3>
+<EditForm Model="@CreateSimulationModel" OnValidSubmit="@(async () => await HandleValidSubmitAsync())" FormName="create_simulation_form" novalidate>
+    <!-- ... -->
+    <FluentStack Orientation="Orientation.Horizontal">
+        <FluentSelect TOption="PersonaDto" 
+                      Placeholder="Select persona..."
+                      Items="@Personas" 
+                      Id="personas" 
+                      OptionValue="@(p => p.Id.ToString())" 
+                      OptionText="@(p => p.Name)" 
+                      @bind-SelectedValue="CreateSimulationModel.PersonaId" />
+        <FluentSelect TOption="PsychProblemDto"
+                      Placeholder="Select problem..."
+                      Items="@PsychProblems"
+                      Id="problems"
+                      OptionValue="@(p => p.Id.ToString())"
+                      OptionText="@(p => p.Name)"
+                      @bind-SelectedValue="@CreateSimulationModel.PsychProblemId" />
+    
+        <FluentSelect TOption="SkillDto"
+                      Placeholder="Select skill..."
+                      Items="@Skills"
+                      Id="skills"
+                      OptionValue="@(p => p.Id.ToString())"
+                      OptionText="@(p => p.Name)"
+                      @bind-SelectedValue="@CreateSimulationModel.SkillId" />
+        <FluentSelect TOption="int" Placeholder="Select feedback..." @bind-SelectedValue=@CreateSimulationModel.FeedbackType>
+            <FluentOption Value=1 Selected=@(CreateSimulationModel.FeedbackType == 1)>Limited</FluentOption>
+            <FluentOption Value=2 Selected=@(CreateSimulationModel.FeedbackType == 2)>Extensive</FluentOption>
+        </FluentSelect>
+        <FluentButton Type="ButtonType.Submit">Create</FluentButton>
+    </FluentStack>
+    <FluentValidationMessage For="@(() => CreateSimulationModel.FeedbackType)" />
+    <!-- ... -->
+</EditForm>

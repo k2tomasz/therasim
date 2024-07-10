@@ -1,0 +1,13 @@
+﻿.feedback-display {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.feedback-display fluent-card {
+    padding: 20px;
+    width: 100%;
+}
