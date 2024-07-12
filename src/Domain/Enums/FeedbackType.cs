@@ -1,6 +1,10 @@
-﻿namespace Therasim.Domain.Enums;
+﻿using System.Runtime.Serialization;
+
+namespace Therasim.Domain.Enums;
 public enum FeedbackType
 {
-    Limited = 0,
+    [EnumMember(Value = "Limited")]
+    Limited = 1,
+    [EnumMember(Value = "Extensive")]
     Extensive
 }

@@ -7,6 +7,8 @@ namespace Therasim.Web.Components.Pages
 {
     public partial class Chat : ComponentBase
     {
+        [Parameter]
+        public Guid SimulationId { get; set; }
         private Feedback.Feedback FeedbackComponent { get; set; } = null!;
 
         protected override void OnInitialized()

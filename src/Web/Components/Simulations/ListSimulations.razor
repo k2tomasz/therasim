@@ -1,11 +1,12 @@
 ﻿
 <h3 style="margin-top: 20px;">Simulations</h3>
 <FluentDataGrid Items="@Simulations" style="width: 100%">
-    <PropertyColumn Property="@(p => p.Persona)"/>
+    <PropertyColumn Property="@(p => p.Persona)" Width="300px"/>
     <PropertyColumn Property="@(p => p.Problem)"/>
     <PropertyColumn Property="@(p => p.Skill)" />
-    <PropertyColumn Property="@(p => p.FeedbackType)" />
-    <TemplateColumn Title="Bonus">
-        <FluentButton Appearance="Appearance.Accent" @onclick="@(() => StartSimulation(context))">Start</FluentButton>
+    <PropertyColumn Title="Feedback" Property="@(p => p.FeedbackType)" />
+    <PropertyColumn Property="@(p => p.Language)" />
+    <TemplateColumn>
+        <FluentButton @onclick="@(() => StartSimulation(context))" IconStart="@(new Icons.Regular.Size16.ChatMultiple())">Start</FluentButton>
     </TemplateColumn>
 </FluentDataGrid>

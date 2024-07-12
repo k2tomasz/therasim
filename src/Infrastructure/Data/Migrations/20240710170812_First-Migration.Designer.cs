@@ -12,7 +12,7 @@ using Therasim.Infrastructure.Data;
 namespace Therasim.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240705153935_First-Migration")]
+    [Migration("20240710170812_First-Migration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -25,58 +25,14 @@ namespace Therasim.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Therasim.Domain.Entities.Assessment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ChatAssistantId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FeedbackAssistantId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("FeedbackType")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("PersonaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SkillId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonaId");
-
-                    b.HasIndex("SkillId");
-
-                    b.ToTable("Assessments", (string)null);
-                });
-
             modelBuilder.Entity("Therasim.Domain.Entities.Conversation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AssessmentId")
+                    b.Property<Guid>("SimulationId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ChatThreadId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FeedbackThreadId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -84,7 +40,7 @@ namespace Therasim.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssessmentId");
+                    b.HasIndex("SimulationId");
 
                     b.ToTable("Conversations", (string)null);
                 });
@@ -110,6 +66,60 @@ namespace Therasim.Infrastructure.Data.Migrations
                     b.ToTable("Personas", (string)null);
                 });
 
+            modelBuilder.Entity("Therasim.Domain.Entities.PsychProblem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PsychProblems", (string)null);
+                });
+
+            modelBuilder.Entity("Therasim.Domain.Entities.Simulation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("FeedbackType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PersonaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PsychProblemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SkillId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonaId");
+
+                    b.HasIndex("PsychProblemId");
+
+                    b.HasIndex("SkillId");
+
+                    b.ToTable("Simulations", (string)null);
+                });
+
             modelBuilder.Entity("Therasim.Domain.Entities.Skill", b =>
                 {
                     b.Property<Guid>("Id")
@@ -131,49 +141,62 @@ namespace Therasim.Infrastructure.Data.Migrations
                     b.ToTable("Skills", (string)null);
                 });
 
-            modelBuilder.Entity("Therasim.Domain.Entities.Assessment", b =>
+            modelBuilder.Entity("Therasim.Domain.Entities.Conversation", b =>
+                {
+                    b.HasOne("Therasim.Domain.Entities.Simulation", "Simulation")
+                        .WithMany("Conversations")
+                        .HasForeignKey("SimulationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Simulation");
+                });
+
+            modelBuilder.Entity("Therasim.Domain.Entities.Simulation", b =>
                 {
                     b.HasOne("Therasim.Domain.Entities.Persona", "Persona")
-                        .WithMany("Assessments")
+                        .WithMany("Simulations")
                         .HasForeignKey("PersonaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Therasim.Domain.Entities.PsychProblem", "PsychProblem")
+                        .WithMany("Simulations")
+                        .HasForeignKey("PsychProblemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Therasim.Domain.Entities.Skill", "Skill")
-                        .WithMany("Assessments")
+                        .WithMany("Simulations")
                         .HasForeignKey("SkillId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Persona");
 
+                    b.Navigation("PsychProblem");
+
                     b.Navigation("Skill");
-                });
-
-            modelBuilder.Entity("Therasim.Domain.Entities.Conversation", b =>
-                {
-                    b.HasOne("Therasim.Domain.Entities.Assessment", "Assessment")
-                        .WithMany("Conversations")
-                        .HasForeignKey("AssessmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Assessment");
-                });
-
-            modelBuilder.Entity("Therasim.Domain.Entities.Assessment", b =>
-                {
-                    b.Navigation("Conversations");
                 });
 
             modelBuilder.Entity("Therasim.Domain.Entities.Persona", b =>
                 {
-                    b.Navigation("Assessments");
+                    b.Navigation("Simulations");
+                });
+
+            modelBuilder.Entity("Therasim.Domain.Entities.PsychProblem", b =>
+                {
+                    b.Navigation("Simulations");
+                });
+
+            modelBuilder.Entity("Therasim.Domain.Entities.Simulation", b =>
+                {
+                    b.Navigation("Conversations");
                 });
 
             modelBuilder.Entity("Therasim.Domain.Entities.Skill", b =>
                 {
-                    b.Navigation("Assessments");
+                    b.Navigation("Simulations");
                 });
 #pragma warning restore 612, 618
         }

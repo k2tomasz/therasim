@@ -18,9 +18,6 @@ public class ConversationConfiguration : IEntityTypeConfiguration<Conversation>
         builder.HasOne(c => c.Simulation)
             .WithMany(a => a.Conversations)
             .HasForeignKey(c => c.SimulationId);
-
-        builder.Property(c => c.ChatThreadId).IsRequired();
-        builder.Property(c => c.FeedbackThreadId).IsRequired();
     }
 }
 

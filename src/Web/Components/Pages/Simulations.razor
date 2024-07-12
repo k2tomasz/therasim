@@ -1,4 +1,4 @@
 ﻿@page "/simulations"
 <PageTitle>Simulations</PageTitle>
-<CreateSimulation />
-<ListSimulations />
+<CreateSimulation OnSimulationCreated="HandleSimulationCreated" />
+<ListSimulations @ref="ListSimulationsComponent" />

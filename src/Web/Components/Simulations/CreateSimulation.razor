@@ -1,38 +1,48 @@
 ﻿@using Therasim.Application.Personas.Queries.GetPersonas
 @using Therasim.Application.PsychProblems.Queries.GetPsychProblems
 @using Therasim.Application.Skills.Queries.GetSkills
+@using Therasim.Domain.Enums
 <h3>Create Simulation</h3>
-<EditForm Model="@CreateSimulationModel" OnValidSubmit="@(async () => await HandleValidSubmitAsync())" FormName="create_simulation_form" novalidate>
-    <!-- ... -->
+<EditForm Model="@CreateSimulationModel" OnValidSubmit="@HandleValidSubmitAsync" FormName="create_simulation_form" novalidate>
+    <DataAnnotationsValidator />
+    <FluentValidationSummary />
     <FluentStack Orientation="Orientation.Horizontal">
-        <FluentSelect TOption="PersonaDto" 
+        <FluentSelect TOption="PersonaDto"
                       Placeholder="Select persona..."
-                      Items="@Personas" 
-                      Id="personas" 
-                      OptionValue="@(p => p.Id.ToString())" 
-                      OptionText="@(p => p.Name)" 
-                      @bind-SelectedValue="CreateSimulationModel.PersonaId" />
+                      Items="@_personas"
+                      Id="personas"
+                      Required
+                      OptionValue="@(p => p.Id.ToString())"
+                      OptionText="@(p => p.Name)"
+                      @bind-Value="@CreateSimulationModel.PersonaId" />
         <FluentSelect TOption="PsychProblemDto"
                       Placeholder="Select problem..."
-                      Items="@PsychProblems"
+                      Items="@_psychProblems"
                       Id="problems"
                       OptionValue="@(p => p.Id.ToString())"
                       OptionText="@(p => p.Name)"
-                      @bind-SelectedValue="@CreateSimulationModel.PsychProblemId" />
-    
+                      @bind-Value="@CreateSimulationModel.PsychProblemId" />
         <FluentSelect TOption="SkillDto"
                       Placeholder="Select skill..."
-                      Items="@Skills"
+                      Items="@_skills"
                       Id="skills"
                       OptionValue="@(p => p.Id.ToString())"
                       OptionText="@(p => p.Name)"
-                      @bind-SelectedValue="@CreateSimulationModel.SkillId" />
-        <FluentSelect TOption="int" Placeholder="Select feedback..." @bind-SelectedValue=@CreateSimulationModel.FeedbackType>
-            <FluentOption Value=1 Selected=@(CreateSimulationModel.FeedbackType == 1)>Limited</FluentOption>
-            <FluentOption Value=2 Selected=@(CreateSimulationModel.FeedbackType == 2)>Extensive</FluentOption>
+                      @bind-Value="@CreateSimulationModel.SkillId" />
+        <FluentSelect TOption="FeedbackType" Placeholder="Select feedback..." @bind-Value=@CreateSimulationModel.FeedbackType>
+            @foreach (FeedbackType feedbackType in Enum.GetValues<FeedbackType>())
+            {
+                <FluentOption Value=@(((int)feedbackType).ToString()) Selected=@(((int)feedbackType).ToString() == CreateSimulationModel.FeedbackType)>@feedbackType.ToString()</FluentOption>
+            }
         </FluentSelect>
-        <FluentButton Type="ButtonType.Submit">Create</FluentButton>
+        <FluentSelect TOption="Language" Placeholder="Select language..." @bind-Value=@CreateSimulationModel.Language>
+            @foreach (Language language in Enum.GetValues<Language>())
+            {
+                <FluentOption Value=@(((int)language).ToString()) Selected=@(((int)language).ToString() == CreateSimulationModel.Language)>@language.ToString()</FluentOption>
+            }
+        </FluentSelect>
+        <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" IconStart="@(new Icons.Regular.Size16.Add())">Create</FluentButton>
     </FluentStack>
-    <FluentValidationMessage For="@(() => CreateSimulationModel.FeedbackType)" />
     <!-- ... -->
 </EditForm>
+@PersonaId

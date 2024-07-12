@@ -25,22 +25,13 @@ public class GetSimulationsQueryHandler : IRequestHandler<GetSimulationsQuery, I
         _mapper = mapper;
     }
 
-    public Task<IList<SimulationDto>> Handle(GetSimulationsQuery request, CancellationToken cancellationToken)
+    public async Task<IList<SimulationDto>> Handle(GetSimulationsQuery request, CancellationToken cancellationToken)
     {
-        // var simulations = await _context.simulations
-        //     .Where(x => x.UserId == request.UserId)
-        //     .ProjectTo<SimulationDto>(_mapper.ConfigurationProvider)
-        //     .ToListAsync(cancellationToken);
+        var simulations = await _context.Simulations
+            .Where(x => x.UserId == request.UserId)
+            .ProjectTo<SimulationDto>(_mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
 
-        var simulations = new List<SimulationDto>
-        {
-            new SimulationDto(),
-            new SimulationDto
-            {
-                Persona = "Emily, 65, recently retired", Skill = "Empathy", Problem = "Anxiety", FeedbackType = "Limited"
-            }
-        };
-
-        return Task.FromResult<IList<SimulationDto>>(simulations);
+        return simulations;
     }
 }

@@ -26,9 +26,6 @@ public class SimulationConfiguration : IEntityTypeConfiguration<Simulation>
 
         builder.Property(a => a.FeedbackType).IsRequired();
 
-        builder.Property(a => a.ChatAssistantId).IsRequired();
-        builder.Property(a => a.FeedbackAssistantId).IsRequired();
-
         builder.HasMany(a => a.Conversations)
             .WithOne(a => a.Simulation)
             .HasForeignKey(c => c.SimulationId);

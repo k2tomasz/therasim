@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Therasim.Application.Skills.Queries.GetSkills;
+using Therasim.Web.Services.Interfaces;
 
-namespace Therasim.Web.Services.Interfaces;
+namespace Therasim.Web.Services;
 
 public class SkillService : ISkillService
 {

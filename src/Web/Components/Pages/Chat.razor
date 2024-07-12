@@ -1,6 +1,6 @@
-﻿@page "/chat"
+﻿@page "/simulation/{simulationId:guid}"
 
-<PageTitle>Chat</PageTitle>
+<PageTitle>Simulation</PageTitle>
 <FluentStack Style="height: 100%">
     <div style="width: 60%; height: 100%">
         <ChatConversation OnChatUpdated="HandleChatUpdated" />

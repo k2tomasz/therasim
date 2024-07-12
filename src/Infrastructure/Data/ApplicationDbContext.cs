@@ -8,7 +8,7 @@ namespace Therasim.Infrastructure.Data;
 public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-    public DbSet<Simulation> Assessments => Set<Simulation>();
+    public DbSet<Simulation> Simulations => Set<Simulation>();
     public DbSet<Persona> Personas => Set<Persona>();
     public DbSet<Conversation> Conversations => Set<Conversation>();
     public DbSet<Skill> Skills => Set<Skill>();

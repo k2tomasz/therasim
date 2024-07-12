@@ -4,7 +4,7 @@ namespace Therasim.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {
-    DbSet<Simulation> Assessments { get; }
+    DbSet<Simulation> Simulations { get; }
     DbSet<Persona> Personas { get; }
     DbSet<Conversation> Conversations { get; }
     DbSet<Skill> Skills { get; }

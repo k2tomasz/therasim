@@ -10,7 +10,6 @@ public class Simulation : BaseEntity
     public Guid PsychProblemId { get; set; }
     public PsychProblem PsychProblem { get; set; } = null!;
     public FeedbackType FeedbackType { get; set; }
-    public string ChatAssistantId { get; set; } = null!;
-    public string FeedbackAssistantId { get; set; } = null!;
+    public Language Language { get; set; }
     public IList<Conversation> Conversations { get; private set; } = new List<Conversation>();
 }

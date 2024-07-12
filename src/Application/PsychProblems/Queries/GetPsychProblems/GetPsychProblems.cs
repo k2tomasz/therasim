@@ -24,17 +24,12 @@ public class GetPsychProblemsQueryHandler : IRequestHandler<GetPsychProblemsQuer
         _mapper = mapper;
     }
 
-    public Task<IList<PsychProblemDto>> Handle(GetPsychProblemsQuery request, CancellationToken cancellationToken)
+    public async Task<IList<PsychProblemDto>> Handle(GetPsychProblemsQuery request, CancellationToken cancellationToken)
     {
-        // var psychProblems = await _context.PsychProblems
-        //     .ProjectTo<PsychProblemDto>(_mapper.ConfigurationProvider)
-        //     .ToListAsync(cancellationToken);
+        var psychProblems = await _context.PsychProblems
+            .ProjectTo<PsychProblemDto>(_mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
 
-        var psychProblems = new List<PsychProblemDto>
-        {
-            new PsychProblemDto { Name = "Depression", Id = Guid.NewGuid() }
-        };
-
-        return Task.FromResult<IList<PsychProblemDto>>(psychProblems);
+        return psychProblems;
     }
 }
