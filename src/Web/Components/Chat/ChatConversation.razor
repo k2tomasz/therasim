@@ -19,7 +19,7 @@
         }
     </div>
     <div class="chat-input-container">
-        <FluentTextField @bind-Value="UserInput" Placeholder="Type your message here..." Style="flex-grow: 1;"/>
+        <FluentTextField @bind-Value="UserInput" Placeholder="Type your message here..." Style="flex-grow: 1;" @onkeypress="OnEnter" />
         <FluentButton OnClick="SendMessage" Style="margin-left: 10px;" IconStart="@(new Icons.Regular.Size16.Send())">Send</FluentButton>
     </div>
 </div>

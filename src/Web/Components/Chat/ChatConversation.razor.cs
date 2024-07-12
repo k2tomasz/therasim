@@ -2,6 +2,7 @@ using Azure;
 using Azure.AI.OpenAI;
 using Azure.AI.OpenAI.Assistants;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Therasim.Web.Models;
 
 namespace Therasim.Web.Components.Chat
@@ -32,6 +33,14 @@ namespace Therasim.Web.Components.Chat
             {
                 await AddUserMessage(UserInput);
                 await CompleteChat();
+            }
+        }
+
+        private async Task OnEnter(KeyboardEventArgs obj)
+        {
+            if (obj.Key == "Enter")
+            {
+                await SendMessage();
             }
         }
 
