@@ -3,6 +3,7 @@ using Azure.AI.OpenAI;
 using Azure.AI.OpenAI.Assistants;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.FluentUI.AspNetCore.Components;
 using Therasim.Web.Models;
 
 namespace Therasim.Web.Components.Chat
@@ -12,7 +13,7 @@ namespace Therasim.Web.Components.Chat
         private AssistantsClient AssistantsClient { get; set; } = null!;
         [Inject] private OpenAIClient OpenAIClient { get; set; } = null!;
         [Parameter] public EventCallback<ChatMessage> OnChatUpdated { get; set; }
-        private string? UserInput { get; set; }
+        [SupplyParameterFromForm] private UserMessageModel UserMessageModel { get; set; } = new();
         //private List<ChatMessage> ChatMessages { get; set; } = new();
         private Assistant _assistant = null!;
         private AssistantThread thread = null!;
@@ -27,23 +28,17 @@ namespace Therasim.Web.Components.Chat
 
         }
 
-        private async Task SendMessage()
+        private async Task HandleValidSubmitAsync()
         {
-            if (!string.IsNullOrWhiteSpace(UserInput))
+            var userMessage = UserMessageModel.Message;
+            if (!string.IsNullOrWhiteSpace(userMessage))
             {
-                await AddUserMessage(UserInput);
+                UserMessageModel = new UserMessageModel();
+                await AddUserMessage(userMessage);
                 await CompleteChat();
             }
         }
-
-        private async Task OnEnter(KeyboardEventArgs obj)
-        {
-            if (obj.Key == "Enter")
-            {
-                await SendMessage();
-            }
-        }
-
+        
         private void AddSystemMessage(string message)
         {
             _messages.Add(new ChatRequestSystemMessage(message));
@@ -52,16 +47,15 @@ namespace Therasim.Web.Components.Chat
         private async Task AddUserMessage(string message)
         {
             _messages.Add(new ChatRequestUserMessage(message));
-            UserInput = string.Empty;
-            await OnChatUpdated.InvokeAsync(new ChatMessage { Text = message, IsUser = true });
             StateHasChanged();
+            await OnChatUpdated.InvokeAsync(new ChatMessage { Text = message, IsUser = true });
         }
 
         private async Task AddAssistantMessage(string message)
         {
             _messages.Add(new ChatRequestAssistantMessage(message));
-            await OnChatUpdated.InvokeAsync(new ChatMessage { Text = message, IsUser = false });
             StateHasChanged();
+            await OnChatUpdated.InvokeAsync(new ChatMessage { Text = message, IsUser = false });
         }
 
         private async Task CompleteChat()
