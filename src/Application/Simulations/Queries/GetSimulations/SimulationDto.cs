@@ -11,6 +11,7 @@ public class SimulationDto
     public string Problem { get; set; } = string.Empty;
     public FeedbackType FeedbackType { get; set; }
     public Language Language { get; set; }
+    public Guid? ActiveSessionId { get; set; }
 
     private class Mapping : Profile
     {
@@ -22,7 +23,8 @@ public class SimulationDto
                 .ForMember(d => d.Persona, opt => opt.MapFrom(s => s.Persona.Name))
                 .ForMember(d => d.Problem, opt => opt.MapFrom(s => s.Problem.Name))
                 .ForMember(d => d.FeedbackType, opt => opt.MapFrom(s => s.FeedbackType))
-                .ForMember(d => d.Language, opt => opt.MapFrom(s => s.Language));
+                .ForMember(d => d.Language, opt => opt.MapFrom(s => s.Language))
+                .ForMember(d => d.ActiveSessionId, opt => opt.MapFrom(s => s.Sessions.Select(x=>x.Id).FirstOrDefault()));
         }
     }
 }

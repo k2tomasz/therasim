@@ -27,7 +27,7 @@ public class GetSimulationsQueryHandler : IRequestHandler<GetSimulationsQuery, I
 
     public async Task<IList<SimulationDto>> Handle(GetSimulationsQuery request, CancellationToken cancellationToken)
     {
-        var simulations = await _context.Simulations
+        var simulations = await _context.Simulations.Include(x=>x.Sessions.Where(x=>x.IsActive))
             .Where(x => x.UserId == request.UserId)
             .ProjectTo<SimulationDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

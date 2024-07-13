@@ -12,7 +12,6 @@ public class FeedbackConfiguration : IEntityTypeConfiguration<Feedback>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Content).IsRequired();
         builder.Property(x => x.Message).IsRequired();
-        builder.Property(x => x.Role).IsRequired();
         builder.Property(x => x.IsUseful);
         builder.Property(x => x.SessionId).IsRequired();
         builder.HasOne(x => x.Session)
