@@ -1,6 +1,6 @@
 ﻿namespace Therasim.Domain.Entities;
 
-public class PsychProblem : BaseEntity
+public class Problem : BaseEntity
 {
     public string Name { get; set; } = null!;
     public string Description { get; set; } = null!;

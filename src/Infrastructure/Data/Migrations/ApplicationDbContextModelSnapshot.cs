@@ -17,7 +17,7 @@ namespace Therasim.Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -63,7 +63,7 @@ namespace Therasim.Infrastructure.Data.Migrations
                     b.ToTable("Personas", (string)null);
                 });
 
-            modelBuilder.Entity("Therasim.Domain.Entities.PsychProblem", b =>
+            modelBuilder.Entity("Therasim.Domain.Entities.Problem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -81,7 +81,7 @@ namespace Therasim.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PsychProblems", (string)null);
+                    b.ToTable("Problems", (string)null);
                 });
 
             modelBuilder.Entity("Therasim.Domain.Entities.Simulation", b =>
@@ -99,7 +99,7 @@ namespace Therasim.Infrastructure.Data.Migrations
                     b.Property<Guid>("PersonaId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PsychProblemId")
+                    b.Property<Guid>("ProblemId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("SkillId")
@@ -113,7 +113,7 @@ namespace Therasim.Infrastructure.Data.Migrations
 
                     b.HasIndex("PersonaId");
 
-                    b.HasIndex("PsychProblemId");
+                    b.HasIndex("ProblemId");
 
                     b.HasIndex("SkillId");
 
@@ -160,9 +160,9 @@ namespace Therasim.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Therasim.Domain.Entities.PsychProblem", "PsychProblem")
+                    b.HasOne("Therasim.Domain.Entities.Problem", "Problem")
                         .WithMany("Simulations")
-                        .HasForeignKey("PsychProblemId")
+                        .HasForeignKey("ProblemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -174,7 +174,7 @@ namespace Therasim.Infrastructure.Data.Migrations
 
                     b.Navigation("Persona");
 
-                    b.Navigation("PsychProblem");
+                    b.Navigation("Problem");
 
                     b.Navigation("Skill");
                 });
@@ -184,7 +184,7 @@ namespace Therasim.Infrastructure.Data.Migrations
                     b.Navigation("Simulations");
                 });
 
-            modelBuilder.Entity("Therasim.Domain.Entities.PsychProblem", b =>
+            modelBuilder.Entity("Therasim.Domain.Entities.Problem", b =>
                 {
                     b.Navigation("Simulations");
                 });

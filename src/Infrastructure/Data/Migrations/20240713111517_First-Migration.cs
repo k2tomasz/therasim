@@ -25,7 +25,7 @@ namespace Therasim.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PsychProblems",
+                name: "Problems",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -34,7 +34,7 @@ namespace Therasim.Infrastructure.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PsychProblems", x => x.Id);
+                    table.PrimaryKey("PK_Problems", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,8 +58,9 @@ namespace Therasim.Infrastructure.Data.Migrations
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PersonaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SkillId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PsychProblemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FeedbackType = table.Column<int>(type: "int", nullable: false)
+                    ProblemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FeedbackType = table.Column<int>(type: "int", nullable: false),
+                    Language = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,9 +72,9 @@ namespace Therasim.Infrastructure.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Simulations_PsychProblems_PsychProblemId",
-                        column: x => x.PsychProblemId,
-                        principalTable: "PsychProblems",
+                        name: "FK_Simulations_Problems_ProblemId",
+                        column: x => x.ProblemId,
+                        principalTable: "Problems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -114,9 +115,9 @@ namespace Therasim.Infrastructure.Data.Migrations
                 column: "PersonaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Simulations_PsychProblemId",
+                name: "IX_Simulations_ProblemId",
                 table: "Simulations",
-                column: "PsychProblemId");
+                column: "ProblemId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Simulations_SkillId",
@@ -137,7 +138,7 @@ namespace Therasim.Infrastructure.Data.Migrations
                 name: "Personas");
 
             migrationBuilder.DropTable(
-                name: "PsychProblems");
+                name: "Problems");
 
             migrationBuilder.DropTable(
                 name: "Skills");

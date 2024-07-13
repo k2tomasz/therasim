@@ -8,7 +8,7 @@ public record CreateSimulationCommand : IRequest<Guid>
 {
     public string UserId { get; init; } = null!;
     public Guid PersonaId { get; init; }
-    public Guid PsychProblemId { get; set; }
+    public Guid ProblemId { get; set; }
     public Guid SkillId { get; init; }
     public FeedbackType FeedbackType { get; set; }
     public Language Language { get; set; }
@@ -37,7 +37,7 @@ public class CreateSimulationCommandHandler : IRequestHandler<CreateSimulationCo
             UserId = request.UserId,
             PersonaId = request.PersonaId,
             SkillId = request.SkillId,
-            PsychProblemId = request.PsychProblemId,
+            ProblemId = request.ProblemId,
             FeedbackType = request.FeedbackType,
             Language = request.Language
         };

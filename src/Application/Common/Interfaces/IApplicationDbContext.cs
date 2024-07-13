@@ -8,7 +8,7 @@ public interface IApplicationDbContext
     DbSet<Persona> Personas { get; }
     DbSet<Conversation> Conversations { get; }
     DbSet<Skill> Skills { get; }
-    DbSet<PsychProblem> PsychProblems { get; }
+    DbSet<Problem> PsychProblems { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

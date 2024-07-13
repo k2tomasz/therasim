@@ -106,13 +106,13 @@ public class ApplicationDbContextInitialiser
 
         if (!_context.PsychProblems.Any())
         {
-            var problem1 = new PsychProblem
+            var problem1 = new Problem
             {
                 Name = "Anxiety",
                 Description = string.Empty
             };
 
-            var problem2 = new PsychProblem
+            var problem2 = new Problem
             {
                 Name = "Depression",
                 Description = string.Empty

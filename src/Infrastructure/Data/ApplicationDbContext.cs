@@ -12,7 +12,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Persona> Personas => Set<Persona>();
     public DbSet<Conversation> Conversations => Set<Conversation>();
     public DbSet<Skill> Skills => Set<Skill>();
-    public DbSet<PsychProblem> PsychProblems => Set<PsychProblem>();
+    public DbSet<Problem> PsychProblems => Set<Problem>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

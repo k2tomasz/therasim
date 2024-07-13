@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Therasim.Infrastructure.Data.Configurations;
 
-public class PsychProblemConfiguration : IEntityTypeConfiguration<PsychProblem>
+public class ProblemConfiguration : IEntityTypeConfiguration<Problem>
 {
-    public void Configure(EntityTypeBuilder<PsychProblem> builder)
+    public void Configure(EntityTypeBuilder<Problem> builder)
     {
-        builder.ToTable("PsychProblems");
+        builder.ToTable("Problems");
 
         builder.HasKey(pp => pp.Id);
 
@@ -16,8 +16,8 @@ public class PsychProblemConfiguration : IEntityTypeConfiguration<PsychProblem>
         builder.Property(pp => pp.Description).HasMaxLength(500);
 
         builder.HasMany(pp => pp.Simulations)
-            .WithOne(s => s.PsychProblem)
-            .HasForeignKey(s => s.PsychProblemId);
+            .WithOne(s => s.Problem)
+            .HasForeignKey(s => s.ProblemId);
     }
 }
 

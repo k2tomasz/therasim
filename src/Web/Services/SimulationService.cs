@@ -31,7 +31,7 @@ public class SimulationService : ISimulationService
             UserId = model.UserId,
             PersonaId = Guid.Parse(model.PersonaId), 
             SkillId = Guid.Parse(model.SkillId),
-            PsychProblemId = Guid.Parse(model.PsychProblemId),
+            ProblemId = Guid.Parse(model.PsychProblemId),
             Language = Enum.Parse<Language>(model.Language),
             FeedbackType = Enum.Parse<FeedbackType>(model.FeedbackType)
         };

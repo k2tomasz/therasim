@@ -12,7 +12,7 @@ public class PsychProblemDto
     {
         public Mapping()
         {
-            CreateMap<PsychProblem, PsychProblemDto>();
+            CreateMap<Problem, PsychProblemDto>();
         }
     }
 }
