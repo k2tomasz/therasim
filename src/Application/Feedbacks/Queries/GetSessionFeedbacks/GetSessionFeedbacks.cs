@@ -2,10 +2,7 @@
 
 namespace Therasim.Application.Feedbacks.Queries.GetSessionFeedbacks;
 
-public record GetSessionFeedbacksQuery : IRequest<IList<FeedbackDto>>
-{
-    public Guid SessionId { get; init; }
-}
+public record GetSessionFeedbacksQuery(Guid SessionId) : IRequest<IList<FeedbackDto>>;
 
 public class GetSessionFeedbacksQueryValidator : AbstractValidator<GetSessionFeedbacksQuery>
 {

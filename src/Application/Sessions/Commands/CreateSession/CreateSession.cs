@@ -3,11 +3,7 @@ using Therasim.Domain.Entities;
 
 namespace Therasim.Application.Sessions.Commands.CreateSession;
 
-public record CreateSessionCommand : IRequest<Guid>
-{
-    public bool IsActive { get; set; } = true;
-    public Guid SimulationId { get; set; }
-}
+public record CreateSessionCommand(Guid SimulationId, bool IsActive = true) : IRequest<Guid>;
 
 public class CreateSessionCommandValidator : AbstractValidator<CreateSessionCommand>
 {

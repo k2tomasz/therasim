@@ -3,12 +3,7 @@ using Therasim.Domain.Entities;
 
 namespace Therasim.Application.Feedbacks.Commands.AddSessionFeedback;
 
-public record AddSessionFeedbackCommand : IRequest<Guid>
-{
-    public Guid SessionId { get; set; }
-    public string Content { get; set; } = null!;
-    public string Message { get; set; } = null!;
-}
+public record AddSessionFeedbackCommand(Guid SessionId, string Content, string Message) : IRequest<Guid>;
 
 public class AddSessionFeedbackCommandValidator : AbstractValidator<AddSessionFeedbackCommand>
 {

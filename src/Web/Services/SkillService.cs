@@ -4,17 +4,10 @@ using Therasim.Web.Services.Interfaces;
 
 namespace Therasim.Web.Services;
 
-public class SkillService : ISkillService
+public class SkillService(IMediator mediator) : ISkillService
 {
-    private readonly IMediator _mediator;
-
-    public SkillService(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     public async Task<IList<SkillDto>> GetSkills()
     {
-        return await _mediator.Send(new GetSkillsQuery());
+        return await mediator.Send(new GetSkillsQuery());
     }
 }
