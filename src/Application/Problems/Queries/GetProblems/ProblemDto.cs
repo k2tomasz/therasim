@@ -1,8 +1,8 @@
 ﻿using Therasim.Domain.Entities;
 
-namespace Therasim.Application.PsychProblems.Queries.GetPsychProblems;
+namespace Therasim.Application.Problems.Queries.GetProblems;
 
-public class PsychProblemDto
+public class ProblemDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
@@ -12,7 +12,7 @@ public class PsychProblemDto
     {
         public Mapping()
         {
-            CreateMap<Problem, PsychProblemDto>();
+            CreateMap<Problem, ProblemDto>();
         }
     }
 }

@@ -9,12 +9,9 @@ public class SkillConfiguration : IEntityTypeConfiguration<Skill>
     public void Configure(EntityTypeBuilder<Skill> builder)
     {
         builder.ToTable("Skills");
-
         builder.HasKey(s => s.Id);
-
         builder.Property(s => s.Name).IsRequired().HasMaxLength(100);
         builder.Property(s => s.Description).HasMaxLength(500);
-
         builder.HasMany(s => s.Simulations)
             .WithOne(a => a.Skill)
             .HasForeignKey(a => a.SkillId);

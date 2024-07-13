@@ -19,7 +19,7 @@ builder.Services.AddSingleton(new OpenAIClient(new Uri(builder.Configuration["Az
 
 builder.Services.AddScoped<IPersonaService, PersonaService>();
 builder.Services.AddScoped<ISimulationService, SimulationService>();
-builder.Services.AddScoped<IPsychProblemsService, PsychProblemsService>();
+builder.Services.AddScoped<IProblemService, ProblemService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 
 

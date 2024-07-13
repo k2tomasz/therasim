@@ -1,5 +1,5 @@
 ﻿@using Therasim.Application.Personas.Queries.GetPersonas
-@using Therasim.Application.PsychProblems.Queries.GetPsychProblems
+@using Therasim.Application.Problems.Queries.GetProblems
 @using Therasim.Application.Skills.Queries.GetSkills
 @using Therasim.Domain.Enums
 <h3>Create Simulation</h3>
@@ -15,13 +15,13 @@
                       OptionValue="@(p => p.Id.ToString())"
                       OptionText="@(p => p.Name)"
                       @bind-Value="@CreateSimulationModel.PersonaId" />
-        <FluentSelect TOption="PsychProblemDto"
+        <FluentSelect TOption="ProblemDto"
                       Placeholder="Select problem..."
                       Items="@_psychProblems"
                       Id="problems"
                       OptionValue="@(p => p.Id.ToString())"
                       OptionText="@(p => p.Name)"
-                      @bind-Value="@CreateSimulationModel.PsychProblemId" />
+                      @bind-Value="@CreateSimulationModel.ProblemId" />
         <FluentSelect TOption="SkillDto"
                       Placeholder="Select skill..."
                       Items="@_skills"

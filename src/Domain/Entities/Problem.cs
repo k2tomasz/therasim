@@ -1,6 +1,6 @@
 ﻿namespace Therasim.Domain.Entities;
 
-public class Problem : BaseEntity
+public class Problem : BaseAuditableEntity
 {
     public string Name { get; set; } = null!;
     public string Description { get; set; } = null!;

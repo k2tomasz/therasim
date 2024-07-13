@@ -2,13 +2,11 @@ using Azure;
 using Azure.AI.OpenAI;
 using Azure.AI.OpenAI.Assistants;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.FluentUI.AspNetCore.Components;
 using Therasim.Web.Models;
 
-namespace Therasim.Web.Components.Chat
+namespace Therasim.Web.Components.Session
 {
-    public partial class ChatConversation : ComponentBase
+    public partial class RunSession : ComponentBase
     {
         private AssistantsClient AssistantsClient { get; set; } = null!;
         [Inject] private OpenAIClient OpenAIClient { get; set; } = null!;

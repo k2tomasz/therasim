@@ -1,6 +1,5 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
-using Therasim.Domain.Enums;
 
 namespace Therasim.Web.Models;
 
@@ -11,7 +10,7 @@ public class CreateSimulationModel
     public string PersonaId { get; set; } = null!;
 
     [Required(ErrorMessage = "Problem is Required")]
-    public string PsychProblemId { get; set; } = null!;
+    public string ProblemId { get; set; } = null!;
 
     [Required(ErrorMessage = "Skill is Required")]
     public string SkillId { get; set; } = null!;

@@ -6,9 +6,11 @@ public interface IApplicationDbContext
 {
     DbSet<Simulation> Simulations { get; }
     DbSet<Persona> Personas { get; }
-    DbSet<Conversation> Conversations { get; }
+    DbSet<Session> Sessions { get; }
+    DbSet<Message> Messages { get; }
+    DbSet<Feedback> Feedbacks { get; }
     DbSet<Skill> Skills { get; }
-    DbSet<Problem> PsychProblems { get; }
+    DbSet<Problem> Problems { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

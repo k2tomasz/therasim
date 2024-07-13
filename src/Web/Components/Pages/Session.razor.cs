@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Therasim.Web.Models;
 
 
 namespace Therasim.Web.Components.Pages
 {
-    public partial class Chat : ComponentBase
+    public partial class Session : ComponentBase
     {
         [Parameter]
         public Guid SimulationId { get; set; }

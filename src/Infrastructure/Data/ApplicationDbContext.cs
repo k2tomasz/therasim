@@ -10,9 +10,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
     public DbSet<Simulation> Simulations => Set<Simulation>();
     public DbSet<Persona> Personas => Set<Persona>();
-    public DbSet<Conversation> Conversations => Set<Conversation>();
+    public DbSet<Session> Sessions => Set<Session>();
+    public DbSet<Message> Messages => Set<Message>();
+    public DbSet<Feedback> Feedbacks => Set<Feedback>();
     public DbSet<Skill> Skills => Set<Skill>();
-    public DbSet<Problem> PsychProblems => Set<Problem>();
+    public DbSet<Problem> Problems => Set<Problem>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

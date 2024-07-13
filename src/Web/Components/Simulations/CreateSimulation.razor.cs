@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Therasim.Application.Personas.Queries.GetPersonas;
-using Therasim.Application.PsychProblems.Queries.GetPsychProblems;
+using Therasim.Application.Problems.Queries.GetProblems;
 using Therasim.Application.Skills.Queries.GetSkills;
 using Therasim.Web.Models;
 using Therasim.Web.Services.Interfaces;
@@ -13,7 +13,7 @@ public partial class CreateSimulation : ComponentBase
 {
     [Inject] private IPersonaService PersonaService { get; set; } = null!;
     [Inject] private ISkillService SkillService { get; set; } = null!;
-    [Inject] private IPsychProblemsService PsychProblemsService { get; set; } = null!;
+    [Inject] private IProblemService PsychProblemsService { get; set; } = null!;
     [Inject] private ISimulationService SimulationService { get; set; } = null!;
     [Parameter] public EventCallback OnSimulationCreated { get; set; }
     [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
@@ -24,7 +24,7 @@ public partial class CreateSimulation : ComponentBase
     //private ValidationMessageStore? messageStore;
     private IList<PersonaDto> _personas = new List<PersonaDto>();
     private IList<SkillDto> _skills = new List<SkillDto>();
-    private IList<PsychProblemDto> _psychProblems = new List<PsychProblemDto>();
+    private IList<ProblemDto> _psychProblems = new List<ProblemDto>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -45,7 +45,7 @@ public partial class CreateSimulation : ComponentBase
 
         _personas = await PersonaService.GetPersonas();
         _skills = await SkillService.GetSkills();
-        _psychProblems = await PsychProblemsService.GetPsychProblems();
+        _psychProblems = await PsychProblemsService.GetProblems();
     }
 
     private async Task HandleValidSubmitAsync()

@@ -1,6 +1,6 @@
 ﻿namespace Therasim.Domain.Entities;
 
-public class Simulation : BaseEntity
+public class Simulation : BaseAuditableEntity
 {
     public string UserId { get; set; } = null!;
     public Guid PersonaId { get; set; }
@@ -11,5 +11,5 @@ public class Simulation : BaseEntity
     public Problem Problem { get; set; } = null!;
     public FeedbackType FeedbackType { get; set; }
     public Language Language { get; set; }
-    public IList<Conversation> Conversations { get; private set; } = new List<Conversation>();
+    public IList<Session> Sessions { get; private set; } = new List<Session>();
 }

@@ -104,7 +104,7 @@ public class ApplicationDbContextInitialiser
             await _context.SaveChangesAsync();
         }
 
-        if (!_context.PsychProblems.Any())
+        if (!_context.Problems.Any())
         {
             var problem1 = new Problem
             {
@@ -118,8 +118,8 @@ public class ApplicationDbContextInitialiser
                 Description = string.Empty
             };
 
-            _context.PsychProblems.Add(problem1);
-            _context.PsychProblems.Add(problem2);
+            _context.Problems.Add(problem1);
+            _context.Problems.Add(problem2);
 
             await _context.SaveChangesAsync();
         }
