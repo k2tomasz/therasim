@@ -7,7 +7,10 @@ namespace Therasim.Infrastructure.Data;
 
 public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    {
+        Console.WriteLine("ApplicationDbContext created!");
+    }
     public DbSet<Simulation> Simulations => Set<Simulation>();
     public DbSet<Persona> Personas => Set<Persona>();
     public DbSet<Session> Sessions => Set<Session>();

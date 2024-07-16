@@ -6,8 +6,7 @@ namespace Therasim.Web.Components.Pages
 {
     public partial class Session : ComponentBase
     {
-        [Parameter]
-        public Guid SimulationId { get; set; }
+        [Parameter] public Guid SessionId { get; set; }
         private Feedback.Feedback FeedbackComponent { get; set; } = null!;
 
         protected override void OnInitialized()

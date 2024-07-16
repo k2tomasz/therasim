@@ -6,9 +6,9 @@ using Therasim.Web.Components;
 using Azure.AI.OpenAI.Assistants;
 using Azure;
 using Azure.AI.OpenAI;
-using Therasim.Infrastructure.Data;
 using Therasim.Web.Services;
 using Therasim.Web.Services.Interfaces;
+using Services = Therasim.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureServices(builder.Configuration);
@@ -21,7 +21,9 @@ builder.Services.AddScoped<IPersonaService, PersonaService>();
 builder.Services.AddScoped<ISimulationService, SimulationService>();
 builder.Services.AddScoped<IProblemService, ProblemService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
-
+builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<Services.Interfaces.IMessageService, Services.MessageService>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 
 builder.Services
     .AddAuth0WebAppAuthentication(options => {
@@ -40,7 +42,7 @@ app.UseAuthorization();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    await app.InitialiseDatabaseAsync();
+    //await app.InitialiseDatabaseAsync();
 }
 else
 {
@@ -54,7 +56,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.MapGet("/Account/Login", async (HttpContext httpContext, string redirectUri = "/") =>
+app.MapGet("/account/login", async (HttpContext httpContext, string redirectUri = "/") =>
 {
     var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
         .WithRedirectUri(redirectUri)
@@ -63,7 +65,7 @@ app.MapGet("/Account/Login", async (HttpContext httpContext, string redirectUri 
     await httpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
 });
 
-app.MapGet("/Account/Logout", async (HttpContext httpContext, string redirectUri = "/") =>
+app.MapGet("/account/logout", async (HttpContext httpContext, string redirectUri = "/") =>
 {
     var authenticationProperties = new LogoutAuthenticationPropertiesBuilder()
         .WithRedirectUri(redirectUri)

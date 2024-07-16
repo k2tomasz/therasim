@@ -8,6 +8,7 @@ namespace Therasim.Web.Components.Simulations;
 public partial class ListSimulations : ComponentBase
 {
     [Inject] private ISimulationService SimulationService { get; set; } = null!;
+    [Inject] private ISessionService SessionService { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
     private IQueryable<SimulationDto> Simulations { get; set; } = new List<SimulationDto>().AsQueryable();
@@ -30,9 +31,15 @@ public partial class ListSimulations : ComponentBase
         }
     }
 
-    private void StartSimulation(SimulationDto simulation)
+    private async Task StartSimulation(SimulationDto simulation)
     {
-        NavigationManager.NavigateTo($"/simulation/{simulation.Id}");
+        var sessionId = await SessionService.CreateSession(simulation.Id);
+        NavigationManager.NavigateTo($"/session/{sessionId}");
+    }
+
+    private void ContinueSimulation(SimulationDto simulation)
+    {
+        NavigationManager.NavigateTo($"/session/{simulation.ActiveSessionId}");
     }
 
     public async Task GetSimulations()

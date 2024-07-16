@@ -11,6 +11,7 @@ namespace Therasim.Web.Components.Session
         private AssistantsClient AssistantsClient { get; set; } = null!;
         [Inject] private OpenAIClient OpenAIClient { get; set; } = null!;
         [Parameter] public EventCallback<ChatMessage> OnChatUpdated { get; set; }
+        [Parameter] public Guid SessionId { get; set; }
         [SupplyParameterFromForm] private UserMessageModel UserMessageModel { get; set; } = new();
         //private List<ChatMessage> ChatMessages { get; set; } = new();
         private Assistant _assistant = null!;

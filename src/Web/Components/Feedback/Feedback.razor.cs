@@ -12,6 +12,7 @@ namespace Therasim.Web.Components.Feedback
 
         [Inject] private AssistantsClient AssistantsClient { get; set; } = null!;
         [Inject] private OpenAIClient OpenAIClient { get; set; } = null!;
+        [Parameter] public Guid SessionId { get; set; }
         private List<ChatMessage> FeedbackMessages { get; set; } = new();
         private Assistant assistant = null!;
         private AssistantThread thread = null!;

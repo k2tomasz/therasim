@@ -24,7 +24,7 @@ public class SimulationDto
                 .ForMember(d => d.Problem, opt => opt.MapFrom(s => s.Problem.Name))
                 .ForMember(d => d.FeedbackType, opt => opt.MapFrom(s => s.FeedbackType))
                 .ForMember(d => d.Language, opt => opt.MapFrom(s => s.Language))
-                .ForMember(d => d.ActiveSessionId, opt => opt.MapFrom(s => s.Sessions.Select(x=>x.Id).FirstOrDefault()));
+                .ForMember(d => d.ActiveSessionId, opt => opt.MapFrom(s => s.Sessions.Count == 0 ? null : (Guid?)s.Sessions.Select(x=>x.Id).First()));
         }
     }
 }

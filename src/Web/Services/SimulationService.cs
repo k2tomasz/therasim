@@ -7,12 +7,19 @@ using Therasim.Web.Services.Interfaces;
 
 namespace Therasim.Web.Services;
 
-public class SimulationService(IMediator mediator) : ISimulationService
+public class SimulationService : ISimulationService
 {
+    private readonly IMediator _mediator;
+
+    public SimulationService(IMediator mediator)
+    {
+        _mediator = mediator;
+        Console.WriteLine("SimulationService created!");
+    }
     public async Task<IQueryable<SimulationDto>> GetSimulations(string userId)
     {
         var query = new GetSimulationsQuery { UserId = userId };
-        var result = await mediator.Send(query);
+        var result = await _mediator.Send(query);
 
         return result.AsQueryable();
     }
@@ -29,7 +36,7 @@ public class SimulationService(IMediator mediator) : ISimulationService
             FeedbackType = Enum.Parse<FeedbackType>(model.FeedbackType)
         };
 
-        return await mediator.Send(command);
+        return await _mediator.Send(command);
     }
 
     
