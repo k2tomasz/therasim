@@ -1,11 +1,11 @@
 using Microsoft.FluentUI.AspNetCore.Components;
 using Auth0.AspNetCore.Authentication;
+using Azure;
+using Azure.AI.OpenAI;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Therasim.Web.Components;
-using Azure.AI.OpenAI.Assistants;
-using Azure;
-using Azure.AI.OpenAI;
+using Microsoft.SemanticKernel;
 using Therasim.Web.Services;
 using Therasim.Web.Services.Interfaces;
 using Services = Therasim.Web.Services;
@@ -14,8 +14,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 
-builder.Services.AddSingleton(new AssistantsClient(new Uri(builder.Configuration["AzureOpenAI:Endpoint"]!), new AzureKeyCredential(builder.Configuration["AzureOpenAI:Key"]!)));
-builder.Services.AddSingleton(new OpenAIClient(new Uri(builder.Configuration["AzureOpenAI:Endpoint"]!), new AzureKeyCredential(builder.Configuration["AzureOpenAI:Key"]!)));
+builder.Services.AddAzureOpenAIChatCompletion(
+    deploymentName: "gpt-4o",
+    apiKey: builder.Configuration["AzureOpenAI:Key"]!,
+    endpoint: builder.Configuration["AzureOpenAI:Endpoint"]!
+);
+
+builder.Services.AddTransient((serviceProvider) => new Kernel(serviceProvider));
+
+//builder.Services.AddSingleton(new AssistantsClient(new Uri(builder.Configuration["AzureOpenAI:Endpoint"]!), new AzureKeyCredential(builder.Configuration["AzureOpenAI:Key"]!)));
+//builder.Services.AddSingleton(new OpenAIClient(new Uri(builder.Configuration["AzureOpenAI:Endpoint"]!), new AzureKeyCredential(builder.Configuration["AzureOpenAI:Key"]!)));
 
 builder.Services.AddScoped<IPersonaService, PersonaService>();
 builder.Services.AddScoped<ISimulationService, SimulationService>();

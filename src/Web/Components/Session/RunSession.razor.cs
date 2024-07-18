@@ -1,30 +1,55 @@
-using Azure;
-using Azure.AI.OpenAI;
-using Azure.AI.OpenAI.Assistants;
 using Microsoft.AspNetCore.Components;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Therasim.Web.Models;
+using AuthorRole = Therasim.Domain.Enums.AuthorRole;
 
 namespace Therasim.Web.Components.Session
 {
     public partial class RunSession : ComponentBase
     {
-        private AssistantsClient AssistantsClient { get; set; } = null!;
-        [Inject] private OpenAIClient OpenAIClient { get; set; } = null!;
-        [Parameter] public EventCallback<ChatMessage> OnChatUpdated { get; set; }
+        [Inject] private Services.Interfaces.IMessageService MessageService { get; set; } = null!;
+        [Inject] private Kernel Kernel { get; set; } = null!;
+        [Parameter] public EventCallback<ChatMessageModel> OnChatUpdated { get; set; }
         [Parameter] public Guid SessionId { get; set; }
         [SupplyParameterFromForm] private UserMessageModel UserMessageModel { get; set; } = new();
-        //private List<ChatMessage> ChatMessages { get; set; } = new();
-        private Assistant _assistant = null!;
-        private AssistantThread thread = null!;
-        private List<ChatRequestMessage> _messages = new();
+        private IChatCompletionService ChatCompletionService { get; set; } = null!;
+        private OpenAIPromptExecutionSettings OpenAIPromptExecutionSettings { get; set; } = null!;
+        private ChatHistory _messages = [];
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            base.OnInitialized();
-            AddSystemMessage(GetSystemPrompt());
-            //await CreateAssistant();
-            //await CreateThread();
-
+            ChatCompletionService = Kernel.GetRequiredService<IChatCompletionService>();
+            OpenAIPromptExecutionSettings = new();
+            await LoadMessages();
+        }
+        
+        private async Task LoadMessages()
+        {
+            var messages = await MessageService.GetSessionMessages(SessionId);
+            if (messages.Count == 0)
+            {
+                await AddSystemMessage(GetSystemPrompt());
+            }
+            else
+            {
+                foreach (var messageDto in messages)
+                {
+                    switch (messageDto.Role)
+                    {
+                        case AuthorRole.System:
+                            _messages.AddSystemMessage(messageDto.Content);
+                            break;
+                        case AuthorRole.User:
+                            _messages.AddUserMessage(messageDto.Content);
+                            break;
+                        case AuthorRole.Assistant:
+                            _messages.AddAssistantMessage(messageDto.Content);
+                            break;
+                    }
+                }
+            }
         }
 
         private async Task HandleValidSubmitAsync()
@@ -34,111 +59,36 @@ namespace Therasim.Web.Components.Session
             {
                 UserMessageModel = new UserMessageModel();
                 await AddUserMessage(userMessage);
-                await CompleteChat();
+                var response = await ChatCompletionService.GetChatMessageContentsAsync(_messages, OpenAIPromptExecutionSettings, Kernel);
+                foreach (var chatMessageContent in response)
+                {
+                    var newMessage = chatMessageContent.Content;
+                    if (string.IsNullOrEmpty(newMessage)) continue;
+                    await AddAssistantMessage(newMessage);
+                }
             }
         }
         
-        private void AddSystemMessage(string message)
+        private async Task AddSystemMessage(string message)
         {
-            _messages.Add(new ChatRequestSystemMessage(message));
+            _messages.AddSystemMessage(message);
+            await MessageService.AddSessionMessage(SessionId, message, AuthorRole.System);
         }
 
         private async Task AddUserMessage(string message)
         {
-            _messages.Add(new ChatRequestUserMessage(message));
+            _messages.AddUserMessage(message);
             StateHasChanged();
-            await OnChatUpdated.InvokeAsync(new ChatMessage { Text = message, IsUser = true });
+            await MessageService.AddSessionMessage(SessionId, message, AuthorRole.User);
+            await OnChatUpdated.InvokeAsync(new ChatMessageModel { Text = message, IsUser = true });
         }
 
         private async Task AddAssistantMessage(string message)
         {
-            _messages.Add(new ChatRequestAssistantMessage(message));
+            _messages.AddAssistantMessage(message);
             StateHasChanged();
-            await OnChatUpdated.InvokeAsync(new ChatMessage { Text = message, IsUser = false });
-        }
-
-        private async Task CompleteChat()
-        {
-            var chatCompletionsOptions = new ChatCompletionsOptions("gpt-4o", _messages);
-            Response<ChatCompletions> response = await OpenAIClient.GetChatCompletionsAsync(chatCompletionsOptions);
-            await AddAssistantMessage(response.Value.Choices[0].Message.Content);
-
-            // await foreach (StreamingChatCompletionsUpdate chatUpdate in client.GetChatCompletionsStreaming(chatCompletionsOptions))
-            // {
-            //     if (chatUpdate.Role.HasValue)
-            //     {
-            //         Console.Write($"{chatUpdate.Role.Value.ToString().ToUpperInvariant()}: ");
-            //     }
-            //     if (!string.IsNullOrEmpty(chatUpdate.ContentUpdate))
-            //     {
-            //         Console.Write(chatUpdate.ContentUpdate);
-            //     }
-            // }
-        }
-
-        private async Task CreateAssistant()
-        {
-            //Create an assistant
-            _assistant = await AssistantsClient.CreateAssistantAsync(
-                new AssistantCreationOptions("gpt-4o") // Replace this with the name of your model deployment
-                {
-                    Name = "",
-                    Instructions = GetSystemPrompt()
-                });
-
-            //assistant = await AssistantsClient.GetAssistantAsync("asst_ZQXSZi0kz3ZgiHL3ghRcRidC");
-
-            Console.WriteLine($"Chat Assistant ID: {_assistant.Id}");
-
-        }
-
-        private async Task CreateThread()
-        {
-            // Create a thread
-            thread = await AssistantsClient.CreateThreadAsync();
-            Console.WriteLine($"Thread ID: {thread.Id}");
-        }
-
-        private async Task GetAiResponse(string userInput)
-        {
-            // Add a user question to the thread
-            ThreadMessage message = await AssistantsClient.CreateMessageAsync(thread.Id, MessageRole.User, userInput);
-
-            // Run the thread
-            ThreadRun run = await AssistantsClient.CreateRunAsync(thread.Id, new CreateRunOptions(_assistant.Id));
-
-            // Wait for the assistant to respond
-            do
-            {
-                await Task.Delay(TimeSpan.FromMilliseconds(500));
-                run = await AssistantsClient.GetRunAsync(thread.Id, run.Id);
-            } while (run.Status == RunStatus.Queued || run.Status == RunStatus.InProgress);
-
-            Console.WriteLine($"Run Status: {run.Status}");
-            Console.WriteLine($"Run Status: {run.LastError}");
-
-            // Get the messages
-            PageableList<ThreadMessage> messagesPage = await AssistantsClient.GetMessagesAsync(thread.Id);
-            IReadOnlyList<ThreadMessage> messages = messagesPage.Data;
-
-            // Note: messages iterate from newest to oldest, with the messages[0] being the most recent
-            //var threadMessage = messages.First();
-            foreach (ThreadMessage threadMessage in messages.Reverse())
-            {
-                if (threadMessage.Role == MessageRole.Assistant)
-                {
-                    foreach (MessageContent contentItem in threadMessage.ContentItems)
-                    {
-                        if (contentItem is MessageTextContent textItem)
-                        {
-                            // Add AI response to the chat
-                            var chatMessage = new ChatMessage { Text = textItem.Text, IsUser = false };
-                            //Messages.Add(chatMessage);
-                            await OnChatUpdated.InvokeAsync(chatMessage);
-                        }
-                    }
-                }
-            }
+            await MessageService.AddSessionMessage(SessionId, message, AuthorRole.Assistant);
+            await OnChatUpdated.InvokeAsync(new ChatMessageModel { Text = message, IsUser = false });
         }
 
         private string GetSystemPrompt()

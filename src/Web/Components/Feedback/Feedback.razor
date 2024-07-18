@@ -1,12 +1,12 @@
-﻿@using Azure.AI.OpenAI
+﻿@using Microsoft.SemanticKernel.ChatCompletion
 <h3>Feedback</h3>
 <div class="feedback-display">
     @foreach (var message in _messages)
     {
-        if (message is ChatRequestAssistantMessage)
+        if (message.Role == AuthorRole.Assistant)
         {
             <FluentCard Width="100%" Style="margin-bottom: 10px">
-                @((message as ChatRequestAssistantMessage)?.Content)
+                @message.Content
             </FluentCard>
         }
     }

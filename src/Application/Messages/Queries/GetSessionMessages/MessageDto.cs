@@ -7,7 +7,7 @@ public class MessageDto
 {
     public string Content { get; set; } = null!;
     public AuthorRole Role { get; set; }
-    public DateTime Created { get; set; }
+    public DateTimeOffset Created { get; set; }
 
     private class Mapping : Profile
     {

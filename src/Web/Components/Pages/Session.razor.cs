@@ -15,7 +15,7 @@ namespace Therasim.Web.Components.Pages
             // Initialization logic if needed
         }
 
-        private async Task HandleChatUpdated(ChatMessage message)
+        private async Task HandleChatUpdated(ChatMessageModel message)
         {
             await FeedbackComponent.GetFeedback(message);
         }

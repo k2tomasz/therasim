@@ -1,19 +1,19 @@
-@using Azure.AI.OpenAI
+@using Microsoft.SemanticKernel.ChatCompletion
 <div class="chat-container">
     <h3>Simulation</h3>
     <div class="chat-window">
         @foreach (var message in _messages)
         {
-            if (message is ChatRequestUserMessage)
+            if (message.Role == AuthorRole.User)
             {
                 <div class="chat-message user-message">
-                    @((message as ChatRequestUserMessage)?.Content)
+                    @message.Content
                 </div>
             }
-            else if (message is ChatRequestAssistantMessage)
+            else if (message.Role == AuthorRole.Assistant)
             {
                 <div class="chat-message ai-message">
-                    @((message as ChatRequestAssistantMessage)?.Content)
+                    @message.Content
                 </div>
             }
         }
