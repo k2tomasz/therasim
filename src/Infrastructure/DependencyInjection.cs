@@ -33,7 +33,7 @@ public static class DependencyInjection
 
         services.AddTransient<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
-        //services.AddTransient<ApplicationDbContextInitialiser>();
+        services.AddTransient<ApplicationDbContextInitialiser>();
 
         services.AddSingleton(TimeProvider.System);
 

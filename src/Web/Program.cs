@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Therasim.Web.Components;
 using Microsoft.SemanticKernel;
+using Therasim.Infrastructure.Data;
 using Therasim.Web.Services;
 using Therasim.Web.Services.Interfaces;
 using Services = Therasim.Web.Services;
@@ -42,6 +43,10 @@ builder.Services
 
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddFluentUIComponents();
+builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
+{
+    ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
+});
 
 var app = builder.Build();
 
@@ -50,7 +55,7 @@ app.UseAuthorization();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    //await app.InitialiseDatabaseAsync();
+    await app.InitialiseDatabaseAsync();
 }
 else
 {
