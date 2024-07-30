@@ -1,27 +1,38 @@
 using Microsoft.FluentUI.AspNetCore.Components;
 using Auth0.AspNetCore.Authentication;
+using Azure;
+using Azure.AI.OpenAI;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Therasim.Web.Components;
-using Azure.AI.OpenAI.Assistants;
-using Azure;
-using Azure.AI.OpenAI;
+using Microsoft.SemanticKernel;
 using Therasim.Infrastructure.Data;
 using Therasim.Web.Services;
 using Therasim.Web.Services.Interfaces;
+using Services = Therasim.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 
-builder.Services.AddSingleton(new AssistantsClient(new Uri(builder.Configuration["AzureOpenAI:Endpoint"]!), new AzureKeyCredential(builder.Configuration["AzureOpenAI:Key"]!)));
-builder.Services.AddSingleton(new OpenAIClient(new Uri(builder.Configuration["AzureOpenAI:Endpoint"]!), new AzureKeyCredential(builder.Configuration["AzureOpenAI:Key"]!)));
+builder.Services.AddAzureOpenAIChatCompletion(
+    deploymentName: "gpt-4o",
+    apiKey: builder.Configuration["AzureOpenAI:Key"]!,
+    endpoint: builder.Configuration["AzureOpenAI:Endpoint"]!
+);
+
+builder.Services.AddTransient((serviceProvider) => new Kernel(serviceProvider));
+
+//builder.Services.AddSingleton(new AssistantsClient(new Uri(builder.Configuration["AzureOpenAI:Endpoint"]!), new AzureKeyCredential(builder.Configuration["AzureOpenAI:Key"]!)));
+//builder.Services.AddSingleton(new OpenAIClient(new Uri(builder.Configuration["AzureOpenAI:Endpoint"]!), new AzureKeyCredential(builder.Configuration["AzureOpenAI:Key"]!)));
 
 builder.Services.AddScoped<IPersonaService, PersonaService>();
 builder.Services.AddScoped<ISimulationService, SimulationService>();
-builder.Services.AddScoped<IPsychProblemsService, PsychProblemsService>();
+builder.Services.AddScoped<IProblemService, ProblemService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
-
+builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<Services.Interfaces.IMessageService, Services.MessageService>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 
 builder.Services
     .AddAuth0WebAppAuthentication(options => {
@@ -32,6 +43,10 @@ builder.Services
 
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddFluentUIComponents();
+builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
+{
+    ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
+});
 
 var app = builder.Build();
 
@@ -54,7 +69,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.MapGet("/Account/Login", async (HttpContext httpContext, string redirectUri = "/") =>
+app.MapGet("/account/login", async (HttpContext httpContext, string redirectUri = "/") =>
 {
     var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
         .WithRedirectUri(redirectUri)
@@ -63,7 +78,7 @@ app.MapGet("/Account/Login", async (HttpContext httpContext, string redirectUri 
     await httpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
 });
 
-app.MapGet("/Account/Logout", async (HttpContext httpContext, string redirectUri = "/") =>
+app.MapGet("/account/logout", async (HttpContext httpContext, string redirectUri = "/") =>
 {
     var authenticationProperties = new LogoutAuthenticationPropertiesBuilder()
         .WithRedirectUri(redirectUri)

@@ -2,6 +2,9 @@
 using Therasim.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Therasim.Infrastructure.Data.Interceptors;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -13,8 +16,11 @@ public static class DependencyInjection
 
         Guard.Against.Null(connectionString, message: "Connection string 'DefaultConnection' not found.");
 
+        services.AddTransient<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+        services.AddDbContextFactory<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
         services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
+            options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
             options.UseSqlServer(connectionString);
             
         }, ServiceLifetime.Transient);
@@ -27,7 +33,7 @@ public static class DependencyInjection
 
         services.AddTransient<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
-        services.AddScoped<ApplicationDbContextInitialiser>();
+        services.AddTransient<ApplicationDbContextInitialiser>();
 
         services.AddSingleton(TimeProvider.System);
 

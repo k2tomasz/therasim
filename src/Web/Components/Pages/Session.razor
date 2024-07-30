@@ -1,0 +1,11 @@
+﻿@page "/session/{sessionId:guid}"
+
+<PageTitle>Simulation</PageTitle>
+<FluentStack Style="height: 100%">
+    <div style="width: 60%; height: 100%">
+        <RunSession OnChatUpdated="HandleChatUpdated" SessionId="SessionId" />
+    </div>
+    <div style="width: 40%; height: 100%">
+        <Feedback @ref="FeedbackComponent" SessionId="SessionId" />
+    </div>
+</FluentStack>

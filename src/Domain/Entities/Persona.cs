@@ -1,6 +1,6 @@
 ﻿namespace Therasim.Domain.Entities;
 
-public class Persona : BaseEntity
+public class Persona : BaseAuditableEntity
 {
     public string Name { get; set; } = null!;
     public string Background { get; set; } = null!;

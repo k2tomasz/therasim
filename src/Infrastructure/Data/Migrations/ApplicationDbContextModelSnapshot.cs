@@ -17,29 +17,83 @@ namespace Therasim.Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Therasim.Domain.Entities.Conversation", b =>
+            modelBuilder.Entity("Therasim.Domain.Entities.Feedback", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SimulationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId")
+                    b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsUseful")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SessionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("SimulationId");
+                    b.HasIndex("SessionId");
 
-                    b.ToTable("Conversations", (string)null);
+                    b.ToTable("Feedbacks", (string)null);
+                });
+
+            modelBuilder.Entity("Therasim.Domain.Entities.Message", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SessionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SessionId");
+
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("Therasim.Domain.Entities.Persona", b =>
@@ -53,6 +107,18 @@ namespace Therasim.Infrastructure.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -63,16 +129,28 @@ namespace Therasim.Infrastructure.Data.Migrations
                     b.ToTable("Personas", (string)null);
                 });
 
-            modelBuilder.Entity("Therasim.Domain.Entities.PsychProblem", b =>
+            modelBuilder.Entity("Therasim.Domain.Entities.Problem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTimeOffset>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -81,7 +159,38 @@ namespace Therasim.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PsychProblems", (string)null);
+                    b.ToTable("Problems", (string)null);
+                });
+
+            modelBuilder.Entity("Therasim.Domain.Entities.Session", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SimulationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SimulationId");
+
+                    b.ToTable("Sessions");
                 });
 
             modelBuilder.Entity("Therasim.Domain.Entities.Simulation", b =>
@@ -90,16 +199,28 @@ namespace Therasim.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("FeedbackType")
                         .HasColumnType("int");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
 
+                    b.Property<DateTimeOffset>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("PersonaId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PsychProblemId")
+                    b.Property<Guid>("ProblemId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("SkillId")
@@ -113,7 +234,7 @@ namespace Therasim.Infrastructure.Data.Migrations
 
                     b.HasIndex("PersonaId");
 
-                    b.HasIndex("PsychProblemId");
+                    b.HasIndex("ProblemId");
 
                     b.HasIndex("SkillId");
 
@@ -126,10 +247,22 @@ namespace Therasim.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTimeOffset>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -141,10 +274,32 @@ namespace Therasim.Infrastructure.Data.Migrations
                     b.ToTable("Skills", (string)null);
                 });
 
-            modelBuilder.Entity("Therasim.Domain.Entities.Conversation", b =>
+            modelBuilder.Entity("Therasim.Domain.Entities.Feedback", b =>
+                {
+                    b.HasOne("Therasim.Domain.Entities.Session", "Session")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Session");
+                });
+
+            modelBuilder.Entity("Therasim.Domain.Entities.Message", b =>
+                {
+                    b.HasOne("Therasim.Domain.Entities.Session", "Session")
+                        .WithMany("Messages")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Session");
+                });
+
+            modelBuilder.Entity("Therasim.Domain.Entities.Session", b =>
                 {
                     b.HasOne("Therasim.Domain.Entities.Simulation", "Simulation")
-                        .WithMany("Conversations")
+                        .WithMany("Sessions")
                         .HasForeignKey("SimulationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -160,9 +315,9 @@ namespace Therasim.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Therasim.Domain.Entities.PsychProblem", "PsychProblem")
+                    b.HasOne("Therasim.Domain.Entities.Problem", "Problem")
                         .WithMany("Simulations")
-                        .HasForeignKey("PsychProblemId")
+                        .HasForeignKey("ProblemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -174,7 +329,7 @@ namespace Therasim.Infrastructure.Data.Migrations
 
                     b.Navigation("Persona");
 
-                    b.Navigation("PsychProblem");
+                    b.Navigation("Problem");
 
                     b.Navigation("Skill");
                 });
@@ -184,14 +339,21 @@ namespace Therasim.Infrastructure.Data.Migrations
                     b.Navigation("Simulations");
                 });
 
-            modelBuilder.Entity("Therasim.Domain.Entities.PsychProblem", b =>
+            modelBuilder.Entity("Therasim.Domain.Entities.Problem", b =>
                 {
                     b.Navigation("Simulations");
                 });
 
+            modelBuilder.Entity("Therasim.Domain.Entities.Session", b =>
+                {
+                    b.Navigation("Feedbacks");
+
+                    b.Navigation("Messages");
+                });
+
             modelBuilder.Entity("Therasim.Domain.Entities.Simulation", b =>
                 {
-                    b.Navigation("Conversations");
+                    b.Navigation("Sessions");
                 });
 
             modelBuilder.Entity("Therasim.Domain.Entities.Skill", b =>

@@ -1,127 +1,75 @@
-﻿using Azure;
-using Azure.AI.OpenAI;
-using Azure.AI.OpenAI.Assistants;
-using Microsoft.AspNetCore.Components;
-using Therasim.Web.Components.Pages;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Therasim.Web.Models;
+using Therasim.Web.Services.Interfaces;
 
 namespace Therasim.Web.Components.Feedback
 {
     public partial class Feedback : ComponentBase
     {
+        [Inject] private IFeedbackService FeedbackService { get; set; } = null!;
+        [Inject] private Kernel Kernel { get; set; } = null!;
+        [Parameter] public Guid SessionId { get; set; }
+        private IChatCompletionService ChatCompletionService { get; set; } = null!;
+        private OpenAIPromptExecutionSettings OpenAIPromptExecutionSettings { get; set; } = null!;
+        private List<ChatMessageModel> FeedbackMessages { get; set; } = new();
+        private ChatHistory _messages = [];
 
-        [Inject] private AssistantsClient AssistantsClient { get; set; } = null!;
-        [Inject] private OpenAIClient OpenAIClient { get; set; } = null!;
-        private List<ChatMessage> FeedbackMessages { get; set; } = new();
-        private Assistant assistant = null!;
-        private AssistantThread thread = null!;
-        private List<ChatRequestMessage> _messages = new();
-
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            AddSystemMessage(GetSystemPrompt());
+            ChatCompletionService = Kernel.GetRequiredService<IChatCompletionService>();
+            OpenAIPromptExecutionSettings = new();
+            await LoadMessages();
         }
 
-        private void AddSystemMessage(string message)
+        private async Task LoadMessages()
         {
-            _messages.Add(new ChatRequestSystemMessage(message));
-        }
-
-        private void AddUserMessage(string message)
-        {
-            _messages.Add(new ChatRequestUserMessage(message));
-            StateHasChanged();
-        }
-
-        private void AddAssistantMessage(string message)
-        {
-            _messages.Add(new ChatRequestAssistantMessage(message));
-            StateHasChanged();
-        }
-
-        private async Task CompleteChat()
-        {
-            var chatCompletionsOptions = new ChatCompletionsOptions("gpt-4o", _messages);
-            Response<ChatCompletions> response = await OpenAIClient.GetChatCompletionsAsync(chatCompletionsOptions);
-            AddAssistantMessage(response.Value.Choices[0].Message.Content);
-
-            // await foreach (StreamingChatCompletionsUpdate chatUpdate in client.GetChatCompletionsStreaming(chatCompletionsOptions))
-            // {
-            //     if (chatUpdate.Role.HasValue)
-            //     {
-            //         Console.Write($"{chatUpdate.Role.Value.ToString().ToUpperInvariant()}: ");
-            //     }
-            //     if (!string.IsNullOrEmpty(chatUpdate.ContentUpdate))
-            //     {
-            //         Console.Write(chatUpdate.ContentUpdate);
-            //     }
-            // }
-        }
-
-
-
-        private async Task CreateAssistant()
-        {
-            // Create an assistant
-            assistant = await AssistantsClient.CreateAssistantAsync(
-                new AssistantCreationOptions("gpt-35-turbo") // Replace this with the name of your model deployment
-                {
-                    Name = "TheraSim Teacher",
-                    Instructions = GetSystemPrompt()
-                });
-
-            //assistant = await AssistantsClient.GetAssistantAsync("asst_Uo6jpDsi1esBwfmpISzwYqXW");
-
-            Console.WriteLine($"Feedback Assistant ID: {assistant.Id}");
-
-        }
-
-        private async Task CreateThread()
-        {
-            // Create a thread
-            thread = await AssistantsClient.CreateThreadAsync();
-        }
-
-        private async Task GetAiResponse(ChatMessage input)
-        {
-            var userName = input.IsUser ? "Student" : "Alex";
-            var userInput = $"{userName}: {input.Text}";
-            // Add a user question to the thread
-            ThreadMessage message = await AssistantsClient.CreateMessageAsync(thread.Id, MessageRole.User, userInput);
-
-            // Run the thread
-            ThreadRun run = await AssistantsClient.CreateRunAsync(thread.Id, new CreateRunOptions(assistant.Id));
-
-            // Wait for the assistant to respond
-            do
+            var feedbacks = await FeedbackService.GetSessionFeedbacks(SessionId);
+            if (feedbacks.Count == 0)
             {
-                await Task.Delay(TimeSpan.FromMilliseconds(500));
-                run = await AssistantsClient.GetRunAsync(thread.Id, run.Id);
+                AddSystemMessage(GetSystemPrompt());
             }
-            while (run.Status == RunStatus.Queued || run.Status == RunStatus.InProgress);
-
-            // Get the messages
-            PageableList<ThreadMessage> messagesPage = await AssistantsClient.GetMessagesAsync(thread.Id);
-            IReadOnlyList<ThreadMessage> messages = messagesPage.Data;
-
-            // Note: messages iterate from newest to oldest, with the messages[0] being the most recent
-            var threadMessage = messages.Reverse().First();
-            foreach (MessageContent contentItem in threadMessage.ContentItems)
+            else
             {
-                if (contentItem is MessageTextContent textItem)
+                foreach (var feedbacksDto in feedbacks)
                 {
-                    // Add AI response to the chat
-                    FeedbackMessages.Add(new ChatMessage { Text = textItem.Text, IsUser = false });
+                    AddUserMessage(feedbacksDto.Message);
+                    AddAssistantMessage(feedbacksDto.Content);
                 }
             }
         }
 
-        public async Task GetFeedback(ChatMessage message)
+        private void AddSystemMessage(string message)
+        {
+            _messages.AddSystemMessage(message);
+        }
+
+        private void AddUserMessage(string message)
+        {
+            _messages.AddUserMessage(message);
+        }
+
+        private void AddAssistantMessage(string message)
+        {
+            _messages.AddAssistantMessage(message);
+            StateHasChanged();
+        }
+
+        public async Task GetFeedback(ChatMessageModel message)
         {
             var userName = message.IsUser ? "Student" : "Alex";
             var userInput = $"{userName}: {message.Text}";
-            AddUserMessage(userInput);
-            await CompleteChat();
+            AddUserMessage(userInput); 
+            var response = await ChatCompletionService.GetChatMessageContentsAsync(_messages, OpenAIPromptExecutionSettings, Kernel);
+            foreach (var chatMessageContent in response)
+            {
+                var newFeedback = chatMessageContent.Content;
+                if (string.IsNullOrEmpty(newFeedback)) continue;
+                AddAssistantMessage(newFeedback);
+                await FeedbackService.AddSessionFeedback(SessionId, newFeedback, userInput);
+            }
         }
 
         private string GetSystemPrompt()

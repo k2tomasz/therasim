@@ -14,8 +14,8 @@ public class SimulationService : ISimulationService
     public SimulationService(IMediator mediator)
     {
         _mediator = mediator;
+        Console.WriteLine("SimulationService created!");
     }
-
     public async Task<IQueryable<SimulationDto>> GetSimulations(string userId)
     {
         var query = new GetSimulationsQuery { UserId = userId };
@@ -31,7 +31,7 @@ public class SimulationService : ISimulationService
             UserId = model.UserId,
             PersonaId = Guid.Parse(model.PersonaId), 
             SkillId = Guid.Parse(model.SkillId),
-            PsychProblemId = Guid.Parse(model.PsychProblemId),
+            ProblemId = Guid.Parse(model.ProblemId),
             Language = Enum.Parse<Language>(model.Language),
             FeedbackType = Enum.Parse<FeedbackType>(model.FeedbackType)
         };

@@ -104,22 +104,22 @@ public class ApplicationDbContextInitialiser
             await _context.SaveChangesAsync();
         }
 
-        if (!_context.PsychProblems.Any())
+        if (!_context.Problems.Any())
         {
-            var problem1 = new PsychProblem
+            var problem1 = new Problem
             {
                 Name = "Anxiety",
                 Description = string.Empty
             };
 
-            var problem2 = new PsychProblem
+            var problem2 = new Problem
             {
                 Name = "Depression",
                 Description = string.Empty
             };
 
-            _context.PsychProblems.Add(problem1);
-            _context.PsychProblems.Add(problem2);
+            _context.Problems.Add(problem1);
+            _context.Problems.Add(problem2);
 
             await _context.SaveChangesAsync();
         }
