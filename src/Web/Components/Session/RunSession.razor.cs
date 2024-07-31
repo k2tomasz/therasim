@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.FluentUI.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -7,24 +10,39 @@ using AuthorRole = Therasim.Domain.Enums.AuthorRole;
 
 namespace Therasim.Web.Components.Session
 {
-    public partial class RunSession : ComponentBase
+    public partial class RunSession : ComponentBase, IAsyncDisposable, IDisposable
     {
         [Inject] private Services.Interfaces.IMessageService MessageService { get; set; } = null!;
         [Inject] private Kernel Kernel { get; set; } = null!;
+        [Inject] private IJSRuntime JS { get; set; } = null!;
         [Parameter] public EventCallback<ChatMessageModel> OnChatUpdated { get; set; }
         [Parameter] public Guid SessionId { get; set; }
         [SupplyParameterFromForm] private UserMessageModel UserMessageModel { get; set; } = new();
-        private IChatCompletionService ChatCompletionService { get; set; } = null!;
-        private OpenAIPromptExecutionSettings OpenAIPromptExecutionSettings { get; set; } = null!;
+        
+        private IChatCompletionService _chatCompletionService = null!;
+        private OpenAIPromptExecutionSettings _openAiPromptExecutionSettings = null!;
         private ChatHistory _messages = [];
-
+        private IJSObjectReference? _speechModule;
+        private DotNetObjectReference<RunSession>? _objRef;
+        private bool _isListening;
+        private Icon _micIcon = new Icons.Regular.Size16.Mic();
         protected override async Task OnInitializedAsync()
         {
-            ChatCompletionService = Kernel.GetRequiredService<IChatCompletionService>();
-            OpenAIPromptExecutionSettings = new();
+            _objRef = DotNetObjectReference.Create(this);
+            _chatCompletionService = Kernel.GetRequiredService<IChatCompletionService>();
+            _openAiPromptExecutionSettings = new();
             await LoadMessages();
         }
-        
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _speechModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/Session/RunSession.razor.js");
+                await _speechModule.InvokeVoidAsync("initializeSpeech");
+            }
+        }
+
         private async Task LoadMessages()
         {
             var messages = await MessageService.GetSessionMessages(SessionId);
@@ -55,11 +73,16 @@ namespace Therasim.Web.Components.Session
         private async Task HandleValidSubmitAsync()
         {
             var userMessage = UserMessageModel.Message;
+            await ProcessUserMessage(userMessage);
+        }
+        
+        private async Task ProcessUserMessage(string? userMessage)
+        {
             if (!string.IsNullOrWhiteSpace(userMessage))
             {
                 UserMessageModel = new UserMessageModel();
                 await AddUserMessage(userMessage);
-                var response = await ChatCompletionService.GetChatMessageContentsAsync(_messages, OpenAIPromptExecutionSettings, Kernel);
+                var response = await _chatCompletionService.GetChatMessageContentsAsync(_messages, _openAiPromptExecutionSettings, Kernel);
                 foreach (var chatMessageContent in response)
                 {
                     var newMessage = chatMessageContent.Content;
@@ -89,6 +112,12 @@ namespace Therasim.Web.Components.Session
             StateHasChanged();
             await MessageService.AddSessionMessage(SessionId, message, AuthorRole.Assistant);
             await OnChatUpdated.InvokeAsync(new ChatMessageModel { Text = message, IsUser = false });
+        }
+
+        [JSInvokable]
+        public async Task AddUserMessageFromSpeech(string message)
+        {
+            await ProcessUserMessage(message);
         }
 
         private string GetSystemPrompt()
@@ -147,6 +176,32 @@ namespace Therasim.Web.Components.Session
                 Use these guidelines to simulate a realistic and emotionally engaging therapy session as Alex, helping the psychology student practice their therapeutic skills.
                 ";
 
+        }
+
+        async ValueTask IAsyncDisposable.DisposeAsync()
+        {
+            if (_speechModule is not null)
+            {
+                await _speechModule.DisposeAsync();
+            }
+        }
+
+        private async Task StartStopContinuousRecognitionAsync(MouseEventArgs obj)
+        {
+            if (_speechModule is null) return;
+            var functionName = _isListening ? "stopContinuousRecognitionAsync" : "startContinuousRecognitionAsync";
+            _micIcon = _isListening ? new Icons.Regular.Size16.Mic() : new Icons.Filled.Size16.Mic();
+            await _speechModule.InvokeVoidAsync(functionName, _objRef);
+            _isListening = !_isListening;
+        }
+
+        public void Dispose()
+        {
+            if (_speechModule is IDisposable speechModuleDisposable)
+                speechModuleDisposable.Dispose();
+            else if (_speechModule != null)
+                _ = _speechModule.DisposeAsync().AsTask();
+            _objRef?.Dispose();
         }
     }
 }

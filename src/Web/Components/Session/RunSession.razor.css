@@ -34,3 +34,7 @@
     background-color: #ffffff;
     border-top: 1px solid #ccc;
 }
+
+.chat-input-container .hidden {
+    display: none;
+}
