@@ -5,7 +5,7 @@ namespace Therasim.Web.Services.Interfaces;
 
 public interface IMessageService
 {
-    Task<Guid> AddSessionMessage(Guid sessionId, string message, AuthorRole role);
+    Task<Guid> AddSessionMessage(Guid sessionId, string message, MessageAuthorRole role);
     Task<IList<MessageDto>> GetSessionMessages(Guid sessionId);
 
 }

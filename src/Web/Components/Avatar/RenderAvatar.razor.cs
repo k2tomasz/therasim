@@ -23,7 +23,7 @@ public partial class RenderAvatar : ComponentBase, IAsyncDisposable, IDisposable
         }
     }
     
-    public async ValueTask Speak(string textToSpeak)
+    public async ValueTask MakeAvatarSpeak(string textToSpeak)
     {
         if (_avatarModule is not null)
         {

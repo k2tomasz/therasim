@@ -6,7 +6,6 @@ var previousAnimationFrameTimestamp = 0;
 var remoteVideoDiv;
 var canvas;
 
-
 export function initializeSpeech() {
     if (!!window.SpeechSDK) {
         SpeechSDK = window.SpeechSDK;
@@ -42,7 +41,7 @@ export function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential
         mediaPlayer.srcObject = event.streams[0];
         mediaPlayer.autoplay = true;
         document.getElementById('remoteVideo').appendChild(mediaPlayer);
-        document.getElementById('videoLabel').hidden = true;
+        //document.getElementById('videoLabel').hidden = true;
         document.getElementById('overlayArea').hidden = false;
 
         if (event.track.kind === 'video') {
@@ -87,7 +86,7 @@ export function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential
 
     // Make necessary update to the web page when the connection state changes
     peerConnection.oniceconnectionstatechange = e => {
-        log("WebRTC status: " + peerConnection.iceConnectionState);
+        console.log("WebRTC status: " + peerConnection.iceConnectionState);
 
         if (peerConnection.iceConnectionState === 'connected') {
             //document.getElementById('stopSession').disabled = false;
@@ -121,14 +120,14 @@ export function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential
                 };
                 log("Unable to start avatar: " + cancellationDetails.errorDetails);
             }
-            document.getElementById('startSession').disabled = false;
-            document.getElementById('configuration').hidden = false;
+            //document.getElementById('startSession').disabled = false;
+            //document.getElementById('configuration').hidden = false;
         }
     }).catch(
         (error) => {
             console.log("[" + (new Date()).toISOString() + "] Avatar failed to start. Error: " + error);
-            document.getElementById('startSession').disabled = false;
-            document.getElementById('configuration').hidden = false;
+            //document.getElementById('startSession').disabled = false;
+            //document.getElementById('configuration').hidden = false;
         }
     );
 }
@@ -175,7 +174,6 @@ export function makeBackgroundTransparent(timestamp) {
 
     window.requestAnimationFrame(makeBackgroundTransparent);
 }
-
 export function startSession(dotNetHelper) {
     const cogSvcRegion = "swedencentral";
     const cogSvcSubKey = "e3bb29e86fcd4aebaf96684a6893bcea";
@@ -183,8 +181,8 @@ export function startSession(dotNetHelper) {
     let speechSynthesisConfig = SpeechSDK.SpeechConfig.fromSubscription(cogSvcSubKey, cogSvcRegion);
 
     const videoFormat = new SpeechSDK.AvatarVideoFormat();
-    let videoCropTopLeftX = 0; //document.getElementById('videoCrop').checked ? 600 : 0;
-    let videoCropBottomRightX = 1920; //document.getElementById('videoCrop').checked ? 1320 : 1920;
+    let videoCropTopLeftX = 600; //document.getElementById('videoCrop').checked ? 600 : 0;
+    let videoCropBottomRightX = 1320; //document.getElementById('videoCrop').checked ? 1320 : 1920;
     videoFormat.setCropRange(new SpeechSDK.Coordinate(videoCropTopLeftX, 0), new SpeechSDK.Coordinate(videoCropBottomRightX, 1080));
 
     const talkingAvatarCharacter = "lisa";
@@ -218,11 +216,9 @@ export function startSession(dotNetHelper) {
         });
     xhr.send();
 }
-
 export function stopSession() {
     avatarSynthesizer.close();
 }
-
 export function speak(textToSpeak) {
     avatarSynthesizer.speakTextAsync(textToSpeak).then(
         (result) => {

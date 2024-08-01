@@ -1,13 +1,15 @@
 ﻿@using Microsoft.SemanticKernel.ChatCompletion
-<h3>Feedback</h3>
-<div class="feedback-display">
-    @foreach (var message in _messages)
-    {
-        if (message.Role == AuthorRole.Assistant)
+<div class="feedback-container">
+    <h3>Feedback</h3>
+    <div class="feedback-display">
+        @foreach (var message in _messages)
         {
-            <FluentCard Width="100%" Style="margin-bottom: 10px">
-                @message.Content
-            </FluentCard>
+            if (message.Role == AuthorRole.Assistant)
+            {
+                <FluentCard Width="100%" Style="margin-bottom: 10px">
+                    @message.Content
+                </FluentCard>
+            }
         }
-    }
+    </div>
 </div>

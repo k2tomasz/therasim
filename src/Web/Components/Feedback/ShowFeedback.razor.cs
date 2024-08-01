@@ -2,7 +2,6 @@
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
-using Therasim.Web.Models;
 using Therasim.Web.Services.Interfaces;
 
 namespace Therasim.Web.Components.Feedback
@@ -12,15 +11,14 @@ namespace Therasim.Web.Components.Feedback
         [Inject] private IFeedbackService FeedbackService { get; set; } = null!;
         [Inject] private Kernel Kernel { get; set; } = null!;
         [Parameter] public Guid SessionId { get; set; }
-        private IChatCompletionService ChatCompletionService { get; set; } = null!;
-        private OpenAIPromptExecutionSettings OpenAIPromptExecutionSettings { get; set; } = null!;
-        private List<ChatMessageModel> FeedbackMessages { get; set; } = new();
+        private IChatCompletionService _chatCompletionService = null!;
+        private OpenAIPromptExecutionSettings _openAiPromptExecutionSettings = null!;
         private ChatHistory _messages = [];
 
         protected override async Task OnInitializedAsync()
         {
-            ChatCompletionService = Kernel.GetRequiredService<IChatCompletionService>();
-            OpenAIPromptExecutionSettings = new();
+            _chatCompletionService = Kernel.GetRequiredService<IChatCompletionService>();
+            _openAiPromptExecutionSettings = new();
             await LoadMessages();
         }
 
@@ -57,18 +55,28 @@ namespace Therasim.Web.Components.Feedback
             StateHasChanged();
         }
 
-        public async Task GetFeedback(ChatMessageModel message)
+        public async Task GetFeedbackForAssistantMessage(string message)
         {
-            var userName = message.IsUser ? "Student" : "Alex";
-            var userInput = $"{userName}: {message.Text}";
-            AddUserMessage(userInput); 
-            var response = await ChatCompletionService.GetChatMessageContentsAsync(_messages, OpenAIPromptExecutionSettings, Kernel);
+            var sessionMessage = $"Alex: {message}";
+            await GetFeedback(sessionMessage);
+        }
+
+        public async Task GetFeedbackForUserMessage(string message)
+        {
+            var sessionMessage = $"Student: {message}";
+            await GetFeedback(sessionMessage);
+        }
+
+        private async Task GetFeedback(string sessionMessage)
+        {
+            AddUserMessage(sessionMessage);
+            var response = await _chatCompletionService.GetChatMessageContentsAsync(_messages, _openAiPromptExecutionSettings, Kernel);
             foreach (var chatMessageContent in response)
             {
                 var newFeedback = chatMessageContent.Content;
                 if (string.IsNullOrEmpty(newFeedback)) continue;
                 AddAssistantMessage(newFeedback);
-                await FeedbackService.AddSessionFeedback(SessionId, newFeedback, userInput);
+                await FeedbackService.AddSessionFeedback(SessionId, newFeedback, sessionMessage);
             }
         }
 

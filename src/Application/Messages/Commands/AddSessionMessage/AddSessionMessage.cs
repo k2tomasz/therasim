@@ -4,7 +4,7 @@ using Therasim.Domain.Enums;
 
 namespace Therasim.Application.Messages.Commands.AddSessionMessage;
 
-public record AddSessionMessageCommand(Guid SessionId, string Content, AuthorRole Role) : IRequest<Guid>;
+public record AddSessionMessageCommand(Guid SessionId, string Content, MessageAuthorRole Role) : IRequest<Guid>;
 
 public class AddSessionMessageCommandValidator : AbstractValidator<AddSessionMessageCommand>
 {

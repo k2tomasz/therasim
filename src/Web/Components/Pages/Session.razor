@@ -1,14 +1,14 @@
 ﻿@page "/session/{sessionId:guid}"
-
 <PageTitle>Simulation</PageTitle>
 <FluentStack Style="height: 100%">
-    <div style="width: 40%; height: 100%">
-        <RunSession OnChatUpdated="HandleChatUpdated" SessionId="SessionId" />
+    <div style="width: 720px; height: 100%">
+        <RenderAvatar @ref="_renderAvatarComponent" />
+        <SessionControls OnSpeechRecognized="HandleSpeechRecognized" />
     </div>
-    <div style="width: 40%; height: 100%">
-        <RunSession OnChatUpdated="HandleChatUpdated" SessionId="SessionId"/>
+    <div style="height: 100%">
+        <ShowChat OnUserMessageSend="HandleUserMessageSend" ChatHistory="_chatHistory" />
     </div>
-    <div style="width: 40%; height: 100%">
-        <ShowFeedback @ref="FeedbackComponent" SessionId="SessionId"/>
+    <div style="height: 100%">
+        <ShowFeedback @ref="_showFeedbackComponent" SessionId="SessionId" />
     </div>
 </FluentStack>

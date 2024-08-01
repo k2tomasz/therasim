@@ -8,7 +8,7 @@ namespace Therasim.Web.Services;
 
 public class MessageService(IMediator mediator) : IMessageService
 {
-    public async Task<Guid> AddSessionMessage(Guid sessionId, string message, AuthorRole role)
+    public async Task<Guid> AddSessionMessage(Guid sessionId, string message, MessageAuthorRole role)
     {
         var addSessionMessage = new AddSessionMessageCommand(sessionId, message, role);
         return await mediator.Send(addSessionMessage);

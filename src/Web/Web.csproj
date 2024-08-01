@@ -35,9 +35,14 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Components\Session\Avatar.razor" />
+    <_ContentIncludedByDefault Remove="Components\Session\SessionControls.razor" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Components\Avatar\RenderAvatar.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Session\SessionControls.razor" />
   </ItemGroup>
 </Project>

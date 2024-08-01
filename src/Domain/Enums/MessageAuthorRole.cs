@@ -1,6 +1,6 @@
 ﻿namespace Therasim.Domain.Enums
 {
-    public enum AuthorRole
+    public enum MessageAuthorRole
     {
         System,
         Tool,
