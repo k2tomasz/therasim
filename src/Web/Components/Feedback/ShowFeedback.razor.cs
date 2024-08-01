@@ -7,7 +7,7 @@ using Therasim.Web.Services.Interfaces;
 
 namespace Therasim.Web.Components.Feedback
 {
-    public partial class Feedback : ComponentBase
+    public partial class ShowFeedback : ComponentBase
     {
         [Inject] private IFeedbackService FeedbackService { get; set; } = null!;
         [Inject] private Kernel Kernel { get; set; } = null!;

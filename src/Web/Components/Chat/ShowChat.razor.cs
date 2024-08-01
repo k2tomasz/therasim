@@ -8,9 +8,9 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Therasim.Web.Models;
 using AuthorRole = Therasim.Domain.Enums.AuthorRole;
 
-namespace Therasim.Web.Components.Session
+namespace Therasim.Web.Components.Chat
 {
-    public partial class RunSession : ComponentBase, IAsyncDisposable, IDisposable
+    public partial class ShowChat : ComponentBase, IAsyncDisposable, IDisposable
     {
         [Inject] private Services.Interfaces.IMessageService MessageService { get; set; } = null!;
         [Inject] private Kernel Kernel { get; set; } = null!;
@@ -23,7 +23,7 @@ namespace Therasim.Web.Components.Session
         private OpenAIPromptExecutionSettings _openAiPromptExecutionSettings = null!;
         private ChatHistory _messages = [];
         private IJSObjectReference? _speechModule;
-        private DotNetObjectReference<RunSession>? _objRef;
+        private DotNetObjectReference<ShowChat>? _objRef;
         private bool _isListening;
         private Icon _micIcon = new Icons.Regular.Size16.Mic();
         protected override async Task OnInitializedAsync()

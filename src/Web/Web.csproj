@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Components\Session\Avatar.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Auth0.AspNetCore.Authentication" />
     <PackageReference Include="Azure.AI.OpenAI.Assistants" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
@@ -23,5 +27,17 @@
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Session\Avatar.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\Session\Avatar.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Components\Avatar\RenderAvatar.razor" />
   </ItemGroup>
 </Project>
