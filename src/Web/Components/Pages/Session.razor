@@ -6,9 +6,9 @@
         <SessionControls OnSpeechRecognized="HandleSpeechRecognized" />
     </div>
     <div style="height: 100%">
-        <ShowChat OnUserMessageSend="HandleUserMessageSend" ChatHistory="_chatHistory" />
+        <ChatContainer @ref="_chatContainerComponent" OnUserMessageSend="HandleUserMessageSend" ChatHistory="_chatHistory" />
     </div>
     <div style="height: 100%">
-        <ShowFeedback @ref="_showFeedbackComponent" SessionId="SessionId" />
+        <FeedbackContainer @ref="_feedbackContainerComponent" SessionId="SessionId" />
     </div>
 </FluentStack>

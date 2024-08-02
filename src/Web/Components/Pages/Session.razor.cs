@@ -4,6 +4,7 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel;
 using Therasim.Domain.Enums;
 using Therasim.Web.Components.Avatar;
+using Therasim.Web.Components.Chat;
 using Therasim.Web.Components.Feedback;
 
 namespace Therasim.Web.Components.Pages
@@ -13,11 +14,13 @@ namespace Therasim.Web.Components.Pages
         [Inject] private Services.Interfaces.IMessageService MessageService { get; set; } = null!;
         [Inject] private Kernel Kernel { get; set; } = null!;
         [Parameter] public Guid SessionId { get; set; }
-        private ShowFeedback _showFeedbackComponent = null!;
+        private FeedbackContainer _feedbackContainerComponent = null!;
+        private ChatContainer _chatContainerComponent = null!;
         private RenderAvatar _renderAvatarComponent = null!;
         private IChatCompletionService _chatCompletionService = null!;
         private OpenAIPromptExecutionSettings _openAiPromptExecutionSettings = null!;
-        private ChatHistory _chatHistory = [];
+        private readonly ChatHistory _chatHistory = [];
+
         protected override async Task OnInitializedAsync()
         {
             _chatCompletionService = Kernel.GetRequiredService<IChatCompletionService>();
@@ -61,7 +64,7 @@ namespace Therasim.Web.Components.Pages
         private async Task AddUserMessage(string message)
         {
             _chatHistory.AddUserMessage(message);
-            await _showFeedbackComponent.GetFeedbackForUserMessage(message);
+            await _feedbackContainerComponent.GetFeedbackForUserMessage(message);
             await MessageService.AddSessionMessage(SessionId, message, MessageAuthorRole.User);
             StateHasChanged();
         }
@@ -70,7 +73,7 @@ namespace Therasim.Web.Components.Pages
         {
             _chatHistory.AddAssistantMessage(message);
             await _renderAvatarComponent.MakeAvatarSpeak(message);
-            await _showFeedbackComponent.GetFeedbackForAssistantMessage(message);
+            await _feedbackContainerComponent.GetFeedbackForAssistantMessage(message);
             await MessageService.AddSessionMessage(SessionId, message, MessageAuthorRole.Assistant);
             StateHasChanged();
         }
@@ -103,7 +106,7 @@ namespace Therasim.Web.Components.Pages
         private string GetSystemPrompt()
         {
             return @"
-                You are Alex, a 25-year-old recent college graduate. You have been struggling to find a job and are experiencing significant depression. Your symptoms include persistent sadness, lack of interest in activities you once enjoyed, fatigue, changes in sleep and appetite, and feelings of worthlessness. You are seeking help to understand your feelings, develop coping strategies, and improve your daily functioning.
+                You are Alex, female, a 25-year-old recent college graduate. You have been struggling to find a job and are experiencing significant depression. Your symptoms include persistent sadness, lack of interest in activities you once enjoyed, fatigue, changes in sleep and appetite, and feelings of worthlessness. You are seeking help to understand your feelings, develop coping strategies, and improve your daily functioning.
 
                 Scenario:
 

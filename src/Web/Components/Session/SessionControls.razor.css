@@ -1,0 +1,12 @@
+﻿.session-controls-container {
+    margin-top: 50px;
+    width: 100%;
+    text-align: center;
+}
+
+::deep .session-controls-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-left: 10px;
+}

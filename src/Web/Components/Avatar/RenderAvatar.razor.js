@@ -5,12 +5,26 @@ var peerConnection;
 var previousAnimationFrameTimestamp = 0;
 var remoteVideoDiv;
 var canvas;
+var transparentBackground = false;
 
-export function initializeSpeech() {
+export function initializeAvatar() {
     if (!!window.SpeechSDK) {
         SpeechSDK = window.SpeechSDK;
         console.log("SpeechSDK loaded");
     }
+
+    if (window.innerHeight < 1300) {
+        var videoContainer = document.getElementById('videoContainer');
+        var overlayImage = document.getElementById('overlayImage');
+        var canvas = document.getElementById('canvas');
+        var tmpCanvas = document.getElementById('tmpCanvas');
+
+        videoContainer.style.height = '980px';
+        overlayImage.style.height = '980px';
+        canvas.style.height = '980px';
+        tmpCanvas.style.height = '980px';
+    }
+
 }
 
 // Setup WebRTC
@@ -41,14 +55,12 @@ export function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential
         mediaPlayer.srcObject = event.streams[0];
         mediaPlayer.autoplay = true;
         document.getElementById('remoteVideo').appendChild(mediaPlayer);
-        //document.getElementById('videoLabel').hidden = true;
-        document.getElementById('overlayArea').hidden = false;
 
         if (event.track.kind === 'video') {
             mediaPlayer.playsInline = true;
             remoteVideoDiv = document.getElementById('remoteVideo');
             canvas = document.getElementById('canvas');
-            if (document.getElementById('transparentBackground').checked) {
+            if (transparentBackground == true) {
                 remoteVideoDiv.style.width = '0.1px';
                 canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
                 canvas.hidden = false;
@@ -58,11 +70,12 @@ export function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential
 
             mediaPlayer.addEventListener('play',
                 () => {
-                    if (document.getElementById('transparentBackground').checked) {
+                    if (transparentBackground == true) {
                         window.requestAnimationFrame(makeBackgroundTransparent);
                     } else {
                         remoteVideoDiv.style.width = mediaPlayer.videoWidth / 2 + 'px';
                     }
+                    document.getElementById('overlayArea').hidden = true;
                 });
         }
         else {
@@ -181,9 +194,11 @@ export function startSession(dotNetHelper) {
     let speechSynthesisConfig = SpeechSDK.SpeechConfig.fromSubscription(cogSvcSubKey, cogSvcRegion);
 
     const videoFormat = new SpeechSDK.AvatarVideoFormat();
-    let videoCropTopLeftX = 600; //document.getElementById('videoCrop').checked ? 600 : 0;
-    let videoCropBottomRightX = 1320; //document.getElementById('videoCrop').checked ? 1320 : 1920;
-    videoFormat.setCropRange(new SpeechSDK.Coordinate(videoCropTopLeftX, 0), new SpeechSDK.Coordinate(videoCropBottomRightX, 1080));
+    let videoCropTopLeftX = 600;
+    let videoCropBottomRightX = 1320;
+    let videoCropBottomRightY = window.innerHeight < 1300 ? 980 : 1080;
+    videoFormat.setCropRange(new SpeechSDK.Coordinate(videoCropTopLeftX, 0), new SpeechSDK.Coordinate(videoCropBottomRightX, videoCropBottomRightY));
+
 
     const talkingAvatarCharacter = "lisa";
     const talkingAvatarStyle = "casual-sitting";

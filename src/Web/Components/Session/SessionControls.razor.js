@@ -1,7 +1,7 @@
 var SpeechSDK;
 var recognizer;
 
-export function initializeSpeech() {
+export function initializeSpeechRecognition() {
     if (!!window.SpeechSDK) {
         SpeechSDK = window.SpeechSDK;
         console.log("SpeechSDK loaded");

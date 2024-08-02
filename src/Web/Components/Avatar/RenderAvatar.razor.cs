@@ -18,7 +18,7 @@ public partial class RenderAvatar : ComponentBase, IAsyncDisposable, IDisposable
         if (firstRender)
         {
             _avatarModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/Avatar/RenderAvatar.razor.js");
-            await _avatarModule.InvokeVoidAsync("initializeSpeech");
+            await _avatarModule.InvokeVoidAsync("initializeAvatar");
             await _avatarModule.InvokeVoidAsync("startSession", _objRef);
         }
     }
