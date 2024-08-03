@@ -2,6 +2,6 @@
     height: 100%
 }
 
-.avatar-column {
-    width: 720px;
+.session-column-hidden {
+    display: none;
 }

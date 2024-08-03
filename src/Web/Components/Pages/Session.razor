@@ -3,15 +3,12 @@
 <FluentStack Style="height: 100%">
     <div class="session-column">
         <RenderAvatar @ref="_renderAvatarComponent" />
-        <SessionControls 
-            OnSpeechRecognized="HandleSpeechRecognized" 
-            OnChatContainerHide="HandleHideChatContainer" 
-            OnFeedbackContainerHide="HandleHideFeedbackContainer" />
+        <SessionControls OnSpeechRecognized="HandleSpeechRecognized"  />
     </div>
-    <div class="session-column">
+    <div class="@_chatColumnClass">
         <ChatContainer @ref="_chatContainerComponent" OnUserMessageSend="HandleUserMessageSend" ChatHistory="_chatHistory" />
     </div>
-    <div class="session-column">
+    <div class="@_feedbackColumnClass">
         <FeedbackContainer @ref="_feedbackContainerComponent" SessionId="SessionId" />
     </div>
 </FluentStack>
