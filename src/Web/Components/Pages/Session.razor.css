@@ -1,1 +1,7 @@
-﻿
+﻿.session-column {
+    height: 100%
+}
+
+.avatar-column {
+    width: 720px;
+}

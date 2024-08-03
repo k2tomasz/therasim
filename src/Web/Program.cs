@@ -1,7 +1,5 @@
 using Microsoft.FluentUI.AspNetCore.Components;
 using Auth0.AspNetCore.Authentication;
-using Azure;
-using Azure.AI.OpenAI;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Therasim.Web.Components;

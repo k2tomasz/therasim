@@ -2,18 +2,20 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    max-width: 600px;
-    width: 100%;
-}
-.feedback-display {
-    margin-top: 20px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    border: 1px solid #ccc;
+    padding: 10px;
 }
 
-.feedback-display fluent-card {
-    padding: 20px;
+.feedback-window {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
     width: 100%;
+}
+
+.feedback-message {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
 }

@@ -78,16 +78,6 @@ namespace Therasim.Web.Components.Pages
             StateHasChanged();
         }
 
-        private async Task HandleUserMessageSend(string userMessage)
-        {
-            await ProcessUserMessage(userMessage);
-        }
-
-        private async Task HandleSpeechRecognized(string userMessage)
-        {
-            await ProcessUserMessage(userMessage);
-        }
-
         private async Task ProcessUserMessage(string? userMessage)
         {
             if (!string.IsNullOrWhiteSpace(userMessage))
@@ -101,6 +91,28 @@ namespace Therasim.Web.Components.Pages
                     await AddAssistantMessage(assistantMessage);
                 }
             }
+        }
+
+        private async Task HandleUserMessageSend(string userMessage)
+        {
+            await ProcessUserMessage(userMessage);
+        }
+
+        private async Task HandleSpeechRecognized(string userMessage)
+        {
+            await ProcessUserMessage(userMessage);
+        }
+
+        private void HandleHideChatContainer(bool obj)
+        {
+            //_class = "chat-container";
+            StateHasChanged();
+        }
+
+        private void HandleHideFeedbackContainer(bool obj)
+        {
+            //_class = "chat-container chat-container-hidden";
+            StateHasChanged();
         }
 
         private string GetSystemPrompt()
