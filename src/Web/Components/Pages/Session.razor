@@ -1,14 +1,14 @@
 ﻿@page "/session/{sessionId:guid}"
 <PageTitle>Simulation</PageTitle>
 <FluentStack Style="height: 100%">
-    <div class="session-column">
+    <div class="session-column-avatar">
         <RenderAvatar @ref="_renderAvatarComponent" />
         <SessionControls OnSpeechRecognized="HandleSpeechRecognized"  />
     </div>
-    <div class="@_chatColumnClass">
+    <div class="session-column">
         <ChatContainer @ref="_chatContainerComponent" OnUserMessageSend="HandleUserMessageSend" ChatHistory="_chatHistory" />
     </div>
-    <div class="@_feedbackColumnClass">
+    <div class="session-column">
         <FeedbackContainer @ref="_feedbackContainerComponent" SessionId="SessionId" />
     </div>
 </FluentStack>

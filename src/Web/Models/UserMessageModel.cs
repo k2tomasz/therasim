@@ -5,6 +5,6 @@ namespace Therasim.Web.Models;
 public class UserMessageModel
 {
     [Required]
-    [StringLength(500)]
+    [StringLength(1000)]
     public string? Message { get; set; } = null!;
 }

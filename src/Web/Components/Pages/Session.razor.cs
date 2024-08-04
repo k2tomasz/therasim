@@ -20,8 +20,6 @@ namespace Therasim.Web.Components.Pages
         private IChatCompletionService _chatCompletionService = null!;
         private OpenAIPromptExecutionSettings _openAiPromptExecutionSettings = null!;
         private readonly ChatHistory _chatHistory = [];
-        private string _chatColumnClass = "session-column";
-        private string _feedbackColumnClass = "session-column";
 
         protected override async Task OnInitializedAsync()
         {
@@ -103,18 +101,6 @@ namespace Therasim.Web.Components.Pages
         private async Task HandleSpeechRecognized(string userMessage)
         {
             await ProcessUserMessage(userMessage);
-        }
-
-        private void HandleHideChatContainer(bool isChatVisible)
-        {
-            _chatColumnClass = isChatVisible ? "session-column" : "session-column session-column-hidden";
-            StateHasChanged();
-        }
-
-        private void HandleHideFeedbackContainer(bool isFeedbackVisible)
-        {
-            _feedbackColumnClass = isFeedbackVisible ? "session-column" : "session-column session-column-hidden";
-            StateHasChanged();
         }
 
         private string GetSystemPrompt()

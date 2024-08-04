@@ -1,7 +1,7 @@
-﻿.session-column {
-    height: 100%
+﻿.session-column-avatar {
+    height: 100%;
 }
-
-.session-column-hidden {
-    display: none;
+.session-column {
+    height: 100%;
+    min-width: 500px;
 }
