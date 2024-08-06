@@ -6,6 +6,7 @@ var previousAnimationFrameTimestamp = 0;
 var remoteVideoDiv;
 var canvas;
 var transparentBackground = false;
+var mediaPlayer;
 
 export function initializeAvatar() {
     if (!!window.SpeechSDK) {
@@ -50,7 +51,7 @@ export function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential
             }
         }
 
-        const mediaPlayer = document.createElement(event.track.kind);
+        mediaPlayer = document.createElement(event.track.kind);
         mediaPlayer.id = event.track.kind;
         mediaPlayer.srcObject = event.streams[0];
         mediaPlayer.autoplay = true;
@@ -102,17 +103,9 @@ export function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential
         console.log("WebRTC status: " + peerConnection.iceConnectionState);
 
         if (peerConnection.iceConnectionState === 'connected') {
-            //document.getElementById('stopSession').disabled = false;
-            //document.getElementById('speak').disabled = false;
-            //document.getElementById('configuration').hidden = true;
         }
 
         if (peerConnection.iceConnectionState === 'disconnected' || peerConnection.iceConnectionState === 'failed') {
-            //document.getElementById('speak').disabled = true;
-            //document.getElementById('stopSpeaking').disabled = true;
-            //document.getElementById('stopSession').disabled = true;
-            //document.getElementById('startSession').disabled = false;
-            //document.getElementById('configuration').hidden = false;
         }
     }
 
@@ -133,14 +126,10 @@ export function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential
                 };
                 log("Unable to start avatar: " + cancellationDetails.errorDetails);
             }
-            //document.getElementById('startSession').disabled = false;
-            //document.getElementById('configuration').hidden = false;
         }
     }).catch(
         (error) => {
             console.log("[" + (new Date()).toISOString() + "] Avatar failed to start. Error: " + error);
-            //document.getElementById('startSession').disabled = false;
-            //document.getElementById('configuration').hidden = false;
         }
     );
 }
@@ -235,6 +224,7 @@ export function stopSession() {
     avatarSynthesizer.close();
 }
 export function speak(textToSpeak) {
+    mediaPlayer.muted = false;
     avatarSynthesizer.speakTextAsync(textToSpeak).then(
         (result) => {
             if (result.reason === SpeechSDK.ResultReason.SynthesizingAudioCompleted) {
