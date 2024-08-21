@@ -16,7 +16,7 @@
                       OptionText="@(p => p.Name)"
                       @bind-Value="@CreateSimulationModel.PersonaId" />
         <FluentSelect TOption="ProblemDto"
-                      Placeholder="Select problem..."
+                      Placeholder="Select condition..."
                       Items="@_psychProblems"
                       Id="problems"
                       OptionValue="@(p => p.Id.ToString())"
@@ -43,5 +43,4 @@
         </FluentSelect>
         <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" IconStart="@(new Icons.Regular.Size16.Add())">Create</FluentButton>
     </FluentStack>
-    <!-- ... -->
 </EditForm>

@@ -3,12 +3,54 @@
 <FluentStack Style="height: 100%">
     <div class="session-column-avatar">
         <RenderAvatar @ref="_renderAvatarComponent" />
-        <SessionControls OnSpeechRecognized="HandleSpeechRecognized"  />
     </div>
     <div class="session-column">
-        <ChatContainer @ref="_chatContainerComponent" OnUserMessageSend="HandleUserMessageSend" ChatHistory="_chatHistory" />
+        <ChatContainer @ref="_chatContainerComponent" OnUserMessageSend="HandleUserMessageSend" OnSpeechRecognized="HandleSpeechRecognized" ChatHistory="_chatHistory" />
     </div>
     <div class="session-column">
         <FeedbackContainer @ref="_feedbackContainerComponent" SessionId="SessionId" />
     </div>
 </FluentStack>
+
+@* <FluentGrid Spacing="20" OnBreakpointEnter="@OnBreakpointEnterHandler" AdaptiveRendering="true" Justify="JustifyContent.FlexStart" Style="">
+    <FluentGridItem xs="12">
+        <div class="card">
+            xs="12"
+        </div>
+    </FluentGridItem>
+    <FluentGridItem xs="12" sm="6" HiddenWhen="GridItemHidden.SmAndDown">
+        <div class="card">
+            xs="12" sm="6" Hidden="SmAndDown"
+        </div>
+    </FluentGridItem>
+    <FluentGridItem xs="12" sm="6">
+        <div class="card">
+            xs="12" sm="6"
+        </div>
+    </FluentGridItem>
+    <FluentGridItem xs="6" sm="3">
+        <div class="card">
+            xs="6" sm="3"
+        </div>
+    </FluentGridItem>
+    <FluentGridItem xs="6" sm="3">
+        <div class="card">
+            xs="6" sm="3"
+        </div>
+    </FluentGridItem>
+    <FluentGridItem xs="6" sm="3">
+        <div class="card">
+            xs="6" sm="3"
+        </div>
+    </FluentGridItem>
+    <FluentGridItem xs="6" sm="3">
+        <div class="card">
+            xs="6" sm="3"
+        </div>
+    </FluentGridItem>
+    <FluentGridItem xs="3">
+        <div class="card">
+            xs="3"
+        </div>
+    </FluentGridItem>
+</FluentGrid> *@

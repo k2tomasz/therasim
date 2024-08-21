@@ -47,4 +47,15 @@ public partial class ListSimulations : ComponentBase
         Simulations = await SimulationService.GetSimulations(UserId);
         StateHasChanged();
     }
+
+    private async Task DeleteSimulation(SimulationDto context)
+    {
+        var removed = await SimulationService.DeleteSimulation(context.Id);
+        
+        if (removed)
+        {
+            Simulations = Simulations.Where(x=>x.Id != context.Id);
+            StateHasChanged();
+        }
+    }
 }

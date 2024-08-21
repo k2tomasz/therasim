@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel;
@@ -159,6 +160,12 @@ namespace Therasim.Web.Components.Pages
                 Use these guidelines to simulate a realistic and emotionally engaging therapy session as Alex, helping the psychology student practice their therapeutic skills.
                 ";
 
+        }
+
+        private void OnBreakpointEnterHandler(GridItemSize obj)
+        {
+            return;
+            //throw new NotImplementedException();
         }
     }
 

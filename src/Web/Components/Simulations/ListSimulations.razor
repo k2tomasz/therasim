@@ -1,7 +1,7 @@
 ﻿<h3 style="margin-top: 20px;">Simulations</h3>
 <FluentDataGrid Items="@Simulations" style="width: 100%">
     <PropertyColumn Property="@(p => p.Persona)" Width="300px"/>
-    <PropertyColumn Property="@(p => p.Problem)"/>
+    <PropertyColumn Title="Condition" Property="@(p => p.Problem)"/>
     <PropertyColumn Property="@(p => p.Skill)" />
     <PropertyColumn Title="Feedback" Property="@(p => p.FeedbackType)" />
     <PropertyColumn Property="@(p => p.Language)" />
@@ -14,5 +14,6 @@
         {
             <FluentButton @onclick="@(() => StartSimulation(context))" IconStart="@(new Icons.Regular.Size16.ChatMultiple())">Start</FluentButton>
         }
+        <FluentButton Color="red" IconStart="@(new Icons.Regular.Size16.Delete())" OnClick="@(() => DeleteSimulation(context))">Delete</FluentButton>
     </TemplateColumn>
 </FluentDataGrid>

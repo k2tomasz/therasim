@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Therasim.Application.Simulations.Commands.CreateSimulation;
+using Therasim.Application.Simulations.Commands.DeleteSimulation;
 using Therasim.Application.Simulations.Queries.GetSimulations;
 using Therasim.Domain.Enums;
 using Therasim.Web.Models;
@@ -39,5 +40,9 @@ public class SimulationService : ISimulationService
         return await _mediator.Send(command);
     }
 
-    
+    public async Task<bool> DeleteSimulation(Guid simulationId)
+    {
+        var command = new DeleteSimulationCommand(simulationId);
+        return await _mediator.Send(command);
+    }
 }

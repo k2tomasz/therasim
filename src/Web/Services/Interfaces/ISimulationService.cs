@@ -7,4 +7,5 @@ public interface ISimulationService
 {
     Task<IQueryable<SimulationDto>> GetSimulations(string userId);
     Task<Guid> CreateSimulation(CreateSimulationModel createSimulationModel);
+    Task<bool> DeleteSimulation(Guid simulationId);
 }
