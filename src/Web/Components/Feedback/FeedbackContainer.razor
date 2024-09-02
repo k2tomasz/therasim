@@ -7,7 +7,7 @@
             if (message.Role == AuthorRole.Assistant)
             {
                 <div class="feedback-message">
-                    @message.Content
+                    <MarkdownSection Content=@message.Content/>
                 </div>
             }
         }

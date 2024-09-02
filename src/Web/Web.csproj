@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Auth0.AspNetCore.Authentication" />
     <PackageReference Include="Azure.AI.OpenAI.Assistants" />
+    <PackageReference Include="Markdig" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
     <PackageReference Include="Microsoft.Azure.SignalR" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
