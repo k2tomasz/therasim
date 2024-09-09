@@ -18,6 +18,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Feedback> Feedbacks => Set<Feedback>();
     public DbSet<Skill> Skills => Set<Skill>();
     public DbSet<Problem> Problems => Set<Problem>();
+    public DbSet<Assessment> Assessments => Set<Assessment>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

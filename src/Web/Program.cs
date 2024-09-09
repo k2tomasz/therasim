@@ -31,6 +31,7 @@ builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<Services.Interfaces.IMessageService, Services.MessageService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+builder.Services.AddScoped<IAssessmentService, AssessmentService>();
 
 builder.Services
     .AddAuth0WebAppAuthentication(options => {

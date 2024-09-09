@@ -15,7 +15,6 @@ public class SimulationService : ISimulationService
     public SimulationService(IMediator mediator)
     {
         _mediator = mediator;
-        Console.WriteLine("SimulationService created!");
     }
     public async Task<IQueryable<SimulationDto>> GetSimulations(string userId)
     {

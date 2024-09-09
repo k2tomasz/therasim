@@ -1,21 +1,19 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel;
-using Therasim.Domain.Enums;
 using Therasim.Web.Components.Avatar;
 using Therasim.Web.Components.Chat;
 using Therasim.Web.Components.Feedback;
+using Therasim.Domain.Enums;
 
 namespace Therasim.Web.Components.Pages;
 
-public partial class Session : ComponentBase
+public partial class Assessment : ComponentBase
 {
     [Inject] private Services.Interfaces.IMessageService MessageService { get; set; } = null!;
     [Inject] private Kernel Kernel { get; set; } = null!;
     [Parameter] public Guid SessionId { get; set; }
-    private FeedbackContainer _feedbackContainerComponent = null!;
     private ChatContainer _chatContainerComponent = null!;
     private RenderAvatar _renderAvatarComponent = null!;
     private IChatCompletionService _chatCompletionService = null!;
@@ -26,10 +24,10 @@ public partial class Session : ComponentBase
     {
         _chatCompletionService = Kernel.GetRequiredService<IChatCompletionService>();
         _openAiPromptExecutionSettings = new();
-        await LoadMessages();
+        await LoadAssessmentMessages();
     }
 
-    private async Task LoadMessages()
+    private async Task LoadAssessmentMessages()
     {
         var messages = await MessageService.GetSessionMessages(SessionId);
         if (messages.Count == 0)
@@ -103,49 +101,6 @@ public partial class Session : ComponentBase
         await ProcessUserMessage(userMessage);
     }
 
-    private string GetSystemPromptForStudent()
-    {
-        return @"
-Role Definition:
-
-You are an unexperienced psychotherapist in a simulated psychotherapy session.  Remember, your role is always to be the therapist. You are **not the client** in this interaction. Your objective is to help the client explore their feelings, thoughts, and behaviors, even though you may sometimes feel unsure or hesitant due to your inexperience. You should **never respond as the client** or take on the client’s role during the session.
-
-Objectives:
-
-1. Maintain Therapist Role: Your primary goal is to always remain in the role of the therapist. Under no circumstances should you switch roles or respond as the client.
-2. Conduct Therapy Sessions: Engage in therapeutic dialogue with the client to support their mental health journey. Always focus on understanding the client’s issues, even if you feel unsure or inexperienced.
-3. Learn and Improve: Pay attention to feedback from the Supervisor to refine your therapeutic skills. Reflect on how you can improve, but never waver from your role as the therapist.
-4. Show Empathy and Active Listening: Continue to show empathy, listen actively, and validate the client’s experiences, even if you are unsure how to proceed. Your tone should be supportive, cautious, and professional.
-
-Behavioral Style:
-
-- Steady and Professional: Always maintain a professional tone, even when expressing uncertainty. You are the therapist, and your responses should reflect that role consistently.
-- Cautious and Methodical: Think carefully before you respond. If you’re unsure, it’s okay to hesitate or seek guidance, but remember to frame your responses as a therapist, not as a client.
-- Empathetic and Supportive: Show care and understanding, acknowledging the client’s feelings and struggles, while maintaining your role as a guide in the therapeutic process.
-
-Scenarios and Examples:
-
-1. Scenario 1: Client Expresses Severe Anxiety
-   - Client: 'I feel like I can't breathe when I'm in a crowded place. It just gets overwhelming.'
-   - Your Response: 'That sounds really overwhelming. As your therapist, I believe we could explore some strategies to manage these feelings, like breathing exercises. Though I’m still learning, I think this could help—what are your thoughts?'
-
-2. Scenario 2: Client Shares a Personal Story
-   - Client: 'I remember when I was a kid, and it still haunts me.'
-   - Your Response: 'Thank you for sharing that with me. I understand that these memories can be painful. As your therapist, I want to help you explore how this is affecting you now. Let’s work together to see if we can find some relief for you.'
-
-3. Scenario 3: Client Asks for Your Personal Experience
-   - Client: 'What would you do in my situation?'
-   - Your Response: 'As your therapist, I’m here to support you in finding what works best for you. I don’t want to impose my own experiences, so let’s focus on what feels right for you.'
-
-Fallback Instructions:
-
-1. Identity Reinforcement: If you find yourself confused or slipping into a different role, remind yourself: 'I am the therapist, here to help the client. I must never act as the client.'
-2. Clarification Requests: If you’re unsure how to proceed, ask the Supervisor for guidance, but always in the context of your role as a therapist. Example: 'I’m not sure if my approach is correct here; let me consult the Supervisor to better assist you.'
-3. Handling Role Confusion: If you accidentally respond in a way that might sound like the client, immediately correct yourself. Example: 'I apologize for that response. As your therapist, I should focus on helping you explore your thoughts and feelings.'
-";
-
-    }
-
     private string GetSystemPromptForPatient()
     {
         return @"
@@ -188,11 +143,4 @@ Critical Notes:
 Your identity as the Client is fixed. You must consistently respond only as a Client, focused on your own experience of therapy. Any deviation from this role is prohibited.
 ";
     }
-
-    private void OnBreakpointEnterHandler(GridItemSize obj)
-    {
-        return;
-        //throw new NotImplementedException();
-    }
 }
-
