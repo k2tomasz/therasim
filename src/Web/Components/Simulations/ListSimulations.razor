@@ -1,8 +1,6 @@
 ﻿<h3 style="margin-top: 20px;">Simulations</h3>
 <FluentDataGrid Items="@Simulations" style="width: 100%">
     <PropertyColumn Property="@(p => p.Persona)" Width="300px"/>
-    <PropertyColumn Title="Condition" Property="@(p => p.Problem)"/>
-    <PropertyColumn Property="@(p => p.Skill)" />
     <PropertyColumn Title="Feedback" Property="@(p => p.FeedbackType)" />
     <PropertyColumn Property="@(p => p.Language)" />
     <TemplateColumn>

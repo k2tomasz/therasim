@@ -1,69 +1,59 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
+using Microsoft.AspNetCore.Components;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel;
+using Therasim.Application.Assessments.Queries.GetAssessment;
 using Therasim.Web.Components.Avatar;
 using Therasim.Web.Components.Chat;
-using Therasim.Web.Components.Feedback;
-using Therasim.Domain.Enums;
+using Therasim.Web.Services.Interfaces;
 
 namespace Therasim.Web.Components.Pages;
 
 public partial class Assessment : ComponentBase
 {
-    [Inject] private Services.Interfaces.IMessageService MessageService { get; set; } = null!;
+    [Inject] private IAssessmentService AssessmentService { get; set; } = null!;
     [Inject] private Kernel Kernel { get; set; } = null!;
-    [Parameter] public Guid SessionId { get; set; }
+    [Parameter] public Guid AssessmentId { get; set; }
     private ChatContainer _chatContainerComponent = null!;
     private RenderAvatar _renderAvatarComponent = null!;
     private IChatCompletionService _chatCompletionService = null!;
     private OpenAIPromptExecutionSettings _openAiPromptExecutionSettings = null!;
-    private readonly ChatHistory _chatHistory = [];
+    private ChatHistory _chatHistory = [];
+    private AssessmentDetailsDto _assessment = null!;
 
     protected override async Task OnInitializedAsync()
     {
         _chatCompletionService = Kernel.GetRequiredService<IChatCompletionService>();
         _openAiPromptExecutionSettings = new();
-        await LoadAssessmentMessages();
+        await LoadAssessment();
     }
 
-    private async Task LoadAssessmentMessages()
+    private async Task LoadAssessment()
     {
-        var messages = await MessageService.GetSessionMessages(SessionId);
-        if (messages.Count == 0)
+        _assessment = await AssessmentService.GetAssessment(AssessmentId);
+        if (string.IsNullOrEmpty(_assessment.ChatHistory))
         {
-            await AddSystemMessage(GetSystemPromptForPatient());
+            _chatHistory.AddSystemMessage(GetSystemPromptForPatient());
+            return;
+        }
+
+        var deserializedHistory = JsonSerializer.Deserialize<ChatHistory>(_assessment.ChatHistory);
+        if (deserializedHistory is not null)
+        {
+            _chatHistory = deserializedHistory;
         }
         else
         {
-            foreach (var messageDto in messages)
-            {
-                switch (messageDto.Role)
-                {
-                    case MessageAuthorRole.System:
-                        _chatHistory.AddSystemMessage(messageDto.Content);
-                        break;
-                    case MessageAuthorRole.User:
-                        _chatHistory.AddUserMessage(messageDto.Content);
-                        break;
-                    case MessageAuthorRole.Assistant:
-                        _chatHistory.AddAssistantMessage(messageDto.Content);
-                        break;
-                }
-            }
+            _chatHistory.AddSystemMessage(GetSystemPromptForPatient());
         }
-    }
-
-    private async Task AddSystemMessage(string message)
-    {
-        _chatHistory.AddSystemMessage(message);
-        await MessageService.AddSessionMessage(SessionId, message, MessageAuthorRole.System);
     }
 
     private async Task AddUserMessage(string message)
     {
         _chatHistory.AddUserMessage(message);
-        await MessageService.AddSessionMessage(SessionId, message, MessageAuthorRole.User);
+        await SaveChatHistory();
         StateHasChanged();
     }
 
@@ -71,7 +61,7 @@ public partial class Assessment : ComponentBase
     {
         _chatHistory.AddAssistantMessage(message);
         await _renderAvatarComponent.MakeAvatarSpeak(message);
-        await MessageService.AddSessionMessage(SessionId, message, MessageAuthorRole.Assistant);
+        await SaveChatHistory();
         StateHasChanged();
     }
 
@@ -87,8 +77,13 @@ public partial class Assessment : ComponentBase
             var assistantMessage = chatMessageContent.Content;
             if (string.IsNullOrEmpty(assistantMessage)) continue;
             await AddAssistantMessage(assistantMessage);
-            await _feedbackContainerComponent.GetFeedback(userMessage, assistantMessage);
         }
+    }
+
+    private async Task SaveChatHistory()
+    {
+        var chatHistoryJson = JsonSerializer.Serialize(_chatHistory);
+        await AssessmentService.SaveChatHistory(AssessmentId, chatHistoryJson);
     }
 
     private async Task HandleUserMessageSend(string userMessage)

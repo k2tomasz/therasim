@@ -14,8 +14,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Simulation> Simulations => Set<Simulation>();
     public DbSet<Persona> Personas => Set<Persona>();
     public DbSet<Session> Sessions => Set<Session>();
-    public DbSet<Message> Messages => Set<Message>();
-    public DbSet<Feedback> Feedbacks => Set<Feedback>();
     public DbSet<Skill> Skills => Set<Skill>();
     public DbSet<Problem> Problems => Set<Problem>();
     public DbSet<Assessment> Assessments => Set<Assessment>();

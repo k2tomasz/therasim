@@ -1,18 +1,19 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel;
-using Therasim.Domain.Enums;
 using Therasim.Web.Components.Avatar;
 using Therasim.Web.Components.Chat;
 using Therasim.Web.Components.Feedback;
+using Therasim.Web.Services.Interfaces;
 
 namespace Therasim.Web.Components.Pages;
 
 public partial class Session : ComponentBase
 {
-    [Inject] private Services.Interfaces.IMessageService MessageService { get; set; } = null!;
+    [Inject] private ISessionService SessionService { get; set; } = null!;
     [Inject] private Kernel Kernel { get; set; } = null!;
     [Parameter] public Guid SessionId { get; set; }
     private FeedbackContainer _feedbackContainerComponent = null!;
@@ -20,52 +21,38 @@ public partial class Session : ComponentBase
     private RenderAvatar _renderAvatarComponent = null!;
     private IChatCompletionService _chatCompletionService = null!;
     private OpenAIPromptExecutionSettings _openAiPromptExecutionSettings = null!;
-    private readonly ChatHistory _chatHistory = [];
+    private ChatHistory _chatHistory = [];
 
     protected override async Task OnInitializedAsync()
     {
         _chatCompletionService = Kernel.GetRequiredService<IChatCompletionService>();
         _openAiPromptExecutionSettings = new();
-        await LoadMessages();
+        await LoadSession();
     }
-
-    private async Task LoadMessages()
+    private async Task LoadSession()
     {
-        var messages = await MessageService.GetSessionMessages(SessionId);
-        if (messages.Count == 0)
+        var session = await SessionService.GetSession(SessionId);
+        if (string.IsNullOrEmpty(session.ChatHistory))
         {
-            await AddSystemMessage(GetSystemPromptForPatient());
+            _chatHistory.AddSystemMessage(GetSystemPromptForPatient());
+            return;
+        }
+
+        var deserializedHistory = JsonSerializer.Deserialize<ChatHistory>(session.ChatHistory);
+        if (deserializedHistory is not null)
+        {
+            _chatHistory = deserializedHistory;
         }
         else
         {
-            foreach (var messageDto in messages)
-            {
-                switch (messageDto.Role)
-                {
-                    case MessageAuthorRole.System:
-                        _chatHistory.AddSystemMessage(messageDto.Content);
-                        break;
-                    case MessageAuthorRole.User:
-                        _chatHistory.AddUserMessage(messageDto.Content);
-                        break;
-                    case MessageAuthorRole.Assistant:
-                        _chatHistory.AddAssistantMessage(messageDto.Content);
-                        break;
-                }
-            }
+            _chatHistory.AddSystemMessage(GetSystemPromptForPatient());
         }
-    }
-
-    private async Task AddSystemMessage(string message)
-    {
-        _chatHistory.AddSystemMessage(message);
-        await MessageService.AddSessionMessage(SessionId, message, MessageAuthorRole.System);
     }
 
     private async Task AddUserMessage(string message)
     {
         _chatHistory.AddUserMessage(message);
-        await MessageService.AddSessionMessage(SessionId, message, MessageAuthorRole.User);
+        await SaveChatHistory();
         StateHasChanged();
     }
 
@@ -73,7 +60,7 @@ public partial class Session : ComponentBase
     {
         _chatHistory.AddAssistantMessage(message);
         await _renderAvatarComponent.MakeAvatarSpeak(message);
-        await MessageService.AddSessionMessage(SessionId, message, MessageAuthorRole.Assistant);
+        await SaveChatHistory();
         StateHasChanged();
     }
 
@@ -91,6 +78,12 @@ public partial class Session : ComponentBase
             await AddAssistantMessage(assistantMessage);
             await _feedbackContainerComponent.GetFeedback(userMessage, assistantMessage);
         }
+    }
+
+    private async Task SaveChatHistory()
+    {
+        var chatHistoryJson = JsonSerializer.Serialize(_chatHistory);
+        await SessionService.SaveChatHistory(SessionId, chatHistoryJson);
     }
 
     private async Task HandleUserMessageSend(string userMessage)

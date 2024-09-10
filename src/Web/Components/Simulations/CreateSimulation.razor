@@ -1,6 +1,4 @@
 ﻿@using Therasim.Application.Personas.Queries.GetPersonas
-@using Therasim.Application.Problems.Queries.GetProblems
-@using Therasim.Application.Skills.Queries.GetSkills
 @using Therasim.Domain.Enums
 <h3>Create Therapy Simulation</h3>
 <EditForm Model="@CreateSimulationModel" OnValidSubmit="@HandleValidSubmitAsync" FormName="create_simulation_form" novalidate>
@@ -15,20 +13,6 @@
                       OptionValue="@(p => p.Id.ToString())"
                       OptionText="@(p => p.Name)"
                       @bind-Value="@CreateSimulationModel.PersonaId" />
-        <FluentSelect TOption="ProblemDto"
-                      Placeholder="Select condition..."
-                      Items="@_psychProblems"
-                      Id="problems"
-                      OptionValue="@(p => p.Id.ToString())"
-                      OptionText="@(p => p.Name)"
-                      @bind-Value="@CreateSimulationModel.ProblemId" />
-        <FluentSelect TOption="SkillDto"
-                      Placeholder="Select skill..."
-                      Items="@_skills"
-                      Id="skills"
-                      OptionValue="@(p => p.Id.ToString())"
-                      OptionText="@(p => p.Name)"
-                      @bind-Value="@CreateSimulationModel.SkillId" />
         <FluentSelect TOption="FeedbackType" Placeholder="Select feedback..." @bind-Value=@CreateSimulationModel.FeedbackType>
             @foreach (FeedbackType feedbackType in Enum.GetValues<FeedbackType>())
             {

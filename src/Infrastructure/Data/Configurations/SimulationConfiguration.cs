@@ -15,10 +15,6 @@ public class SimulationConfiguration : IEntityTypeConfiguration<Simulation>
         builder.HasOne(a => a.Persona)
             .WithMany(a => a.Simulations)
             .HasForeignKey(a => a.PersonaId);
-        builder.Property(a => a.SkillId).IsRequired();
-        builder.HasOne(a => a.Skill)
-            .WithMany(a => a.Simulations)
-            .HasForeignKey(a => a.SkillId);
         builder.Property(a => a.FeedbackType).IsRequired();
         builder.HasMany(a => a.Sessions)
             .WithOne(a => a.Simulation)

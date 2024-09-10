@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Components;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -8,50 +9,50 @@ namespace Therasim.Web.Components.Feedback
 {
     public partial class FeedbackContainer : ComponentBase
     {
-        [Inject] private IFeedbackService FeedbackService { get; set; } = null!;
+        [Inject] private ISessionService SessionService { get; set; } = null!;
         [Inject] private Kernel Kernel { get; set; } = null!;
         [Parameter] public Guid SessionId { get; set; }
         private IChatCompletionService _chatCompletionService = null!;
         private OpenAIPromptExecutionSettings _openAiPromptExecutionSettings = null!;
-        private ChatHistory _messages = [];
+        private ChatHistory _feedbackHistory = [];
 
         protected override async Task OnInitializedAsync()
         {
             _chatCompletionService = Kernel.GetRequiredService<IChatCompletionService>();
             _openAiPromptExecutionSettings = new();
-            await LoadMessages();
+            await LoadSession();
         }
 
-        private async Task LoadMessages()
+        private async Task LoadSession()
         {
-            var feedbacks = await FeedbackService.GetSessionFeedbacks(SessionId);
-            if (feedbacks.Count == 0)
+            var _session = await SessionService.GetSession(SessionId);
+            if (string.IsNullOrEmpty(_session.ChatHistory))
             {
-                AddSystemMessage(GetSystemPrompt());
+                _feedbackHistory.AddSystemMessage(GetSystemPrompt());
+                return;
+            }
+
+            var deserializedHistory = JsonSerializer.Deserialize<ChatHistory>(_session.ChatHistory);
+            if (deserializedHistory is not null)
+            {
+                _feedbackHistory = deserializedHistory;
             }
             else
             {
-                foreach (var feedbacksDto in feedbacks)
-                {
-                    AddUserMessage(feedbacksDto.Message);
-                    AddAssistantMessage(feedbacksDto.Content);
-                }
+                _feedbackHistory.AddSystemMessage(GetSystemPrompt());
             }
         }
 
-        private void AddSystemMessage(string message)
+        private async Task AddUserMessage(string message)
         {
-            _messages.AddSystemMessage(message);
+            _feedbackHistory.AddUserMessage(message);
+            await SaveFeedbackHistory();
         }
 
-        private void AddUserMessage(string message)
+        private async Task AddAssistantMessage(string message)
         {
-            _messages.AddUserMessage(message);
-        }
-
-        private void AddAssistantMessage(string message)
-        {
-            _messages.AddAssistantMessage(message);
+            _feedbackHistory.AddAssistantMessage(message);
+            await SaveFeedbackHistory();
             StateHasChanged();
         }
 
@@ -70,15 +71,20 @@ namespace Therasim.Web.Components.Feedback
         public async Task GetFeedback(string studentMessage, string clientMessage)
         {
             var sessionMessage = $"Student: {studentMessage}; Client: {clientMessage}";
-            AddUserMessage(sessionMessage);
-            var response = await _chatCompletionService.GetChatMessageContentsAsync(_messages, _openAiPromptExecutionSettings, Kernel);
+            await AddUserMessage(sessionMessage);
+            var response = await _chatCompletionService.GetChatMessageContentsAsync(_feedbackHistory, _openAiPromptExecutionSettings, Kernel);
             foreach (var chatMessageContent in response)
             {
                 var newFeedback = chatMessageContent.Content;
                 if (string.IsNullOrEmpty(newFeedback)) continue;
-                AddAssistantMessage(newFeedback);
-                await FeedbackService.AddSessionFeedback(SessionId, newFeedback, sessionMessage);
+                await AddAssistantMessage(newFeedback);
             }
+        }
+
+        private async Task SaveFeedbackHistory()
+        {
+            var feedbackHistoryJson = JsonSerializer.Serialize(_feedbackHistory);
+            await SessionService.SaveChatHistory(SessionId, feedbackHistoryJson);
         }
 
         private string GetSystemPrompt()

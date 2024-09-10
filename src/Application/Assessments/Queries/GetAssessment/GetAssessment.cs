@@ -2,11 +2,7 @@
 
 namespace Therasim.Application.Assessments.Queries.GetAssessment;
 
-public record GetAssessmentQuery : IRequest<AssessmentDetailsDto>
-{
-    public Guid AssessmentId { get; init; }
-}
-
+public record GetAssessmentQuery(Guid AssessmentId) : IRequest<AssessmentDetailsDto>;
 public class GetAssessmentQueryValidator : AbstractValidator<GetAssessmentQuery>
 {
     public GetAssessmentQueryValidator()

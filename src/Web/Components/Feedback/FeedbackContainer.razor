@@ -2,7 +2,7 @@
 <div class="feedback-container">
     <h3>Feedback</h3>
     <div class="feedback-window">
-        @foreach (var message in _messages)
+        @foreach (var message in _feedbackHistory)
         {
             if (message.Role == AuthorRole.Assistant)
             {

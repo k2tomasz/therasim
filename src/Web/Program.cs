@@ -7,7 +7,6 @@ using Microsoft.SemanticKernel;
 using Therasim.Infrastructure.Data;
 using Therasim.Web.Services;
 using Therasim.Web.Services.Interfaces;
-using Services = Therasim.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureServices(builder.Configuration);
@@ -29,8 +28,6 @@ builder.Services.AddScoped<ISimulationService, SimulationService>();
 builder.Services.AddScoped<IProblemService, ProblemService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
-builder.Services.AddScoped<Services.Interfaces.IMessageService, Services.MessageService>();
-builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IAssessmentService, AssessmentService>();
 
 builder.Services

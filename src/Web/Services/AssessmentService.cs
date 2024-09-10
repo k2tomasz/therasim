@@ -29,7 +29,7 @@ public class AssessmentService : IAssessmentService
 
     public async Task<AssessmentDetailsDto> GetAssessment(Guid assessmentId)
     {
-        var query = new GetAssessmentQuery { AssessmentId = assessmentId };
+        var query = new GetAssessmentQuery(assessmentId);
         return await _mediator.Send(query);
     }
 

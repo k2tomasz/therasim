@@ -7,8 +7,6 @@ public interface IApplicationDbContext
     DbSet<Simulation> Simulations { get; }
     DbSet<Persona> Personas { get; }
     DbSet<Session> Sessions { get; }
-    DbSet<Message> Messages { get; }
-    DbSet<Feedback> Feedbacks { get; }
     DbSet<Skill> Skills { get; }
     DbSet<Problem> Problems { get; }
     DbSet<Assessment> Assessments { get; }

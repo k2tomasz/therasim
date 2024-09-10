@@ -12,9 +12,6 @@ public class ProblemConfiguration : IEntityTypeConfiguration<Problem>
         builder.HasKey(pp => pp.Id);
         builder.Property(pp => pp.Name).IsRequired().HasMaxLength(100);
         builder.Property(pp => pp.Description).HasMaxLength(500);
-        builder.HasMany(pp => pp.Simulations)
-            .WithOne(s => s.Problem)
-            .HasForeignKey(s => s.ProblemId);
     }
 }
 

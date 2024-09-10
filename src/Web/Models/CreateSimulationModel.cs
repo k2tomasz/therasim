@@ -9,12 +9,6 @@ public class CreateSimulationModel
     [Required(ErrorMessage = "Persona is Required")]
     public string PersonaId { get; set; } = null!;
 
-    [Required(ErrorMessage = "Problem is Required")]
-    public string ProblemId { get; set; } = null!;
-
-    [Required(ErrorMessage = "Skill is Required")]
-    public string SkillId { get; set; } = null!;
-
     [Required(ErrorMessage = "Feedback is Required")]
     public string FeedbackType { get; set; } = null!;
 
