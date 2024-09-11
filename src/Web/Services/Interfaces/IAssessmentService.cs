@@ -12,4 +12,5 @@ public interface IAssessmentService
     Task<bool> SaveChatHistory(Guid assessmentId, string chatHistory);
     Task<bool> StartAssessment(Guid assessmentId);
     Task<bool> EndAssessment(Guid assessmentId);
+    Task GenerateAssessmentFeedback(Guid assessmentId);
 }

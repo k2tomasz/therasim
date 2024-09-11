@@ -72,14 +72,7 @@ public class ApplicationDbContextInitialiser
 
             };
 
-            var persona2 = new Persona
-            {
-                Name = "Emily, 65, recently retired",
-                Background = string.Empty
-            };
-
             _context.Personas.Add(persona1);
-            _context.Personas.Add(persona2);
 
             await _context.SaveChangesAsync();
         }
@@ -88,18 +81,12 @@ public class ApplicationDbContextInitialiser
         {
             var skill1 = new Skill
             {
-                Name = "Empathy",
-                Description = string.Empty
+                Name = "Emotional Mirroring",
+                Description = "Emotional mirroring is the practice of reflecting the client’s emotional state back to them, often using similar words, tone, or body language to convey understanding. This technique helps clients feel seen and heard and provides a space for them to process their emotions."
             };
 
-            var skill2 = new Skill
-            {
-                Name = "Communication",
-                Description = string.Empty
-            };
 
             _context.Skills.Add(skill1);
-            _context.Skills.Add(skill2);
 
             await _context.SaveChangesAsync();
         }

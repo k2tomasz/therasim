@@ -26,15 +26,11 @@ public class EndAssessmentCommandHandler : IRequestHandler<EndAssessmentCommand,
     public async Task<bool> Handle(EndAssessmentCommand request, CancellationToken cancellationToken)
     {
         var assessment = await _context.Assessments.FindAsync(request.AssessmentId);
-        if (assessment != null)
-        {
-            assessment.EndDate = DateTime.UtcNow;
-            await _context.SaveChangesAsync(cancellationToken);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+
+        if (assessment == null) throw new NotFoundException(request.AssessmentId.ToString(), "Assessment");
+        
+        assessment.EndDate = DateTime.UtcNow;
+        await _context.SaveChangesAsync(cancellationToken);
+        return true;
     }
 }

@@ -8,7 +8,7 @@
         {
             <FluentButton @onclick="@(() => StartAssessment(context))" IconStart="@(new Icons.Regular.Size16.ChatMultiple())">Start</FluentButton>
         }
-        else
+        else @if (!context.Completed)
         {
             <FluentButton @onclick="@(() => ContinueAssessment(context))" IconStart="@(new Icons.Regular.Size16.ChatMultiple())">Continue</FluentButton>
         }

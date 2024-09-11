@@ -7,6 +7,8 @@ using Microsoft.SemanticKernel;
 using Therasim.Infrastructure.Data;
 using Therasim.Web.Services;
 using Therasim.Web.Services.Interfaces;
+using Therasim.Application.Common.Interfaces;
+using Therasim.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureServices(builder.Configuration);
@@ -29,6 +31,7 @@ builder.Services.AddScoped<IProblemService, ProblemService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<IAssessmentService, AssessmentService>();
+builder.Services.AddTransient<ILanguageModelService, LanguageModelService>();
 
 builder.Services
     .AddAuth0WebAppAuthentication(options => {

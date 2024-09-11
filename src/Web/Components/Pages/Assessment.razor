@@ -8,6 +8,25 @@
         <ChatContainer @ref="_chatContainerComponent" OnUserMessageSend="HandleUserMessageSend" OnSpeechRecognized="HandleSpeechRecognized" ChatHistory="_chatHistory" />
     </div>
     <div class="session-column">
-        Description
+        <div class="assessment-container">
+            <h3>Assessment</h3>
+            <div class="assessment-window">
+                <div class="assessment-message">
+                    @_assessment?.SkillDescription
+                </div>
+                <div class="assessment-message">
+                    Click Finish below to end the assessment.
+                </div>
+                @if (_showGeneratingFeedbackMessage)
+                {
+                    <div class="assessment-message">
+                        Generating feedback, please wait...
+                    </div>
+                }
+            </div>
+            <div class="assessment-input-container">
+                <FluentButton Appearance="Appearance.Accent" @onclick="@(EndAssessment)" IconStart="@(new Icons.Regular.Size16.Stop())">Finish</FluentButton>
+            </div>
+        </div>
     </div>
 </FluentStack>

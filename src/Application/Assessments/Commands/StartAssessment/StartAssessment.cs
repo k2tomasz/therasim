@@ -26,15 +26,11 @@ public class StartAssessmentCommandHandler : IRequestHandler<StartAssessmentComm
     public async Task<bool> Handle(StartAssessmentCommand request, CancellationToken cancellationToken)
     {
         var assessment = await _context.Assessments.FindAsync(request.AssessmentId);
-        if (assessment != null)
-        {
-            assessment.StartDate = DateTime.UtcNow;
-            await _context.SaveChangesAsync(cancellationToken);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+
+        if (assessment == null) throw new NotFoundException(request.AssessmentId.ToString(), "Assessment");
+
+        assessment.StartDate = DateTime.UtcNow;
+        await _context.SaveChangesAsync(cancellationToken);
+        return true;
     }
 }

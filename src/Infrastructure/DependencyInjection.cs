@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Therasim.Infrastructure.Data.Interceptors;
-using Microsoft.Extensions.Options;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -32,9 +31,7 @@ public static class DependencyInjection
         // }, ServiceLifetime.Transient);
 
         services.AddTransient<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
-
         services.AddTransient<ApplicationDbContextInitialiser>();
-
         services.AddSingleton(TimeProvider.System);
 
         return services;

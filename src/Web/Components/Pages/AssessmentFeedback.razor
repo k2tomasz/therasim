@@ -1,0 +1,20 @@
+﻿@page "/assessment/{assessmentId:guid}/feedback"
+<PageTitle>Assessment Feedback</PageTitle>
+<FluentStack Style="height: 100%">
+    <div class="session-column">
+        <ChatContainer @ref="_chatContainerComponent" ChatHistory="_chatHistory" ReadOnly="true"  />
+    </div>
+    <div class="session-column">
+        <div class="feedback-container">
+            <h3>Feedback</h3>
+            <div class="feedback-window">
+                <div class="feedback-message">
+                    @if (_assessment?.Feedback != null)
+                    {
+                        <MarkdownSection Content=@_assessment.Feedback />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</FluentStack>

@@ -12,6 +12,7 @@ namespace Therasim.Web.Components.Chat
         [Parameter] public EventCallback<string> OnUserMessageSend { get; set; }
         [Parameter] public EventCallback<string> OnSpeechRecognized { get; set; }
         [Parameter] public ChatHistory ChatHistory { get; set; } = [];
+        [Parameter] public bool ReadOnly { get; set; } = false;
         [SupplyParameterFromForm] private UserMessageModel UserMessageModel { get; set; } = new();
         [Inject] private IJSRuntime JS { get; set; } = null!;
         private DotNetObjectReference<ChatContainer>? _objRef;
@@ -26,7 +27,7 @@ namespace Therasim.Web.Components.Chat
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender)
+            if (firstRender && !ReadOnly)
             {
                 _speechModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/Chat/ChatContainer.razor.js");
                 await _speechModule.InvokeVoidAsync("initializeSpeechRecognition");

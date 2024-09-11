@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Therasim.Application.Assessments.Commands.CreateAssessment;
 using Therasim.Application.Assessments.Commands.EndAssessment;
+using Therasim.Application.Assessments.Commands.GenerateAssessmentFeedback;
 using Therasim.Application.Assessments.Commands.SaveAssessmentChatHistory;
 using Therasim.Application.Assessments.Commands.StartAssessment;
 using Therasim.Application.Assessments.Queries.GetAssessment;
@@ -62,5 +63,11 @@ public class AssessmentService : IAssessmentService
     {
         var command = new EndAssessmentCommand { AssessmentId = assessmentId };
         return await _mediator.Send(command);
+    }
+
+    public async Task GenerateAssessmentFeedback(Guid assessmentId)
+    {
+        var command = new GenerateAssessmentFeedbackCommand(assessmentId);
+        await _mediator.Send(command);
     }
 }

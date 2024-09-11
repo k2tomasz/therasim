@@ -8,7 +8,7 @@ public class AssessmentDetailsDto
     public string Skill { get; set; } = string.Empty;
     public string SkillDescription { get; set; } = string.Empty;
     public string? ChatHistory { get; set; }
-
+    public string? Feedback { get; set; }
     private class Mapping : Profile
     {
         public Mapping()
@@ -17,6 +17,7 @@ public class AssessmentDetailsDto
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id))
                 .ForMember(d => d.Skill, opt => opt.MapFrom(s => s.Skill.Name))
                 .ForMember(d => d.SkillDescription, opt => opt.MapFrom(s => s.Skill.Description))
+                .ForMember(d => d.Feedback, opt => opt.MapFrom(s => s.Feedback))
                 .ForMember(d => d.ChatHistory, opt => opt.MapFrom(s => s.ChatHistory));
         }
     }
