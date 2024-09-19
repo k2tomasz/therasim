@@ -25,7 +25,7 @@
                 }
             </div>
             <div class="assessment-input-container">
-                <FluentButton Appearance="Appearance.Accent" @onclick="@(EndAssessment)" IconStart="@(new Icons.Regular.Size16.Stop())">Finish</FluentButton>
+                <FluentButton Disabled="_showGeneratingFeedbackMessage" Appearance="Appearance.Accent" @onclick="@(EndAssessment)" IconStart="@(new Icons.Regular.Size16.Stop())">Finish</FluentButton>
             </div>
         </div>
     </div>

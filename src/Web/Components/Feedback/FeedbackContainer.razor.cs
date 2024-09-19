@@ -68,6 +68,7 @@ namespace Therasim.Web.Components.Feedback
             var sessionMessage = $"Student: {studentMessage}; Client: {clientMessage}";
             await AddUserMessage(sessionMessage);
             var response = await LanguageModelService.GetChatMessageContentsAsync(_feedbackHistory);
+            if (string.IsNullOrEmpty(response)) return;
             await AddAssistantMessage(response);
         }
 

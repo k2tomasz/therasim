@@ -15,8 +15,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Persona> Personas => Set<Persona>();
     public DbSet<Session> Sessions => Set<Session>();
     public DbSet<Skill> Skills => Set<Skill>();
-    public DbSet<Problem> Problems => Set<Problem>();
     public DbSet<Assessment> Assessments => Set<Assessment>();
+    public DbSet<AssessmentTask> AssessmentTasks => Set<AssessmentTask>();
+    public DbSet<UserAssessment> UserAssessments => Set<UserAssessment>();
+    public DbSet<UserAssessmentTask> UserAssessmentTasks => Set<UserAssessmentTask>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

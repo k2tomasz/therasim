@@ -1,11 +1,11 @@
 ﻿using MediatR;
-using Therasim.Application.Assessments.Commands.CreateAssessment;
 using Therasim.Application.Assessments.Commands.EndAssessment;
 using Therasim.Application.Assessments.Commands.GenerateAssessmentFeedback;
 using Therasim.Application.Assessments.Commands.SaveAssessmentChatHistory;
 using Therasim.Application.Assessments.Commands.StartAssessment;
 using Therasim.Application.Assessments.Queries.GetAssessment;
 using Therasim.Application.Assessments.Queries.GetAssessments;
+using Therasim.Application.UserAssessments.Commands.CreateUserAssessment;
 using Therasim.Domain.Enums;
 using Therasim.Web.Models;
 using Therasim.Web.Services.Interfaces;

@@ -15,12 +15,20 @@ public class LanguageModelService(Kernel kernel) : ILanguageModelService
     public async Task<string> GetChatMessageContentsAsync(ChatHistory chatHistory)
     {
         StringBuilder sb = new();
-        var response = await _chatCompletionService.GetChatMessageContentsAsync(chatHistory, _openAiPromptExecutionSettings, kernel);
-        foreach (var chatMessage in response)
+        try
         {
-            var chatMessageContent = chatMessage.Content;
-            if (string.IsNullOrEmpty(chatMessageContent)) continue;
-            sb.AppendJoin('.',chatMessageContent);
+            var response = await _chatCompletionService.GetChatMessageContentsAsync(chatHistory, _openAiPromptExecutionSettings, kernel);
+            foreach (var chatMessage in response)
+            {
+                var chatMessageContent = chatMessage.Content;
+                if (string.IsNullOrEmpty(chatMessageContent)) continue;
+                sb.AppendJoin('.', chatMessageContent);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return string.Empty;
         }
 
         return sb.ToString();

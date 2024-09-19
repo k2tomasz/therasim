@@ -8,8 +8,10 @@ public interface IApplicationDbContext
     DbSet<Persona> Personas { get; }
     DbSet<Session> Sessions { get; }
     DbSet<Skill> Skills { get; }
-    DbSet<Problem> Problems { get; }
     DbSet<Assessment> Assessments { get; }
+    DbSet<AssessmentTask> AssessmentTasks { get; }
+    DbSet<UserAssessment> UserAssessments { get; }
+    DbSet<UserAssessmentTask> UserAssessmentTasks { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
