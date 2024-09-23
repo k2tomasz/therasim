@@ -1,17 +1,17 @@
-﻿@page "/assessment/{assessmentId:guid}/feedback"
+﻿@page "/assessment/{userAssessmentId:guid}/feedback"
 <PageTitle>Assessment Feedback</PageTitle>
 <FluentStack Style="height: 100%">
-    <div class="session-column">
+    @* <div class="session-column">
         <ChatContainer @ref="_chatContainerComponent" ChatHistory="_chatHistory" ReadOnly="true"  />
-    </div>
+    </div> *@
     <div class="session-column">
         <div class="feedback-container">
             <h3>Feedback</h3>
             <div class="feedback-window">
                 <div class="feedback-message">
-                    @if (_assessment?.Feedback != null)
+                    @if (_userAssessment?.Feedback != null)
                     {
-                        <MarkdownSection Content=@_assessment.Feedback />
+                        <MarkdownSection Content=@_userAssessment.Feedback />
                     }
                 </div>
             </div>

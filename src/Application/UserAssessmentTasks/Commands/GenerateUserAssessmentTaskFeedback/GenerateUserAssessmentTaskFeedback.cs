@@ -2,10 +2,7 @@
 
 namespace Therasim.Application.UserAssessmentTasks.Commands.GenerateUserAssessmentTaskFeedback;
 
-public record GenerateUserAssessmentTaskFeedbackCommand : IRequest
-{
-    public Guid UserAssessmentTaskId { get; init; }
-}
+public record GenerateUserAssessmentTaskFeedbackCommand(Guid UserAssessmentTaskId) : IRequest;
 
 public class GenerateUserAssessmentTaskFeedbackCommandValidator : AbstractValidator<GenerateUserAssessmentTaskFeedbackCommand>
 {

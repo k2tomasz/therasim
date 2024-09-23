@@ -10,12 +10,12 @@ namespace Therasim.Web.Components.Pages;
 
 public partial class AssessmentFeedback : ComponentBase
 {
-    [Inject] private IAssessmentService AssessmentService { get; set; } = null!;
+    [Inject] private IUserAssessmentService UserAssessmentService { get; set; } = null!;
     [Inject] private ILanguageModelService LanguageModelService { get; set; } = null!;
-    [Parameter] public Guid AssessmentId { get; set; }
-    private ChatContainer _chatContainerComponent = null!;
+    [Parameter] public Guid UserAssessmentId { get; set; }
+    //private ChatContainer _chatContainerComponent = null!;
     private ChatHistory _chatHistory = [];
-    private AssessmentDetailsDto _assessment = null!;
+    private UserAssessmentDetailsDto _userAssessment = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -24,17 +24,17 @@ public partial class AssessmentFeedback : ComponentBase
 
     private async Task LoadAssessment()
     {
-        _assessment = await AssessmentService.GetAssessment(AssessmentId);
-        if (string.IsNullOrEmpty(_assessment.ChatHistory))
-        {
-            _chatHistory.AddSystemMessage(LanguageModelService.GetSystemPromptForPatient());
-            return;
-        }
+        _userAssessment = await UserAssessmentService.GetUserAssessment(UserAssessmentId);
+        //if (string.IsNullOrEmpty(_userAssessment.ChatHistory))
+        //{
+        //    _chatHistory.AddSystemMessage(LanguageModelService.GetSystemPromptForPatient());
+        //    return;
+        //}
 
-        var deserializedHistory = JsonSerializer.Deserialize<ChatHistory>(_assessment.ChatHistory);
-        if (deserializedHistory is not null)
-        {
-            _chatHistory = deserializedHistory;
-        }
+        //var deserializedHistory = JsonSerializer.Deserialize<ChatHistory>(_assessment.ChatHistory);
+        //if (deserializedHistory is not null)
+        //{
+        //    _chatHistory = deserializedHistory;
+        //}
     }
 }

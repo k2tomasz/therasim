@@ -3,6 +3,7 @@ using Therasim.Application.UserAssessments.Commands.CreateUserAssessment;
 using Therasim.Application.UserAssessments.Commands.GenerateUserAssessmentFeedback;
 using Therasim.Application.UserAssessments.Queries.GetUserAssessment;
 using Therasim.Application.UserAssessments.Queries.GetUserAssessments;
+using Therasim.Web.Models;
 using Therasim.Web.Services.Interfaces;
 
 namespace Therasim.Web.Services;
@@ -29,12 +30,12 @@ public class UserAssessmentService : IUserAssessmentService
         return await _mediator.Send(query);
     }
 
-    public async Task<Guid> CreateUserAssessment(string userId, Guid assessmentId)
+    public async Task<Guid> CreateUserAssessment(CreateUserAssessmentModel createUserAssessmentModel)
     {
         var command = new CreateUserAssessmentCommand
         {
-            UserId = userId,
-            AssessmentId = assessmentId,
+            UserId = createUserAssessmentModel.UserId,
+            AssessmentId = Guid.Parse(createUserAssessmentModel.AssessmentId),
         };
 
         return await _mediator.Send(command);

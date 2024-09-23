@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Therasim.Application.Assessments.Queries.GetAssessments;
-using Therasim.Domain.Enums;
 using Therasim.Web.Services.Interfaces;
 
 namespace Therasim.Web.Services;
@@ -14,10 +13,9 @@ public class AssessmentService : IAssessmentService
         _mediator = mediator;
     }
 
-    public async Task<IQueryable<AssessmentDto>> GetAssessments()
+    public async Task<IList<AssessmentDto>> GetAssessments()
     {
         var query = new GetAssessmentsQuery();
-        var result = await _mediator.Send(query);
-        return result.AsQueryable();
+        return await _mediator.Send(query);
     }
 }

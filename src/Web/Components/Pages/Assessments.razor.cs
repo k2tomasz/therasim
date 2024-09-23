@@ -5,10 +5,10 @@ namespace Therasim.Web.Components.Pages;
 
 public partial class Assessments : ComponentBase
 {
-    private ListAssessments ListAssessmentsComponent { get; set; } = null!;
+    private ListUserAssessments ListAssessmentsComponent { get; set; } = null!;
 
     private async Task HandleAssessmentCreated()
     {
-        await ListAssessmentsComponent.GetAssessments();
+        await ListAssessmentsComponent.GetUserAssessments();
     }
 }

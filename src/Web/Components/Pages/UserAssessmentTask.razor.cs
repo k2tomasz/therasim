@@ -5,19 +5,21 @@ using Therasim.Web.Components.Avatar;
 using Therasim.Web.Components.Chat;
 using Therasim.Web.Services.Interfaces;
 using Therasim.Application.Common.Interfaces;
+using Therasim.Application.UserAssessmentTasks.Queries.GetUserAssessmentTask;
 
 namespace Therasim.Web.Components.Pages;
 
-public partial class Assessment : ComponentBase
+public partial class UserAssessmentTask : ComponentBase
 {
     [Inject] private IAssessmentService AssessmentService { get; set; } = null!;
+    [Inject] private IUserAssessmentTaskService UserAssessmentTaskService { get; set; } = null!;
     [Inject] private ILanguageModelService LanguageModelService { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
-    [Parameter] public Guid AssessmentId { get; set; }
+    [Parameter] public Guid UserAssessmentId { get; set; }
     private ChatContainer _chatContainerComponent = null!;
     private RenderAvatar _renderAvatarComponent = null!;
     private ChatHistory _chatHistory = [];
-    private AssessmentDetailsDto _assessment = null!;
+    private UserAssessmentTaskDto _userAssessmentTask = null!;
     private bool _showGeneratingFeedbackMessage = false;
 
     protected override async Task OnInitializedAsync()
@@ -27,14 +29,14 @@ public partial class Assessment : ComponentBase
 
     private async Task LoadAssessment()
     {
-        _assessment = await AssessmentService.GetAssessment(AssessmentId);
-        if (string.IsNullOrEmpty(_assessment.ChatHistory))
+        _userAssessmentTask = await UserAssessmentTaskService.GetUserAssessmentTask(UserAssessmentId);
+        if (string.IsNullOrEmpty(_userAssessmentTask.ChatHistory))
         {
             _chatHistory.AddSystemMessage(LanguageModelService.GetSystemPromptForPatient());
             return;
         }
 
-        var deserializedHistory = JsonSerializer.Deserialize<ChatHistory>(_assessment.ChatHistory);
+        var deserializedHistory = JsonSerializer.Deserialize<ChatHistory>(_userAssessmentTask.ChatHistory);
         if (deserializedHistory is not null)
         {
             _chatHistory = deserializedHistory;
@@ -72,7 +74,7 @@ public partial class Assessment : ComponentBase
     private async Task SaveChatHistory()
     {
         var chatHistoryJson = JsonSerializer.Serialize(_chatHistory);
-        await AssessmentService.SaveChatHistory(AssessmentId, chatHistoryJson);
+        await UserAssessmentTaskService.SaveAssessmentTaskChatHistory(UserAssessmentId, chatHistoryJson);
     }
 
     private async Task HandleUserMessageSend(string userMessage)
@@ -90,8 +92,8 @@ public partial class Assessment : ComponentBase
         _showGeneratingFeedbackMessage = true;
         StateHasChanged();
         await SaveChatHistory();
-        await AssessmentService.EndAssessment(_assessment.Id);
-        await AssessmentService.GenerateAssessmentFeedback(_assessment.Id);
-        NavigationManager.NavigateTo($"/assessment/{_assessment.Id}/feedback");
+        await UserAssessmentTaskService.EndAssessmentTask(UserAssessmentId);
+        await UserAssessmentTaskService.GenerateAssessmentTaskFeedback(UserAssessmentId);
+        NavigationManager.NavigateTo($"/assessment/{UserAssessmentId}/feedback");
     }
 }

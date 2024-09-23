@@ -4,5 +4,5 @@ namespace Therasim.Web.Services.Interfaces;
 
 public interface IAssessmentService
 {
-    Task<IQueryable<AssessmentDto>> GetAssessments();
+    Task<IList<AssessmentDto>> GetAssessments();
 }

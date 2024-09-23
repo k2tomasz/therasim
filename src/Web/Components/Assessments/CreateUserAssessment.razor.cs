@@ -1,22 +1,19 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Therasim.Application.Personas.Queries.GetPersonas;
-using Therasim.Application.Skills.Queries.GetSkills;
+using Therasim.Application.Assessments.Queries.GetAssessments;
 using Therasim.Web.Models;
 using Therasim.Web.Services.Interfaces;
 
 namespace Therasim.Web.Components.Assessments;
 
-public partial class CreateAssessment : ComponentBase
+public partial class CreateUserAssessment : ComponentBase
 {
-    [Inject] private IPersonaService PersonaService { get; set; } = null!;
-    [Inject] private ISkillService SkillService { get; set; } = null!;
     [Inject] private IAssessmentService AssessmentService { get; set; } = null!;
+    [Inject] private IUserAssessmentService UserAssessmentService { get; set; } = null!;
     [Parameter] public EventCallback OnAssessmentCreated { get; set; }
     [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
-    [SupplyParameterFromForm] private CreateAssessmentModel CreateAssessmentModel { get; set; } = new();
-    private IList<PersonaDto> _personas = new List<PersonaDto>();
-    private IList<SkillDto> _skills = new List<SkillDto>();
+    [SupplyParameterFromForm] private CreateUserAssessmentModel CreateUserAssessmentModel { get; set; } = new();
+    private IList<AssessmentDto> _availableAssessments = new List<AssessmentDto>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -31,17 +28,16 @@ public partial class CreateAssessment : ComponentBase
                      .Select(c => c.Value)
                      .FirstOrDefault() ?? string.Empty;
 
-                CreateAssessmentModel.UserId = userId;
+                CreateUserAssessmentModel.UserId = userId;
             }
         }
 
-        _personas = await PersonaService.GetPersonas();
-        _skills = await SkillService.GetSkills();
+        _availableAssessments = await AssessmentService.GetAssessments();
     }
 
     private async Task HandleValidSubmitAsync()
     {
-        await AssessmentService.CreateAssessment(CreateAssessmentModel);
+        await UserAssessmentService.CreateUserAssessment(CreateUserAssessmentModel);
         await OnAssessmentCreated.InvokeAsync();
     }
 }

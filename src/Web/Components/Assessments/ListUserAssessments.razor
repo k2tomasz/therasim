@@ -1,0 +1,9 @@
+﻿<h3 style="margin-top: 20px;">My Assessments</h3>
+<FluentDataGrid Items="@UserAssessments" style="width: 100%">
+    <PropertyColumn Property="@(p => p.Name)"/>
+    <PropertyColumn Property="@(p => p.Description)" />
+    <PropertyColumn Property="@(p => p.Language)" />
+    <TemplateColumn>
+        <FluentButton @onclick="@(() => GoToAssessment(context))" IconStart="@(new Icons.Regular.Size20.AppsListDetail())">Details</FluentButton>
+    </TemplateColumn>
+</FluentDataGrid>

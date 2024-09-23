@@ -1,0 +1,17 @@
+﻿@using Therasim.Application.Assessments.Queries.GetAssessments
+<h3>Select Assessment</h3>
+<EditForm Model="@CreateUserAssessmentModel" OnValidSubmit="@HandleValidSubmitAsync" FormName="create_user_assessment_form" novalidate>
+    <DataAnnotationsValidator />
+    <FluentValidationSummary />
+    <FluentStack Orientation="Orientation.Horizontal">
+        <FluentSelect TOption="AssessmentDto"
+                      Placeholder="Select assessment..."
+                      Items="@_availableAssessments"
+                      Id="assessments"
+                      Required
+                      OptionValue="@(p => p.Id.ToString())"
+                      OptionText="@(p => $"{p.Name} ({p.Language})")"
+                      @bind-Value="@CreateUserAssessmentModel.AssessmentId" />
+        <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" IconStart="@(new Icons.Regular.Size16.Add())">Start</FluentButton>
+    </FluentStack>
+</EditForm>

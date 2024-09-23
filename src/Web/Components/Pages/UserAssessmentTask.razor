@@ -1,4 +1,4 @@
-﻿@page "/assessment/{assessmentId:guid}"
+﻿@page "/assessment/{userAssessmentId:guid}"
 <PageTitle>Assessment</PageTitle>
 <FluentStack Style="height: 100%">
     <div class="session-column-avatar">
@@ -12,7 +12,7 @@
             <h3>Assessment</h3>
             <div class="assessment-window">
                 <div class="assessment-message">
-                    @_assessment?.SkillDescription
+                    @_userAssessmentTask?.Objective
                 </div>
                 <div class="assessment-message">
                     Click Finish below to end the assessment.

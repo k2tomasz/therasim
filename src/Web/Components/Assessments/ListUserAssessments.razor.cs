@@ -1,16 +1,15 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Therasim.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
-using Therasim.Application.Assessments.Queries.GetAssessments;
-
+using Therasim.Application.UserAssessments.Queries.GetUserAssessments;
 namespace Therasim.Web.Components.Assessments;
 
-public partial class ListAssessments : ComponentBase
+public partial class ListUserAssessments : ComponentBase
 {
-    [Inject] private IAssessmentService AssessmentService { get; set; } = null!;
+    [Inject] private IUserAssessmentService UserAssessmentService { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
-    private IQueryable<AssessmentDto> Assessments { get; set; } = new List<AssessmentDto>().AsQueryable();
+    private IQueryable<UserAssessmentDto> UserAssessments { get; set; } = new List<UserAssessmentDto>().AsQueryable();
     private string UserId { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
@@ -26,29 +25,28 @@ public partial class ListAssessments : ComponentBase
                     .Select(c => c.Value)
                     .FirstOrDefault() ?? string.Empty;
             }
-            await GetAssessments();
+            await GetUserAssessments();
         }
     }
 
-    private async Task StartAssessment(AssessmentDto assessment)
-    {
-        await AssessmentService.StartAssessment(assessment.Id);
-        NavigationManager.NavigateTo($"/assessment/{assessment.Id}");
-    }
-
-    private void ContinueAssessment(AssessmentDto assessment)
+    private void GoToAssessment(UserAssessmentDto assessment)
     {
         NavigationManager.NavigateTo($"/assessment/{assessment.Id}");
     }
 
-    private void ViewFeedback(AssessmentDto assessment)
-    {
-        NavigationManager.NavigateTo($"/assessment/{assessment.Id}/feedback");
-    }
+    //private void ContinueAssessment(UserAssessmentDto assessment)
+    //{
+    //    NavigationManager.NavigateTo($"/assessment/{assessment.Id}");
+    //}
 
-    public async Task GetAssessments()
+    //private void ViewFeedback(UserAssessmentDto assessment)
+    //{
+    //    NavigationManager.NavigateTo($"/assessment/{assessment.Id}/feedback");
+    //}
+
+    public async Task GetUserAssessments()
     {
-        Assessments = await AssessmentService.GetAssessments(UserId);
+        UserAssessments = await UserAssessmentService.GetUserAssessments(UserId);
         StateHasChanged();
     }
 }
