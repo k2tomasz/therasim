@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.SemanticKernel.ChatCompletion;
-using Therasim.Application.Assessments.Queries.GetAssessment;
 using Therasim.Web.Components.Avatar;
 using Therasim.Web.Components.Chat;
 using Therasim.Web.Services.Interfaces;

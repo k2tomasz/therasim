@@ -10,20 +10,16 @@ public class AssessmentConfiguration : IEntityTypeConfiguration<Assessment>
     {
         builder.ToTable("Assessments");
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.UserId).IsRequired();
+        builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
         builder.Property(x => x.Language).IsRequired();
-        builder.Property(x => x.StartDate);
-        builder.Property(x => x.EndDate);
-        builder.Property(x => x.Feedback);
-        builder.Property(x => x.ChatHistory);
-        builder.Property(a => a.PersonaId).IsRequired();
-        builder.HasOne(a => a.Persona)
-            .WithMany(a => a.Assessments)
-            .HasForeignKey(a => a.PersonaId);
-        builder.Property(a => a.SkillId).IsRequired();
-        builder.HasOne(a => a.Skill)
-            .WithMany(a => a.Assessments)
-            .HasForeignKey(a => a.SkillId);
+        builder.Property(x => x.Description).IsRequired().HasMaxLength(500);
+        builder.Property(x => x.FeedbackSystemPrompt).IsRequired();
+        builder.HasMany(p => p.UserAssessments)
+            .WithOne(a => a.Assessment)
+            .HasForeignKey(a => a.AssessmentId);
+        builder.HasMany(p => p.AssessmentTasks)
+            .WithOne(a => a.Assessment)
+            .HasForeignKey(a => a.AssessmentId);
     }
 }
 

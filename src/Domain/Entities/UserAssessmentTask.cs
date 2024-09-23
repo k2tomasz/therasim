@@ -2,6 +2,7 @@
 
 public class UserAssessmentTask : BaseAuditableEntity
 {
+    public string UserId { get; set; } = null!;
     public Guid UserAssessmentId { get; set; }
     public UserAssessment UserAssessment { get; set; } = null!;
     public Guid AssessmentTaskId { get; set; }

@@ -90,27 +90,5 @@ public class ApplicationDbContextInitialiser
 
             await _context.SaveChangesAsync();
         }
-
-        if (!_context.Problems.Any())
-        {
-            var problem1 = new Problem
-            {
-                Name = "Anxiety",
-                Description = string.Empty
-            };
-
-            var problem2 = new Problem
-            {
-                Name = "Depression",
-                Description = string.Empty
-            };
-
-            _context.Problems.Add(problem1);
-            _context.Problems.Add(problem2);
-
-            await _context.SaveChangesAsync();
-        }
-
-
     }
 }

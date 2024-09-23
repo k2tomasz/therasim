@@ -2,10 +2,7 @@
 
 namespace Therasim.Application.Assessments.Queries.GetAssessments;
 
-public record GetAssessmentsQuery : IRequest<IList<AssessmentDto>>
-{
-    public string UserId { get; init; } = null!;
-}
+public record GetAssessmentsQuery : IRequest<IList<AssessmentDto>>;
 
 public class GetAssessmentsQueryValidator : AbstractValidator<GetAssessmentsQuery>
 {
@@ -28,7 +25,6 @@ public class GetAssessmentsQueryHandler : IRequestHandler<GetAssessmentsQuery, I
     public async Task<IList<AssessmentDto>> Handle(GetAssessmentsQuery request, CancellationToken cancellationToken)
     {
         var assessments = await _context.Assessments
-            .Where(a => a.UserId == request.UserId)
             .ProjectTo<AssessmentDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 

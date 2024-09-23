@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.SemanticKernel.ChatCompletion;
-using Therasim.Application.Assessments.Queries.GetAssessment;
 using Therasim.Web.Components.Chat;
 using Therasim.Web.Services.Interfaces;
 using Therasim.Application.Common.Interfaces;
+using Therasim.Application.UserAssessments.Queries.GetUserAssessment;
 
 namespace Therasim.Web.Components.Pages;
 

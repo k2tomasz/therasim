@@ -27,10 +27,11 @@ builder.Services.AddTransient((serviceProvider) => new Kernel(serviceProvider));
 
 builder.Services.AddScoped<IPersonaService, PersonaService>();
 builder.Services.AddScoped<ISimulationService, SimulationService>();
-builder.Services.AddScoped<IProblemService, ProblemService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<IAssessmentService, AssessmentService>();
+builder.Services.AddScoped<IUserAssessmentService, UserAssessmentService>();
+builder.Services.AddScoped<IUserAssessmentTaskService, UserAssessmentTaskService>();
 builder.Services.AddTransient<ILanguageModelService, LanguageModelService>();
 
 builder.Services

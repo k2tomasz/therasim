@@ -3,7 +3,7 @@
 public class AssessmentTask : BaseAuditableEntity
 {
     public string Objective { get; set; } = null!;
-    public string PersonaSystemPrompt { get; set; } = null!;
+    public string ClientSystemPrompt { get; set; } = null!;
     public string FeedbackSystemPrompt { get; set; } = null!;
     public Language Language { get; set; }
     public int? LengthInMinutes { get; set; }

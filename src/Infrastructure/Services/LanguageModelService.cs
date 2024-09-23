@@ -34,7 +34,7 @@ public class LanguageModelService(Kernel kernel) : ILanguageModelService
         return sb.ToString();
     }
 
-    public async Task<string> GenerateAssessmentFeedback(string? chatHistory)
+    public async Task<string> GenerateAssessmentFeedback(string? chatHistory, string feedbackSystemPrompt)
     {
         if (string.IsNullOrEmpty(chatHistory))
         {
@@ -64,7 +64,7 @@ public class LanguageModelService(Kernel kernel) : ILanguageModelService
         }
 
         ChatHistory chatHistoryForFeedback = new();
-        chatHistoryForFeedback.AddSystemMessage(GetSystemPromptForAssessmentFeedback());
+        chatHistoryForFeedback.AddSystemMessage(feedbackSystemPrompt);
         chatHistoryForFeedback.AddUserMessage(transcript.ToString());
         var response = await GetChatMessageContentsAsync(chatHistoryForFeedback);
 

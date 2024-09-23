@@ -26,11 +26,25 @@ public class CreateUserAssessmentCommandHandler : IRequestHandler<CreateUserAsse
 
     public async Task<Guid> Handle(CreateUserAssessmentCommand request, CancellationToken cancellationToken)
     {
+        var assessmentTasks = await _context.AssessmentTasks
+            .Where(x => x.AssessmentId == request.AssessmentId)
+            .ToArrayAsync(cancellationToken);
+
         var entity = new UserAssessment
         {
             UserId = request.UserId,
             AssessmentId = request.AssessmentId,
         };
+
+        foreach (var assessmentTask in assessmentTasks)
+        {
+            entity.UserAssessmentTasks.Add(new UserAssessmentTask
+            {
+                UserId = request.UserId,
+                AssessmentTaskId = assessmentTask.Id,
+                UserAssessment = entity,
+            });
+        }
 
         _context.UserAssessments.Add(entity);
 
