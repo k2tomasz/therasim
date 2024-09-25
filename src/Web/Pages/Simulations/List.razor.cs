@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Therasim.Web.Components.Simulations;
 
-namespace Therasim.Web.Components.Pages;
+namespace Therasim.Web.Pages.Simulations;
 
-public partial class Simulations : ComponentBase
+public partial class List : ComponentBase
 {
     private ListSimulations ListSimulationsComponent { get; set; } = null!;
 

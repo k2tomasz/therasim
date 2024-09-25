@@ -16,9 +16,9 @@ public class UserAssessmentDetailsDto
             CreateMap<UserAssessment, UserAssessmentDetailsDto>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id))
                 .ForMember(d => d.Feedback, opt => opt.MapFrom(s => s.Feedback))
-                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.Assessment.Name))
-                .ForMember(d => d.Description, opt => opt.MapFrom(s => s.Assessment.Description))
-                .ForMember(d => d.Language, opt => opt.MapFrom(s => s.Assessment.Language.ToString()));
+                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.Assessment.AssessmentLanguages.First().Name))
+                .ForMember(d => d.Description, opt => opt.MapFrom(s => s.Assessment.AssessmentLanguages.First().Description))
+                .ForMember(d => d.Language, opt => opt.MapFrom(s => s.Assessment.AssessmentLanguages.First().Language.ToString()));
         }
     }
 }

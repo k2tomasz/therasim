@@ -2,6 +2,7 @@
 
 public class AssessmentTask : BaseAuditableEntity
 {
+    public int Order { get; set; }
     public int? LengthInMinutes { get; set; }
     public int? LengthInInteractionCycles { get; set; }
     public Guid AssessmentId { get; set; }

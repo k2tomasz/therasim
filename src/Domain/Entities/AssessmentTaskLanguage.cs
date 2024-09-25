@@ -3,8 +3,7 @@ namespace Therasim.Domain.Entities;
 public class AssessmentTaskLanguage : BaseAuditableEntity
 {
     public string Name { get; set; } = null!;
-    public string Description { get; set; } = null!;
-    public string Introductions { get; set; } = null!;
+    public string Instructions { get; set; } = null!;
     public string Scenario { get; set; } = null!;
     public string Challenge { get; set; } = null!;
     public string Skills { get; set; } = null!;

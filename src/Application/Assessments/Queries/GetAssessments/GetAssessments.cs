@@ -2,7 +2,9 @@
 
 namespace Therasim.Application.Assessments.Queries.GetAssessments;
 
-public record GetAssessmentsQuery : IRequest<IList<AssessmentDto>>;
+public record GetAssessmentsQuery : IRequest<IList<AssessmentDto>>
+{
+}
 
 public class GetAssessmentsQueryValidator : AbstractValidator<GetAssessmentsQuery>
 {
@@ -25,8 +27,10 @@ public class GetAssessmentsQueryHandler : IRequestHandler<GetAssessmentsQuery, I
     public async Task<IList<AssessmentDto>> Handle(GetAssessmentsQuery request, CancellationToken cancellationToken)
     {
         var assessments = await _context.Assessments
+            .Include(a => a.AssessmentLanguages)
             .ProjectTo<AssessmentDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
+
 
         return assessments;
     }

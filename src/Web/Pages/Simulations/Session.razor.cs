@@ -3,40 +3,36 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Therasim.Web.Components.Avatar;
 using Therasim.Web.Components.Chat;
+using Therasim.Web.Components.Feedback;
 using Therasim.Web.Services.Interfaces;
 using Therasim.Application.Common.Interfaces;
-using Therasim.Application.UserAssessmentTasks.Queries.GetUserAssessmentTask;
 
-namespace Therasim.Web.Components.Pages;
+namespace Therasim.Web.Pages.Simulations;
 
-public partial class UserAssessmentTask : ComponentBase
+public partial class Session : ComponentBase
 {
-    [Inject] private IAssessmentService AssessmentService { get; set; } = null!;
-    [Inject] private IUserAssessmentTaskService UserAssessmentTaskService { get; set; } = null!;
+    [Inject] private ISessionService SessionService { get; set; } = null!;
     [Inject] private ILanguageModelService LanguageModelService { get; set; } = null!;
-    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
-    [Parameter] public Guid UserAssessmentId { get; set; }
+    [Parameter] public Guid SessionId { get; set; }
+    private FeedbackContainer _feedbackContainerComponent = null!;
     private ChatContainer _chatContainerComponent = null!;
     private RenderAvatar _renderAvatarComponent = null!;
     private ChatHistory _chatHistory = [];
-    private UserAssessmentTaskDto _userAssessmentTask = null!;
-    private bool _showGeneratingFeedbackMessage = false;
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadAssessment();
+        await LoadSession();
     }
-
-    private async Task LoadAssessment()
+    private async Task LoadSession()
     {
-        _userAssessmentTask = await UserAssessmentTaskService.GetUserAssessmentTask(UserAssessmentId);
-        if (string.IsNullOrEmpty(_userAssessmentTask.ChatHistory))
+        var session = await SessionService.GetSession(SessionId);
+        if (string.IsNullOrEmpty(session.ChatHistory))
         {
             _chatHistory.AddSystemMessage(LanguageModelService.GetSystemPromptForPatient());
             return;
         }
 
-        var deserializedHistory = JsonSerializer.Deserialize<ChatHistory>(_userAssessmentTask.ChatHistory);
+        var deserializedHistory = JsonSerializer.Deserialize<ChatHistory>(session.ChatHistory);
         if (deserializedHistory is not null)
         {
             _chatHistory = deserializedHistory;
@@ -69,12 +65,13 @@ public partial class UserAssessmentTask : ComponentBase
         var response = await LanguageModelService.GetChatMessageContentsAsync(_chatHistory);
         if (string.IsNullOrEmpty(response)) return;
         await AddAssistantMessage(response);
+        await _feedbackContainerComponent.GetFeedback(userMessage, response);
     }
 
     private async Task SaveChatHistory()
     {
         var chatHistoryJson = JsonSerializer.Serialize(_chatHistory);
-        await UserAssessmentTaskService.SaveAssessmentTaskChatHistory(UserAssessmentId, chatHistoryJson);
+        await SessionService.SaveChatHistory(SessionId, chatHistoryJson);
     }
 
     private async Task HandleUserMessageSend(string userMessage)
@@ -86,14 +83,5 @@ public partial class UserAssessmentTask : ComponentBase
     {
         await ProcessUserMessage(userMessage);
     }
-
-    private async Task EndAssessment()
-    {
-        _showGeneratingFeedbackMessage = true;
-        StateHasChanged();
-        await SaveChatHistory();
-        await UserAssessmentTaskService.EndAssessmentTask(UserAssessmentId);
-        await UserAssessmentTaskService.GenerateAssessmentTaskFeedback(UserAssessmentId);
-        NavigationManager.NavigateTo($"/assessment/{UserAssessmentId}/feedback");
-    }
 }
+

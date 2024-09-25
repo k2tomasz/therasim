@@ -1,4 +1,5 @@
 ﻿using Therasim.Domain.Entities;
+using Therasim.Domain.Enums;
 
 namespace Therasim.Application.UserAssessments.Queries.GetUserAssessments;
 
@@ -7,16 +8,18 @@ public class UserAssessmentDto
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
     public string Description { get; set; } = null!;
-    public string Language { get; set; } = null!;
+    public Language Language { get; set; }
+    public Guid NextUserAssessmentTaskId { get; set; }
     private class Mapping : Profile
     {
         public Mapping()
         {
             CreateMap<UserAssessment, UserAssessmentDto>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id))
-                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.Assessment.Name))
-                .ForMember(d => d.Description, opt => opt.MapFrom(s => s.Assessment.Description))
-                .ForMember(d => d.Language, opt => opt.MapFrom(s => s.Assessment.Language.ToString()));
+                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.Assessment.AssessmentLanguages.First().Name))
+                .ForMember(d => d.Description, opt => opt.MapFrom(s => s.Assessment.AssessmentLanguages.First().Description))
+                .ForMember(d => d.Language, opt => opt.MapFrom(s => s.Language.ToString()))
+                .ForMember(d => d.NextUserAssessmentTaskId, opt => opt.MapFrom(s => s.UserAssessmentTasks.First().Id));
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Therasim.Infrastructure.Data.Configurations
             builder.Property(al => al.Description)
                 .IsRequired();
 
-            builder.Property(al => al.Introductions)
+            builder.Property(al => al.Instructions)
                 .IsRequired();
 
             builder.Property(al => al.FeedbackSystemPrompt)

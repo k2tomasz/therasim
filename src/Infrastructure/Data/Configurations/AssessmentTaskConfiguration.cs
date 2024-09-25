@@ -10,17 +10,7 @@ public class AssessmentTaskConfiguration : IEntityTypeConfiguration<AssessmentTa
     {
         builder.HasKey(at => at.Id);
 
-        builder.Property(at => at.Objective)
-            .IsRequired()
-            .HasMaxLength(500);
-
-        builder.Property(at => at.ClientSystemPrompt)
-            .IsRequired();
-
-        builder.Property(at => at.FeedbackSystemPrompt)
-            .IsRequired();
-
-        builder.Property(at => at.Language)
+        builder.Property(at => at.Order)
             .IsRequired();
 
         builder.Property(at => at.LengthInMinutes)
@@ -35,6 +25,10 @@ public class AssessmentTaskConfiguration : IEntityTypeConfiguration<AssessmentTa
         builder.HasOne(at => at.Assessment)
             .WithMany(a => a.AssessmentTasks)
             .HasForeignKey(at => at.AssessmentId);
+
+        builder.HasMany(at => at.AssessmentTaskLanguages)
+            .WithOne(uat => uat.AssessmentTask)
+            .HasForeignKey(uat => uat.AssessmentTaskId);
 
         builder.HasMany(at => at.UserAssessmentTasks)
             .WithOne(uat => uat.AssessmentTask)

@@ -1,0 +1,31 @@
+﻿@using Therasim.Domain.Enums
+@if (_assessment != null)
+{
+    <FluentStack Orientation="Orientation.Horizontal">
+        <FluentLabel Typo="Typography.H1">@_assessment.Name</FluentLabel>
+        <FluentSelect TOption="Language" SelectedOptionChanged="LanguageChanged">
+            @foreach (Language language in Enum.GetValues<Language>())
+            {
+                <FluentOption Value=@(((int)language).ToString()) Selected=@(language == _language)>@language.ToString()</FluentOption>
+            }
+        </FluentSelect>
+    </FluentStack>
+    <FluentAccordion>
+        <FluentAccordionItem Expanded="true">
+            <HeadingTemplate>Description</HeadingTemplate>
+            <ChildContent>@_assessment.Description</ChildContent>
+        </FluentAccordionItem>
+        <FluentAccordionItem Expanded="true">
+            <HeadingTemplate>Introductions</HeadingTemplate>
+            <ChildContent>@_assessment.Instructions</ChildContent>
+        </FluentAccordionItem>
+        <FluentAccordionItem Expanded="true">
+            <HeadingTemplate>Tasks</HeadingTemplate>
+            <ChildContent>
+                <ListAssessmentTasks AssessmentId="AssessmentId" Language="_language" />
+            </ChildContent>
+        </FluentAccordionItem>
+    </FluentAccordion>
+    <FluentButton Type="ButtonType.Button" Appearance="Appearance.Accent" OnClick="StartAssessment">Add & Start First Task</FluentButton>
+    <FluentButton Type="ButtonType.Button" Appearance="Appearance.Accent" OnClick="StartAssessment">Add to My Assessments</FluentButton>
+}

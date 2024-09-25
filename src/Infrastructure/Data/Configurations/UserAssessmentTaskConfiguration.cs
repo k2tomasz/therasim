@@ -13,12 +13,6 @@ namespace Therasim.Infrastructure.Data.Configurations
             builder.Property(ua => ua.UserId)
                 .IsRequired();
 
-            builder.Property(uat => uat.UserAssessmentId)
-                .IsRequired();
-
-            builder.Property(uat => uat.AssessmentTaskId)
-                .IsRequired();
-
             builder.Property(uat => uat.StartDate)
                 .IsRequired(false);
 
@@ -28,6 +22,18 @@ namespace Therasim.Infrastructure.Data.Configurations
             builder.Property(uat => uat.Feedback);
 
             builder.Property(uat => uat.ChatHistory);
+
+            builder.Property(ua => ua.Language)
+                .IsRequired();
+
+            builder.Property(at => at.Order)
+                .IsRequired();
+
+            builder.Property(uat => uat.UserAssessmentId)
+                .IsRequired();
+
+            builder.Property(uat => uat.AssessmentTaskId)
+                .IsRequired();
 
             builder.HasOne(uat => uat.UserAssessment)
                 .WithMany(ua => ua.UserAssessmentTasks)

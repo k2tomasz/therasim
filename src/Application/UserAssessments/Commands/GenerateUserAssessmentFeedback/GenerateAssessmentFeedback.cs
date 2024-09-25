@@ -24,7 +24,7 @@ public class GenerateUserAssessmentFeedbackCommandHandler : IRequestHandler<Gene
     public async Task Handle(GenerateUserAssessmentFeedbackCommand request, CancellationToken cancellationToken)
     {
         var userAssessment = await _context.UserAssessments
-            .Include(x => x.Assessment)
+            .Include(x => x.Assessment.AssessmentLanguages.Where(l => l.Language == x.Language))
             .Where(x => x.Id == request.UserAssessmentId)
             .SingleOrDefaultAsync(cancellationToken);
 
@@ -32,7 +32,7 @@ public class GenerateUserAssessmentFeedbackCommandHandler : IRequestHandler<Gene
 
         var transcript = string.Empty;
 
-        var feedback = await _languageModelService.GenerateAssessmentFeedback(transcript, userAssessment.Assessment.FeedbackSystemPrompt);
+        var feedback = await _languageModelService.GenerateAssessmentFeedback(transcript, userAssessment.Assessment.AssessmentLanguages.First().FeedbackSystemPrompt);
 
         userAssessment.Feedback = feedback;
         await _context.SaveChangesAsync(cancellationToken);

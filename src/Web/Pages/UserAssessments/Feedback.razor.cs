@@ -1,14 +1,12 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.SemanticKernel.ChatCompletion;
-using Therasim.Web.Components.Chat;
 using Therasim.Web.Services.Interfaces;
 using Therasim.Application.Common.Interfaces;
 using Therasim.Application.UserAssessments.Queries.GetUserAssessment;
 
-namespace Therasim.Web.Components.Pages;
+namespace Therasim.Web.Pages.UserAssessments;
 
-public partial class AssessmentFeedback : ComponentBase
+public partial class Feedback : ComponentBase
 {
     [Inject] private IUserAssessmentService UserAssessmentService { get; set; } = null!;
     [Inject] private ILanguageModelService LanguageModelService { get; set; } = null!;

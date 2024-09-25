@@ -13,10 +13,7 @@ namespace Therasim.Infrastructure.Data.Configurations
             builder.Property(atl => atl.Name)
                 .IsRequired();
 
-            builder.Property(atl => atl.Description)
-                .IsRequired();
-
-            builder.Property(atl => atl.Introductions)
+            builder.Property(atl => atl.Instructions)
                 .IsRequired();
 
             builder.Property(atl => atl.Scenario)

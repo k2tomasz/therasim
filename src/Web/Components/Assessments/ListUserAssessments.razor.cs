@@ -29,24 +29,23 @@ public partial class ListUserAssessments : ComponentBase
         }
     }
 
-    private void GoToAssessment(UserAssessmentDto assessment)
-    {
-        NavigationManager.NavigateTo($"/assessment/{assessment.Id}");
-    }
-
-    //private void ContinueAssessment(UserAssessmentDto assessment)
-    //{
-    //    NavigationManager.NavigateTo($"/assessment/{assessment.Id}");
-    //}
-
-    //private void ViewFeedback(UserAssessmentDto assessment)
-    //{
-    //    NavigationManager.NavigateTo($"/assessment/{assessment.Id}/feedback");
-    //}
-
     public async Task GetUserAssessments()
     {
         UserAssessments = await UserAssessmentService.GetUserAssessments(UserId);
+        if (!UserAssessments.Any())
+        {
+            NavigationManager.NavigateTo("/assessments");
+        }
         StateHasChanged();
+    }
+
+    private void GoToAssessment(UserAssessmentDto assessment)
+    {
+        NavigationManager.NavigateTo($"/user/assessment/{assessment.Id}");
+    }
+
+    private void StartNextAssessmentTask(UserAssessmentDto context)
+    {
+        NavigationManager.NavigateTo($"/user/assessments/{context.Id}/tasks/{context.NextUserAssessmentTaskId}");
     }
 }

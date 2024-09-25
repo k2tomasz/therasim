@@ -1,0 +1,9 @@
+﻿<FluentLabel Typo="Typography.H3">Available Assessments</FluentLabel>
+<FluentDataGrid Items="@Assessments" style="width: 100%">
+    <PropertyColumn Property="@(p => p.Name)"/>
+    <PropertyColumn Property="@(p => p.Description)" />
+    <PropertyColumn Property="@(p => p.Languages)" />
+    <TemplateColumn>
+        <FluentButton @onclick="@(() => GoToAssessment(context))" IconStart="@(new Icons.Regular.Size20.AppsListDetail())">Details</FluentButton>
+    </TemplateColumn>
+</FluentDataGrid>

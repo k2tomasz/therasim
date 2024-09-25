@@ -25,13 +25,13 @@ public class GenerateUserAssessmentTaskFeedbackCommandHandler : IRequestHandler<
     public async Task Handle(GenerateUserAssessmentTaskFeedbackCommand request, CancellationToken cancellationToken)
     {
         var userAssessmentTask = await _context.UserAssessmentTasks
-            .Include(x => x.AssessmentTask)
+            .Include(x => x.AssessmentTask.AssessmentTaskLanguages.Where(l=>l.Language == x.Language))
             .Where(x => x.Id == request.UserAssessmentTaskId)
             .SingleOrDefaultAsync(cancellationToken);
 
         if (userAssessmentTask == null) throw new NotFoundException(request.UserAssessmentTaskId.ToString(), "UserAssessmentTask");
 
-        var feedback = await _languageModelService.GenerateAssessmentFeedback(userAssessmentTask.ChatHistory, userAssessmentTask.AssessmentTask.FeedbackSystemPrompt);
+        var feedback = await _languageModelService.GenerateAssessmentFeedback(userAssessmentTask.ChatHistory, userAssessmentTask.AssessmentTask.AssessmentTaskLanguages.First().FeedbackSystemPrompt);
 
         userAssessmentTask.Feedback = feedback;
         await _context.SaveChangesAsync(cancellationToken);

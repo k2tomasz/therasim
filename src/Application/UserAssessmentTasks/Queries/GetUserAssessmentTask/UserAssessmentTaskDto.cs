@@ -6,13 +6,17 @@ namespace Therasim.Application.UserAssessmentTasks.Queries.GetUserAssessmentTask
 public class UserAssessmentTaskDto
 {
     public Guid Id { get; set; }
-    public string Objective { get; set; } = null!;
+    public string Name { get; set; } = null!;
+    public string Instructions { get; set; } = null!;
+    public string Scenario { get; set; } = null!;
+    public string Challenge { get; set; } = null!;
+    public string Skills { get; set; } = null!;
+    public string ClientPersona { get; set; } = null!;
     public string ClientSystemPrompt { get; set; } = null!;
     public string FeedbackSystemPrompt { get; set; } = null!;
     public Language Language { get; set; }
     public int? LengthInMinutes { get; set; }
     public int? LengthInInteractionCycles { get; set; }
-    public Guid AssessmentId { get; set; }
     public string? Feedback { get; set; }
     public string? ChatHistory { get; set; }
 
@@ -22,9 +26,14 @@ public class UserAssessmentTaskDto
         {
             CreateMap<UserAssessmentTask, UserAssessmentTaskDto>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id))
-                .ForMember(d => d.Objective, opt => opt.MapFrom(s => s.AssessmentTask.Objective))
-                .ForMember(d => d.ClientSystemPrompt, opt => opt.MapFrom(s => s.AssessmentTask.ClientSystemPrompt))
-                .ForMember(d => d.FeedbackSystemPrompt, opt => opt.MapFrom(s => s.AssessmentTask.FeedbackSystemPrompt))
+                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().Name))
+                .ForMember(d => d.Instructions, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().Instructions))
+                .ForMember(d => d.Scenario, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().Scenario))
+                .ForMember(d => d.Challenge, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().Challenge))
+                .ForMember(d => d.Skills, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().Skills))
+                .ForMember(d => d.ClientPersona, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().ClientPersona))
+                .ForMember(d => d.ClientSystemPrompt, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().ClientSystemPrompt))
+                .ForMember(d => d.FeedbackSystemPrompt, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().FeedbackSystemPrompt))
                 .ForMember(d => d.LengthInMinutes, opt => opt.MapFrom(s => s.AssessmentTask.LengthInMinutes))
                 .ForMember(d => d.LengthInInteractionCycles, opt => opt.MapFrom(s => s.AssessmentTask.LengthInInteractionCycles))
                 .ForMember(d => d.Feedback, opt => opt.MapFrom(s => s.Feedback))

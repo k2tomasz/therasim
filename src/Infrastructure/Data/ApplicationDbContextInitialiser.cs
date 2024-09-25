@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Therasim.Domain.Entities;
+using Therasim.Domain.Enums;
 
 namespace Therasim.Infrastructure.Data;
 
@@ -62,31 +63,29 @@ public class ApplicationDbContextInitialiser
 
         // Default data
         // Seed, if necessary
-        if (!_context.Personas.Any())
+        if (!_context.Assessments.Any())
         {
-
-            var persona1 = new Persona()
+            var assessmentLanguage = new AssessmentLanguage
             {
-                Name = "Alex, 25, recent graduated collage",
-                Background = string.Empty
+                Language = Language.English,
+                Name = "TheraSim Facilitative Skills Assessment",
+                Description = "The TheraSim Facilitative Skills Assessment is an AI-driven evaluation tool designed to " +
+                              "assess psychotherapists' interpersonal effectiveness during challenging therapy moments. " +
+                              "Based on the Facilitative Interpersonal Skills (FIS) method, the assessment evaluates " +
+                              "therapists' core skills, focusing on how they handle emotionally charged scenarios such " +
+                              "as alliance ruptures or client volatility. Using standardized client simulations, " +
+                              "the assessment provides a controlled yet dynamic environment to measure the " +
+                              "therapist's ability to respond to difficult situations across several key areas: " +
+                              "empathy, verbal fluency, rupture-repair capability, and more. Performance is scored " +
+                              "without real-time feedback, to allow for an authentic assessment of the therapist’s instinctive skills.",
+                
+            }
 
+            var assessment = new Assessment
+            {
             };
 
             _context.Personas.Add(persona1);
-
-            await _context.SaveChangesAsync();
-        }
-
-        if (!_context.Skills.Any())
-        {
-            var skill1 = new Skill
-            {
-                Name = "Emotional Mirroring",
-                Description = "Emotional mirroring is the practice of reflecting the client’s emotional state back to them, often using similar words, tone, or body language to convey understanding. This technique helps clients feel seen and heard and provides a space for them to process their emotions."
-            };
-
-
-            _context.Skills.Add(skill1);
 
             await _context.SaveChangesAsync();
         }

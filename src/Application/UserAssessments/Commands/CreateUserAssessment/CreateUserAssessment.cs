@@ -1,11 +1,14 @@
 ﻿using Therasim.Application.Common.Interfaces;
 using Therasim.Domain.Entities;
+using Therasim.Domain.Enums;
+
 namespace Therasim.Application.UserAssessments.Commands.CreateUserAssessment;
 
 public record CreateUserAssessmentCommand : IRequest<Guid>
 {
     public string UserId { get; init; } = null!;
     public Guid AssessmentId { get; init; }
+    public Language Language { get; init; }
 }
 
 public class CreateAssessmentCommandValidator : AbstractValidator<CreateUserAssessmentCommand>
@@ -34,6 +37,7 @@ public class CreateUserAssessmentCommandHandler : IRequestHandler<CreateUserAsse
         {
             UserId = request.UserId,
             AssessmentId = request.AssessmentId,
+            Language = request.Language
         };
 
         foreach (var assessmentTask in assessmentTasks)
@@ -42,6 +46,7 @@ public class CreateUserAssessmentCommandHandler : IRequestHandler<CreateUserAsse
             {
                 UserId = request.UserId,
                 AssessmentTaskId = assessmentTask.Id,
+                Language = request.Language,
                 UserAssessment = entity,
             });
         }

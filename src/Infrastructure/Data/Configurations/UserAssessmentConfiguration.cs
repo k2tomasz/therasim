@@ -13,10 +13,13 @@ namespace Therasim.Infrastructure.Data.Configurations
             builder.Property(ua => ua.UserId)
                 .IsRequired();
 
-            builder.Property(ua => ua.AssessmentId)
+            builder.Property(ua => ua.Feedback);
+
+            builder.Property(ua => ua.Language)
                 .IsRequired();
 
-            builder.Property(ua => ua.Feedback);
+            builder.Property(ua => ua.AssessmentId)
+                .IsRequired();
 
             builder.HasOne(ua => ua.Assessment)
                 .WithMany(a => a.UserAssessments)

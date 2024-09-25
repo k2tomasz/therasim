@@ -24,7 +24,7 @@ public class GetUserAssessmentQueryHandler : IRequestHandler<GetUserAssessmentQu
     public async Task<UserAssessmentDetailsDto> Handle(GetUserAssessmentQuery request, CancellationToken cancellationToken)
     {
         var userAssessment = await _context.UserAssessments
-            .Include(a => a.Assessment)
+            .Include(a => a.Assessment.AssessmentLanguages.Where(l=>l.Language == a.Language))
             .Where(a => a.Id == request.UserAssessmentId)
             .ProjectTo<UserAssessmentDetailsDto>(_mapper.ConfigurationProvider)
             .SingleOrDefaultAsync(cancellationToken);
