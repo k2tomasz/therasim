@@ -24,5 +24,17 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        // Configure relationships to avoid cycles or multiple cascade paths
+        //builder.Entity<UserAssessmentTask>()
+        //    .HasOne(uat => uat.UserAssessment)
+        //    .WithMany(ua => ua.UserAssessmentTasks)
+        //    .HasForeignKey(uat => uat.UserAssessmentId)
+        //    .OnDelete(DeleteBehavior.NoAction);
+
+        //builder.Entity<UserAssessmentTask>()
+        //    .HasOne(uat => uat.AssessmentTask)
+        //    .WithMany(at => at.UserAssessmentTasks)
+        //    .HasForeignKey(uat => uat.AssessmentTaskId)
+        //    .OnDelete(DeleteBehavior.NoAction);
     }
 }

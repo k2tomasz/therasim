@@ -1,31 +1,37 @@
 ﻿@using Therasim.Domain.Enums
 @if (_assessment != null)
 {
-    <FluentStack Orientation="Orientation.Horizontal">
-        <FluentLabel Typo="Typography.H1">@_assessment.Name</FluentLabel>
-        <FluentSelect TOption="Language" SelectedOptionChanged="LanguageChanged">
-            @foreach (Language language in Enum.GetValues<Language>())
-            {
-                <FluentOption Value=@(((int)language).ToString()) Selected=@(language == _language)>@language.ToString()</FluentOption>
-            }
-        </FluentSelect>
-    </FluentStack>
-    <FluentAccordion>
-        <FluentAccordionItem Expanded="true">
-            <HeadingTemplate>Description</HeadingTemplate>
-            <ChildContent>@_assessment.Description</ChildContent>
-        </FluentAccordionItem>
-        <FluentAccordionItem Expanded="true">
-            <HeadingTemplate>Introductions</HeadingTemplate>
-            <ChildContent>@_assessment.Instructions</ChildContent>
-        </FluentAccordionItem>
-        <FluentAccordionItem Expanded="true">
-            <HeadingTemplate>Tasks</HeadingTemplate>
-            <ChildContent>
+    <FluentStack Orientation="Orientation.Vertical" Style="width: 1200px">
+        <FluentCard>
+            <FluentStack Orientation="Orientation.Vertical">
+                <FluentStack Class="assessment-name" Orientation="Orientation.Horizontal">
+                    <FluentLabel Typo="Typography.H3">@_assessment.Name</FluentLabel>
+                    <FluentSpacer/>
+                    <FluentSelect TOption="Language" SelectedOptionChanged="LanguageChanged">
+                        @foreach (Language language in Enum.GetValues<Language>())
+                        {
+                            <FluentOption Value=@(((int)language).ToString()) Selected=@(language == _language)>@language.ToString()</FluentOption>
+                        }
+                    </FluentSelect>
+                    <FluentButton Id="addAndStartButton" Type="ButtonType.Button" OnClick="AddToMyAssessments" IconStart="@(new Icons.Regular.Size20.Add())"></FluentButton>
+                    <FluentTooltip Anchor="addAndStartButton">Add to My Assessments</FluentTooltip>
+                    <FluentButton Id="addButton" Type="ButtonType.Button" OnClick="StartAssessment" IconStart="@(new Icons.Regular.Size20.ArrowStepInRight())"></FluentButton>
+                    <FluentTooltip Anchor="addButton">Add to My Assessments & Start First Task</FluentTooltip>
+                </FluentStack>
+                <p>@_assessment.Description</p>
+            </FluentStack>
+        </FluentCard>
+        <FluentCard>
+            <FluentStack Orientation="Orientation.Vertical">
+                <FluentLabel Typo="Typography.H3">Introductions</FluentLabel>
+                <p>@_assessment.Description</p>
+            </FluentStack>
+        </FluentCard>
+        <FluentCard>
+            <FluentStack Orientation="Orientation.Vertical">
+                <FluentLabel Typo="Typography.H3">Tasks</FluentLabel>
                 <ListAssessmentTasks AssessmentId="AssessmentId" Language="_language" />
-            </ChildContent>
-        </FluentAccordionItem>
-    </FluentAccordion>
-    <FluentButton Type="ButtonType.Button" Appearance="Appearance.Accent" OnClick="StartAssessment">Add & Start First Task</FluentButton>
-    <FluentButton Type="ButtonType.Button" Appearance="Appearance.Accent" OnClick="StartAssessment">Add to My Assessments</FluentButton>
+            </FluentStack>
+        </FluentCard>
+    </FluentStack>
 }

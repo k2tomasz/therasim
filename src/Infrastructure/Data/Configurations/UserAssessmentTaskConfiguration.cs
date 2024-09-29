@@ -41,6 +41,7 @@ namespace Therasim.Infrastructure.Data.Configurations
 
             builder.HasOne(uat => uat.AssessmentTask)
                 .WithMany(at => at.UserAssessmentTasks)
+                .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(uat => uat.AssessmentTaskId);
         }
     }

@@ -1,13 +1,13 @@
 ﻿@inherits LayoutComponentBase
 <FluentLayout>
-    <FluentHeader>
-        <FluentStack Orientation="Orientation.Horizontal" Width="100%">
-            TheraSim
+    <FluentHeader Height="75" Class="app-header">
+        <FluentStack Orientation="Orientation.Horizontal">
+            <img src="images/logo_white.png" height="25px" />
             <FluentSpacer />
             <Login />
         </FluentStack>
     </FluentHeader>
-    <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
+    <FluentStack Class="main" Orientation="Orientation.Horizontal">
         <NavMenu />
         <FluentBodyContent Class="body-content">
             <div class="content">
@@ -19,3 +19,4 @@
         TheraSim &copy; 2024. All rights reserved.
     </FluentFooter>
 </FluentLayout>
+<FluentTooltipProvider />

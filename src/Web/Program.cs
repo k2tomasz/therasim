@@ -9,6 +9,8 @@ using Therasim.Web.Services;
 using Therasim.Web.Services.Interfaces;
 using Therasim.Application.Common.Interfaces;
 using Therasim.Infrastructure.Services;
+using Microsoft.FluentUI.AspNetCore.Components.Components.Tooltip;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureServices(builder.Configuration);
@@ -24,12 +26,13 @@ builder.Services.AddTransient((serviceProvider) => new Kernel(serviceProvider));
 
 //builder.Services.AddSingleton(new AssistantsClient(new Uri(builder.Configuration["AzureOpenAI:Endpoint"]!), new AzureKeyCredential(builder.Configuration["AzureOpenAI:Key"]!)));
 //builder.Services.AddSingleton(new OpenAIClient(new Uri(builder.Configuration["AzureOpenAI:Endpoint"]!), new AzureKeyCredential(builder.Configuration["AzureOpenAI:Key"]!)));
-
+builder.Services.AddScoped<ITooltipService, TooltipService>();
 builder.Services.AddScoped<IPersonaService, PersonaService>();
 builder.Services.AddScoped<ISimulationService, SimulationService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<IAssessmentService, AssessmentService>();
+builder.Services.AddScoped<IAssessmentTaskService, AssessmentTaskService>();
 builder.Services.AddScoped<IUserAssessmentService, UserAssessmentService>();
 builder.Services.AddScoped<IUserAssessmentTaskService, UserAssessmentTaskService>();
 builder.Services.AddTransient<ILanguageModelService, LanguageModelService>();

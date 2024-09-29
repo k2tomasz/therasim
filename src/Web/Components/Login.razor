@@ -1,8 +1,10 @@
-﻿<AuthorizeView>
-    <Authorized>
-        <a href="Account/Logout">Log out</a>
-    </Authorized>
-    <NotAuthorized>
-        <a href="Account/Login?redirectUri=/">Log in</a>
-    </NotAuthorized>
-</AuthorizeView>
+﻿<div>
+    <AuthorizeView>
+        <Authorized>
+            <FluentNavLink Href="account/logout" Match="NavLinkMatch.All">Logout</FluentNavLink>
+        </Authorized>
+        <NotAuthorized>
+            <FluentNavLink Href="account/login?redirectUri=/" Match="NavLinkMatch.All">Login</FluentNavLink>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>

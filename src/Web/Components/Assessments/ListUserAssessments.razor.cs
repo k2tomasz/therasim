@@ -32,11 +32,12 @@ public partial class ListUserAssessments : ComponentBase
     public async Task GetUserAssessments()
     {
         UserAssessments = await UserAssessmentService.GetUserAssessments(UserId);
-        if (!UserAssessments.Any())
-        {
-            NavigationManager.NavigateTo("/assessments");
-        }
         StateHasChanged();
+    }
+
+    private void GoToAssessmentCatalog()
+    {
+        NavigationManager.NavigateTo("/assessments");
     }
 
     private void GoToAssessment(UserAssessmentDto assessment)

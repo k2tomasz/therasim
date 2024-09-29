@@ -8,7 +8,7 @@ public class UserAssessmentDto
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
     public string Description { get; set; } = null!;
-    public Language Language { get; set; }
+    public string Language { get; set; } = null!;
     public Guid NextUserAssessmentTaskId { get; set; }
     private class Mapping : Profile
     {
