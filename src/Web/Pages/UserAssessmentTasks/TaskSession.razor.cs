@@ -6,6 +6,8 @@ using Therasim.Web.Components.Chat;
 using Therasim.Web.Services.Interfaces;
 using Therasim.Application.Common.Interfaces;
 using Therasim.Application.UserAssessmentTasks.Queries.GetUserAssessmentTask;
+using Microsoft.FluentUI.AspNetCore.Components;
+using Therasim.Web.Components.UserAssessmentTasks;
 
 namespace Therasim.Web.Pages.UserAssessmentTasks;
 
@@ -15,6 +17,7 @@ public partial class TaskSession : ComponentBase
     [Inject] private IUserAssessmentTaskService UserAssessmentTaskService { get; set; } = null!;
     [Inject] private ILanguageModelService LanguageModelService { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] private IDialogService DialogService { get; set; } = null!;
     [Parameter] public Guid UserAssessmentId { get; set; }
     [Parameter] public Guid UserAssessmentTaskId { get; set; }
     private ChatContainer _chatContainerComponent = null!;
@@ -25,6 +28,7 @@ public partial class TaskSession : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         await LoadAssessment();
+        await OpenDialogAsync();
     }
 
     private async Task LoadAssessment()
@@ -93,6 +97,32 @@ public partial class TaskSession : ComponentBase
         await SaveChatHistory();
         await UserAssessmentTaskService.EndAssessmentTask(UserAssessmentTaskId);
         await UserAssessmentTaskService.GenerateAssessmentTaskFeedback(UserAssessmentTaskId);
-        NavigationManager.NavigateTo($"/assessment/{UserAssessmentId}/feedback");
+        NavigationManager.NavigateTo($"/assessments/{UserAssessmentId}/feedback");
+    }
+
+    private async Task OpenDialogAsync()
+    {
+
+        await DialogService.ShowDialogAsync<StartAssessmentTaskDialog>(_userAssessmentTask, new DialogParameters()
+        {
+            Title = "Start Assessment Task",
+            PreventDismissOnOverlayClick = true,
+            OnDialogResult = DialogService.CreateDialogCallback(this, HandleDialog),
+            PrimaryAction = "Start",
+            SecondaryAction = "Back",
+            Modal = true
+        });
+    }
+
+    private async Task HandleDialog(DialogResult result)
+    {
+        if (result.Cancelled)
+        {
+            NavigationManager.NavigateTo($"user/assessments/{UserAssessmentId}");
+            return;
+        }
+
+        await SaveChatHistory();
+        _chatContainerComponent.StartTimer(300);
     }
 }

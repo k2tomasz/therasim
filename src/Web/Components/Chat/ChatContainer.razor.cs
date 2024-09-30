@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Microsoft.SemanticKernel.ChatCompletion;
+using System.Timers;
 using Therasim.Web.Models;
 
 namespace Therasim.Web.Components.Chat
@@ -19,6 +20,9 @@ namespace Therasim.Web.Components.Chat
         private IJSObjectReference? _speechModule;
         private bool _micOn;
         private Icon _micIcon = new Icons.Regular.Size16.Mic();
+        private static System.Timers.Timer _timer = null!;
+        private string _timeRemaining = string.Empty;
+        private int _timeInSeconds { get; set; }
 
         protected override void OnInitialized()
         {
@@ -56,6 +60,32 @@ namespace Therasim.Web.Components.Chat
             var functionName = _micOn ? "startContinuousRecognitionAsync" : "stopContinuousRecognitionAsync";
             _micIcon = _micOn ? new Icons.Filled.Size16.Mic() : new Icons.Regular.Size16.Mic();
             await _speechModule.InvokeVoidAsync(functionName, _objRef);
+        }
+
+        public void StartTimer(int timeInSeconds)
+        {
+            _timeInSeconds = timeInSeconds;
+            _timer = new System.Timers.Timer(1000);
+            _timer.Elapsed += CountDownTimer;
+            _timer.Enabled = true;
+        }
+
+        private void CountDownTimer(object? source, ElapsedEventArgs e)
+        {
+            if (_timeInSeconds > 0)
+            {
+                _timeInSeconds -= 1;
+
+                var minutes = _timeInSeconds / 60;
+                var seconds = _timeInSeconds % 60;
+                var time = new TimeOnly(0, minutes, seconds);
+                _timeRemaining = time.ToString("mm:ss");
+            }
+            else
+            {
+                _timer.Enabled = false;
+            }
+            InvokeAsync(StateHasChanged);
         }
 
         async ValueTask IAsyncDisposable.DisposeAsync()

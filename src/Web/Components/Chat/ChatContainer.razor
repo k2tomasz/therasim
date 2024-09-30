@@ -1,6 +1,12 @@
 @using Microsoft.SemanticKernel.ChatCompletion
 <div class="chat-container">
-    <h3>Chat History</h3>
+    <div>
+        <FluentStack Orientation="Orientation.Horizontal">
+            <h3>Chat History</h3>
+            <FluentSpacer/>
+            <h3>@_timeRemaining</h3>
+        </FluentStack>
+    </div>
     <div class="chat-window">
         @foreach (var message in ChatHistory)
         {
