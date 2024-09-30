@@ -5,14 +5,14 @@ using Therasim.Web.Services.Interfaces;
 
 namespace Therasim.Web.Components.AssessmentTasks;
 
-public partial class ListAssessmentTasks : ComponentBase
+public partial class AssessmentTaskList : ComponentBase
 {
     [Inject] private IAssessmentTaskService AssessmentTaskService { get; set; } = null!;
     [Parameter] public Guid AssessmentId { get; set; }
     [Parameter] public Language Language { get; set; }
     private IList<AssessmentTaskDto> _assessmentTasks = new List<AssessmentTaskDto>();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         await GetAssessmentTasks();
     }

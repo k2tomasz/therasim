@@ -27,14 +27,14 @@ public class GetAssessmentQueryHandler : IRequestHandler<GetAssessmentQuery, Ass
 
     public async Task<AssessmentDetailsDto> Handle(GetAssessmentQuery request, CancellationToken cancellationToken)
     {
+
         var assessment = await _context.Assessments
             .Include(a => a.AssessmentLanguages.Where(l => l.Language == request.Language))
             .Where(a => a.Id == request.AssessmentId)
-            .ProjectTo<AssessmentDetailsDto>(_mapper.ConfigurationProvider)
             .SingleOrDefaultAsync(cancellationToken);
 
         Guard.Against.Null(assessment, nameof(assessment));
 
-        return assessment;
+        return _mapper.Map<AssessmentDetailsDto>(assessment);
     }
 }

@@ -20,8 +20,7 @@ public partial class TaskSession : ComponentBase
     private ChatContainer _chatContainerComponent = null!;
     private RenderAvatar _renderAvatarComponent = null!;
     private ChatHistory _chatHistory = [];
-    private UserAssessmentTaskDto _userAssessmentTask = null!;
-    private bool _showGeneratingFeedbackMessage = false;
+    private UserAssessmentTaskDetailsDto _userAssessmentTask = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,7 +29,7 @@ public partial class TaskSession : ComponentBase
 
     private async Task LoadAssessment()
     {
-        _userAssessmentTask = await UserAssessmentTaskService.GetUserAssessmentTask(UserAssessmentId);
+        _userAssessmentTask = await UserAssessmentTaskService.GetUserAssessmentTask(UserAssessmentTaskId);
         if (string.IsNullOrEmpty(_userAssessmentTask.ChatHistory))
         {
             _chatHistory.AddSystemMessage(LanguageModelService.GetSystemPromptForPatient());
@@ -75,7 +74,7 @@ public partial class TaskSession : ComponentBase
     private async Task SaveChatHistory()
     {
         var chatHistoryJson = JsonSerializer.Serialize(_chatHistory);
-        await UserAssessmentTaskService.SaveAssessmentTaskChatHistory(UserAssessmentId, chatHistoryJson);
+        await UserAssessmentTaskService.SaveAssessmentTaskChatHistory(UserAssessmentTaskId, chatHistoryJson);
     }
 
     private async Task HandleUserMessageSend(string userMessage)
@@ -90,11 +89,10 @@ public partial class TaskSession : ComponentBase
 
     private async Task EndAssessment()
     {
-        _showGeneratingFeedbackMessage = true;
         StateHasChanged();
         await SaveChatHistory();
-        await UserAssessmentTaskService.EndAssessmentTask(UserAssessmentId);
-        await UserAssessmentTaskService.GenerateAssessmentTaskFeedback(UserAssessmentId);
+        await UserAssessmentTaskService.EndAssessmentTask(UserAssessmentTaskId);
+        await UserAssessmentTaskService.GenerateAssessmentTaskFeedback(UserAssessmentTaskId);
         NavigationManager.NavigateTo($"/assessment/{UserAssessmentId}/feedback");
     }
 }

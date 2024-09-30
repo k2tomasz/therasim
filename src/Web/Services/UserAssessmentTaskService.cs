@@ -5,6 +5,7 @@ using Therasim.Application.UserAssessmentTasks.Commands.SaveUserAssessmentTaskCh
 using Therasim.Application.UserAssessmentTasks.Commands.StartUserAssessmentTask;
 using Therasim.Application.UserAssessmentTasks.Queries.GetNextUserAssessmentTask;
 using Therasim.Application.UserAssessmentTasks.Queries.GetUserAssessmentTask;
+using Therasim.Application.UserAssessmentTasks.Queries.GetUserAssessmentTasks;
 using Therasim.Web.Services.Interfaces;
 
 namespace Therasim.Web.Services;
@@ -18,9 +19,15 @@ public class UserAssessmentTaskService : IUserAssessmentTaskService
         _mediator = mediator;
     }
 
-    public async Task<UserAssessmentTaskDto> GetUserAssessmentTask(Guid userAssessmentTaskId)
+    public async Task<UserAssessmentTaskDetailsDto> GetUserAssessmentTask(Guid userAssessmentTaskId)
     {
         var query = new GetUserAssessmentTaskQuery(userAssessmentTaskId);
+        return await _mediator.Send(query);
+    }
+
+    public async Task<IList<UserAssessmentTaskDto>> GetUserAssessmentTasks(Guid userAssessmentId)
+    {
+        var query = new GetUserAssessmentTasksQuery(userAssessmentId);
         return await _mediator.Send(query);
     }
 

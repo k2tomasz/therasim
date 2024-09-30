@@ -28,9 +28,8 @@ public class GetAssessmentTasksQueryHandler : IRequestHandler<GetAssessmentTasks
         var assessmentTasks = await _context.AssessmentTasks
             .Include(at => at.AssessmentTaskLanguages.Where(l => l.Language == request.Language))
             .Where(at => at.AssessmentId == request.AssessmentId)
-            .ProjectTo<AssessmentTaskDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
-        return assessmentTasks;
+        return _mapper.Map<IList<AssessmentTaskDto>>(assessmentTasks);
     }
 }

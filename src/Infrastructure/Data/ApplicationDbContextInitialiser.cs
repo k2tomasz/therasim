@@ -86,15 +86,8 @@ public class ApplicationDbContextInitialiser
                 Challenge =
                     "Terapeuta musi potwierdzić doświadczenie klienta, uznać przerwanie sojuszu i pokazać skuteczną naprawę w celu przywrócenia zaufania.",
                 Skills = "Empatia, Naprawa Przerwania Sojuszu, Płynność Werbalna",
-                ClientPersona = @"
-                            - **Imię**: Alex
-                            - **Wiek**: 32 lata
-                            - **Płeć**: Kobieta
-                            - **Zawód**: Specjalistka ds. marketingu
-                            - **Pochodzenie etniczne**: Kaukaska
-                            - **Zgłaszane problemy**: Klientka czuje się niespełniona w pracy i sfrustrowana brakiem postępów w terapii. Uważa, że terapeuta nie rozumie jej kluczowych problemów i że jej obawy są lekceważone.
-                            - **Historia**: Ma historię trudności w relacjach z autorytetami i często czuje się niezrozumiana zarówno w życiu osobistym, jak i zawodowym. Przeszłe doświadczenia z ignorowaniem jej uczuć sprawiły, że jest wrażliwa na brak słyszalności i zrozumienia.
-                            "
+                ClientPersona = "- **Imię**: Alex\n- **Wiek**: 32 lata\n- **Płeć**: Kobieta\n- **Zawód**: Specjalistka ds. marketingu\n- **Pochodzenie etniczne**: Kaukaska\n- **Zgłaszane problemy**: Klientka czuje się niespełniona w pracy i sfrustrowana brakiem postępów w terapii. Uważa, że terapeuta nie rozumie jej kluczowych problemów i że jej obawy są lekceważone.\n- **Historia**: Ma historię trudności w relacjach z autorytetami i często czuje się niezrozumiana zarówno w życiu osobistym, jak i zawodowym. Przeszłe doświadczenia z ignorowaniem jej uczuć sprawiły, że jest wrażliwa na brak słyszalności i zrozumienia."
+
             };
 
             var assessmentTask1 = new AssessmentTask();
@@ -112,7 +105,7 @@ public class ApplicationDbContextInitialiser
                 Challenge =
                     "The therapist must stay calm, regulate their own emotions, and de-escalate the situation while maintaining a productive dialogue",
                 Skills = "Emotional Regulation, Warmth, Conflict Resolution",
-                ClientPersona = "- **Name**: Alex\n- **Age**: 40\n- **Gender**: Male\n- **Occupation**: IT Manager\n- **Ethnicity**: Mixed-race\n- **Presenting Issues**: Frustration with therapy, dissatisfaction with progress, underlying anxiety, possible undiagnosed anger management issues.\n- **History**: Job stress and conflicts with coworkers; limited social support, feeling isolated."
+                ClientPersona = "- **Name**: Alex\n- **Age**: 40\n- **Gender**: Male\n- **Occupation**: IT Manager\n- **Ethnicity**: Mixed-race\n- **Presenting Issues**: Frustration with therapy, dissatisfaction with progress, underlying anxiety, possible undiagnosed anger management issues.\n- **History**: Job stress and conflicts with coworkers; limited social support, feeling isolated.",
             };
 
             var assessmentTask2LanguagePl = new AssessmentTaskLanguage
@@ -124,15 +117,8 @@ public class ApplicationDbContextInitialiser
                 Challenge =
                     "Terapeuta musi zachować spokój, kontrolować własne emocje i złagodzić sytuację, jednocześnie utrzymując produktywny dialog.",
                 Skills = "Regulacja Emocji, Ciepło, Rozwiązywanie Konfliktów",
-                ClientPersona = @"
-                        - **Imię**: Alex
-                        - **Wiek**: 40 lat
-                        - **Płeć**: Mężczyzna
-                        - **Zawód**: Menedżer IT
-                        - **Grupa etniczna**: Mieszana
-                        - **Zgłaszane problemy**: Frustracja związana z terapią, niezadowolenie z postępów, ukryty lęk, możliwe niezdokumentowane problemy z kontrolą złości.
-                        - **Historia**: Stres związany z pracą i konflikty ze współpracownikami; ograniczone wsparcie społeczne, poczucie izolacji.
-                        "
+                ClientPersona = "- **Imię**: Alex\n- **Wiek**: 40 lat\n- **Płeć**: Mężczyzna\n- **Zawód**: Menedżer IT\n- **Grupa etniczna**: Mieszana\n- **Zgłaszane problemy**: Frustracja związana z terapią, niezadowolenie z postępów, ukryty lęk, możliwe niezdokumentowane problemy z kontrolą złości.\n- **Historia**: Stres związany z pracą i konflikty ze współpracownikami; ograniczone wsparcie społeczne, poczucie izolacji.",
+
             };
 
             var assessmentTask2 = new AssessmentTask();
@@ -147,7 +133,7 @@ public class ApplicationDbContextInitialiser
             {
                 Language = Language.English,
                 Name = "TheraSim Interactive Psychotherapy Skills Assessment",
-                Instructions = "### Before You Begin\n\n1. **Setup:**\n   - Ensure a quiet and comfortable environment for the assessment.\n   - Test your microphone and speakers to confirm they are working correctly.\n   - Have a reliable internet connection to avoid interruptions.\n\n2. **Familiarization:**\n   - Review the format of the client persona description, which includes demographics, presenting issues, and relevant history. Understanding this information is crucial for effectively engaging with the simulated client.\n   - Familiarize yourself with the interface, including how to start, pause, and stop the assessment tasks.",
+                Instructions = "### Before You Begin\n1. **Setup:**\n   - Ensure a quiet and comfortable environment for the assessment.\n   - Test your microphone and speakers to confirm they are working correctly.\n   - Have a reliable internet connection to avoid interruptions.\n2. **Familiarization:**\n   - Review the format of the client persona description, which includes demographics, presenting issues, and relevant history. Understanding this information is crucial for effectively engaging with the simulated client.\n   - Familiarize yourself with the interface, including how to start, pause, and stop the assessment tasks.",
                 Description =
                     "The TheraSim Interactive Psychotherapy Skills Assessment is an AI-driven evaluation tool designed " +
                     "to assess psychotherapists' interpersonal effectiveness during challenging therapy moments. " +
@@ -155,7 +141,7 @@ public class ApplicationDbContextInitialiser
                     "scenarios such as alliance ruptures or client volatility. Using standardized interactive client simulations, " +
                     "which replicate real-life conversations in a psychotherapy setting, the assessment provides a controlled " +
                     "yet dynamic environment to measure the therapist's ability to respond to difficult situations " +
-                    "across several key areas: empathy, verbal fluency, rupture-repair capability, and more.\n\n" +
+                    "across several key areas: empathy, verbal fluency, rupture-repair capability, and more.\n" +
                     "The outcome of this assessment includes a quantitative score based on expert criteria and qualitative " +
                     "feedback highlighting the therapist's strengths and areas for improvement, providing comprehensive " +
                     "insights into their interpersonal effectiveness."
@@ -166,18 +152,8 @@ public class ApplicationDbContextInitialiser
             {
                 Language = Language.Polish,
                 Name = "Interaktywny Test Umiejętności Psychoterapeutycznych TheraSim",
-                Instructions = @"
-                        ### Zanim Zaczniesz
+                Instructions = "### Zanim Zaczniesz\n1. **Przygotowanie:**\n- Upewnij się, że przebywasz w cichym i komfortowym miejscu, odpowiednim do przeprowadzenia oceny.\n- Przetestuj mikrofon i głośniki, aby upewnić się, że działają prawidłowo.\n- Zadbaj o stabilne połączenie internetowe, aby uniknąć przerw.\n2. **Zapoznanie:**\n- Zapoznaj się z formatem opisu postaci klienta, który zawiera dane demograficzne, problemy przedstawiane przez klienta oraz istotną historię. Zrozumienie tych informacji jest kluczowe dla efektywnej interakcji z symulowanym klientem.\n- Zapoznaj się z interfejsem, w tym z funkcjami uruchamiania, wstrzymywania i zatrzymywania zadań oceny.",
 
-                        1. **Przygotowanie:**
-                           - Upewnij się, że przebywasz w cichym i komfortowym miejscu, odpowiednim do przeprowadzenia oceny.
-                           - Przetestuj mikrofon i głośniki, aby upewnić się, że działają prawidłowo.
-                           - Zadbaj o stabilne połączenie internetowe, aby uniknąć przerw.
-
-                        2. **Zapoznanie:**
-                           - Zapoznaj się z formatem opisu postaci klienta, który zawiera dane demograficzne, problemy przedstawiane przez klienta oraz istotną historię. Zrozumienie tych informacji jest kluczowe dla efektywnej interakcji z symulowanym klientem.
-                           - Zapoznaj się z interfejsem, w tym z funkcjami uruchamiania, wstrzymywania i zatrzymywania zadań oceny.
-                        ",
                 Description =
                     "Interaktywny Test Umiejętności Psychoterapeutycznych TheraSim to narzędzie oceny oparte na sztucznej inteligencji, " +
                     "zaprojektowane w celu sprawdzania efektywności interpersonalnej psychoterapeutów w trudnych momentach terapii. " +
@@ -185,7 +161,7 @@ public class ApplicationDbContextInitialiser
                     "takimi jak zerwanie przymierza terapeutycznego czy niestabilność emocjonalna klienta. Dzięki ustandaryzowanym, " +
                     "interaktywnym symulacjom klientów, które odzwierciedlają realne rozmowy prowadzone w warunkach psychoterapeutycznych, " +
                     "ocena zapewnia kontrolowane, a jednocześnie dynamiczne środowisko, aby mierzyć zdolność terapeuty do reagowania " +
-                    "na trudne sytuacje w takich kluczowych obszarach, jak empatia, płynność werbalna, zdolność naprawy relacji i inne.\n\n" +
+                    "na trudne sytuacje w takich kluczowych obszarach, jak empatia, płynność werbalna, zdolność naprawy relacji i inne.\n" +
                     "Wynik tej oceny obejmuje ilościową ocenę opartą na kryteriach eksperckich oraz jakościową informację zwrotną wskazującą " +
                     "na mocne strony terapeuty i obszary wymagające poprawy, co daje kompleksowy wgląd w jego efektywność interpersonalną.",
             };

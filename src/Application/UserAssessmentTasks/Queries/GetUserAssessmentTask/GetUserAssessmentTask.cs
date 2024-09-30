@@ -1,8 +1,7 @@
 ﻿using Therasim.Application.Common.Interfaces;
-
 namespace Therasim.Application.UserAssessmentTasks.Queries.GetUserAssessmentTask;
 
-public record GetUserAssessmentTaskQuery(Guid UserAssessmentTaskId) : IRequest<UserAssessmentTaskDto>;
+public record GetUserAssessmentTaskQuery(Guid UserAssessmentTaskId) : IRequest<UserAssessmentTaskDetailsDto>;
 
 public class GetUserAssessmentTaskQueryValidator : AbstractValidator<GetUserAssessmentTaskQuery>
 {
@@ -11,7 +10,7 @@ public class GetUserAssessmentTaskQueryValidator : AbstractValidator<GetUserAsse
     }
 }
 
-public class GetUserAssessmentTaskQueryHandler : IRequestHandler<GetUserAssessmentTaskQuery, UserAssessmentTaskDto>
+public class GetUserAssessmentTaskQueryHandler : IRequestHandler<GetUserAssessmentTaskQuery, UserAssessmentTaskDetailsDto>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -22,16 +21,17 @@ public class GetUserAssessmentTaskQueryHandler : IRequestHandler<GetUserAssessme
         _mapper = mapper;
     }
 
-    public async Task<UserAssessmentTaskDto> Handle(GetUserAssessmentTaskQuery request, CancellationToken cancellationToken)
+    public async Task<UserAssessmentTaskDetailsDto> Handle(GetUserAssessmentTaskQuery request, CancellationToken cancellationToken)
     {
         var userAssessmentTask = await _context.UserAssessmentTasks
             .Include(uat => uat.AssessmentTask.AssessmentTaskLanguages.Where(atl=> atl.Language == uat.Language))
             .Where(uat => uat.Id == request.UserAssessmentTaskId)
-            .ProjectTo<UserAssessmentTaskDto>(_mapper.ConfigurationProvider)
+            .ProjectTo<UserAssessmentTaskDetailsDto>(_mapper.ConfigurationProvider)
             .SingleOrDefaultAsync(cancellationToken);
 
-        if (userAssessmentTask == null) throw new NotFoundException(request.UserAssessmentTaskId.ToString(), "UserAssessmentTask");
+        Guard.Against.Null(userAssessmentTask, nameof(userAssessmentTask));
 
         return userAssessmentTask;
     }
+
 }

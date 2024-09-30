@@ -3,14 +3,12 @@ using Therasim.Domain.Enums;
 
 namespace Therasim.Application.UserAssessmentTasks.Queries.GetUserAssessmentTask;
 
-public class UserAssessmentTaskDto
+public class UserAssessmentTaskDetailsDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
-    public string Instructions { get; set; } = null!;
     public string Scenario { get; set; } = null!;
     public string Challenge { get; set; } = null!;
-    public string Skills { get; set; } = null!;
     public string ClientPersona { get; set; } = null!;
     public string ClientSystemPrompt { get; set; } = null!;
     public string FeedbackSystemPrompt { get; set; } = null!;
@@ -24,13 +22,11 @@ public class UserAssessmentTaskDto
     {
         public Mapping()
         {
-            CreateMap<UserAssessmentTask, UserAssessmentTaskDto>()
+            CreateMap<UserAssessmentTask, UserAssessmentTaskDetailsDto>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id))
                 .ForMember(d => d.Name, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().Name))
-                .ForMember(d => d.Instructions, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().Instructions))
                 .ForMember(d => d.Scenario, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().Scenario))
                 .ForMember(d => d.Challenge, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().Challenge))
-                .ForMember(d => d.Skills, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().Skills))
                 .ForMember(d => d.ClientPersona, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().ClientPersona))
                 .ForMember(d => d.ClientSystemPrompt, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().ClientSystemPrompt))
                 .ForMember(d => d.FeedbackSystemPrompt, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().FeedbackSystemPrompt))

@@ -1,0 +1,37 @@
+﻿<FluentAccordion Style="width: 100%">
+    @foreach (var userAssessmentTask in _userAssessmentTasks)
+    {
+        <FluentAccordionItem Expanded="false" Style="width: 100%" >
+            <HeadingTemplate>
+                <FluentStack Orientation="Orientation.Horizontal">
+                    <FluentLabel Typo="Typography.H3">
+                        @userAssessmentTask.Name
+                        @if (userAssessmentTask.EndDate.HasValue)
+                        {
+                            <FluentIcon Color="Color.Success" Value="@(new Icons.Regular.Size24.Checkmark())" />
+                        }
+                    </FluentLabel>
+                </FluentStack>
+            </HeadingTemplate>
+            <ChildContent>
+                <FluentStack Orientation="Orientation.Vertical">
+                    <UserAssessmentTaskDetails UserAssessmentTask="userAssessmentTask"/>
+                    <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Right">
+                        @if (userAssessmentTask.StartDate == null)
+                        {
+                            <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Button" @onclick="@(() => GoToAssessmentTaskSession(userAssessmentTask))" IconStart="@(new Icons.Regular.Size20.ArrowStepInRight())">Start</FluentButton>
+                        }
+                        else if (userAssessmentTask is { StartDate: not null, EndDate: null })
+                        {
+                            <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Button" OnClick="@(() => GoToAssessmentTaskSession(userAssessmentTask))" IconStart="@(new Icons.Regular.Size20.Certificate())">Continue</FluentButton>
+                        }
+                        else if (userAssessmentTask.EndDate != null)
+                        {
+                            <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Button" OnClick="@(() => GoToAssessmentTaskFeedback(userAssessmentTask))" IconStart="@(new Icons.Regular.Size20.Certificate())">Feedback</FluentButton>
+                        }
+                    </FluentStack>
+                </FluentStack>
+            </ChildContent>
+        </FluentAccordionItem>
+    }
+</FluentAccordion>

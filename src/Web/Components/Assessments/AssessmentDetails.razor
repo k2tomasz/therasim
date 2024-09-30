@@ -7,30 +7,28 @@
                 <FluentStack Class="assessment-name" Orientation="Orientation.Horizontal">
                     <FluentLabel Typo="Typography.H3">@_assessment.Name</FluentLabel>
                     <FluentSpacer/>
-                    <FluentSelect TOption="Language" SelectedOptionChanged="LanguageChanged">
-                        @foreach (Language language in Enum.GetValues<Language>())
-                        {
-                            <FluentOption Value=@(((int)language).ToString()) Selected=@(language == _language)>@language.ToString()</FluentOption>
-                        }
+                    <FluentSelect TOption="Language">
+                        <FluentOption OnSelect="@(async()  => await LanguageChanged(Language.English))" Value=@(Language.English.ToString()) Selected=@(_language == Language.English)>@Language.English.ToString()</FluentOption>
+                        <FluentOption OnSelect="@(async()  => await LanguageChanged(Language.Polish))" Value=@(Language.Polish.ToString()) Selected=@(_language == Language.Polish)>@Language.Polish.ToString()</FluentOption>
                     </FluentSelect>
-                    <FluentButton Id="addAndStartButton" Type="ButtonType.Button" OnClick="AddToMyAssessments" IconStart="@(new Icons.Regular.Size20.Add())"></FluentButton>
-                    <FluentTooltip Anchor="addAndStartButton">Add to My Assessments</FluentTooltip>
-                    <FluentButton Id="addButton" Type="ButtonType.Button" OnClick="StartAssessment" IconStart="@(new Icons.Regular.Size20.ArrowStepInRight())"></FluentButton>
-                    <FluentTooltip Anchor="addButton">Add to My Assessments & Start First Task</FluentTooltip>
+                    <FluentButton Id="addButton" Type="ButtonType.Button" OnClick="AddToMyAssessments" IconStart="@(new Icons.Regular.Size20.Add())">Add</FluentButton>
+                    <FluentTooltip Anchor="addButton">Add to my assessments</FluentTooltip>
+                    <FluentButton Id="addAndStartButton" Appearance="Appearance.Accent" Type="ButtonType.Button" OnClick="StartAssessment" IconStart="@(new Icons.Regular.Size20.ArrowStepInRight())">Start</FluentButton>
+                    <FluentTooltip Anchor="addAndStartButton">Add to my assessments and start first task</FluentTooltip>
                 </FluentStack>
                 <p>@_assessment.Description</p>
             </FluentStack>
         </FluentCard>
         <FluentCard>
             <FluentStack Orientation="Orientation.Vertical">
-                <FluentLabel Typo="Typography.H3">Introductions</FluentLabel>
-                <p>@_assessment.Description</p>
+                <FluentLabel Typo="Typography.H3">Instructions</FluentLabel>
+                <MarkdownSection Content=@_assessment.Instructions />
             </FluentStack>
         </FluentCard>
         <FluentCard>
             <FluentStack Orientation="Orientation.Vertical">
                 <FluentLabel Typo="Typography.H3">Tasks</FluentLabel>
-                <ListAssessmentTasks AssessmentId="AssessmentId" Language="_language" />
+                <AssessmentTaskList AssessmentId="AssessmentId" Language="_language" />
             </FluentStack>
         </FluentCard>
     </FluentStack>

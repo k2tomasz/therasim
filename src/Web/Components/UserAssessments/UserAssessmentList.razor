@@ -9,7 +9,7 @@
             <PropertyColumn Property="@(p => p.Language)"/>
             <TemplateColumn>
                 <FluentButton @onclick="@(() => GoToAssessment(context))" IconStart="@(new Icons.Regular.Size20.CalendarAgenda())">Details</FluentButton>
-                <FluentButton @onclick="@(() => StartNextAssessmentTask(context))" IconStart="@(new Icons.Regular.Size20.ArrowStepInRight())">Start Next Task</FluentButton>
+                <FluentButton Appearance="Appearance.Accent" @onclick="@(() => StartNextAssessmentTask(context))" IconStart="@(new Icons.Regular.Size20.ArrowStepInRight())">Start Next Task</FluentButton>
             </TemplateColumn>
         </ChildContent>
     </FluentDataGrid>
