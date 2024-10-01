@@ -5,6 +5,6 @@
         <RenderAvatar @ref="_renderAvatarComponent" />
     </div>
     <div class="session-column">
-        <ChatContainer @ref="_chatContainerComponent" OnUserMessageSend="HandleUserMessageSend" OnSpeechRecognized="HandleSpeechRecognized" ChatHistory="_chatHistory" />
+        <ChatContainer @ref="_chatContainerComponent" OnUserMessageSend="HandleUserMessageSend" OnTimerElapsed="HandleOnTimerElapsed" OnSpeechRecognized="HandleSpeechRecognized" ChatHistory="_chatHistory" />
     </div>
 </FluentStack>

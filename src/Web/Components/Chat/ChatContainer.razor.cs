@@ -12,6 +12,7 @@ namespace Therasim.Web.Components.Chat
     {
         [Parameter] public EventCallback<string> OnUserMessageSend { get; set; }
         [Parameter] public EventCallback<string> OnSpeechRecognized { get; set; }
+        [Parameter] public EventCallback OnTimerElapsed { get; set; }
         [Parameter] public ChatHistory ChatHistory { get; set; } = [];
         [Parameter] public bool ReadOnly { get; set; } = false;
         [SupplyParameterFromForm] private UserMessageModel UserMessageModel { get; set; } = new();
@@ -64,6 +65,7 @@ namespace Therasim.Web.Components.Chat
 
         public void StartTimer(int timeInSeconds)
         {
+            if (timeInSeconds <= 0) return;
             _timeInSeconds = timeInSeconds;
             _timer = new System.Timers.Timer(1000);
             _timer.Elapsed += CountDownTimer;
@@ -84,8 +86,12 @@ namespace Therasim.Web.Components.Chat
             else
             {
                 _timer.Enabled = false;
+                if (OnTimerElapsed.HasDelegate)
+                {
+                    _ = InvokeAsync(async () => await OnTimerElapsed.InvokeAsync());
+                }
             }
-            InvokeAsync(StateHasChanged);
+            _ = InvokeAsync(StateHasChanged);
         }
 
         async ValueTask IAsyncDisposable.DisposeAsync()

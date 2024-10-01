@@ -28,7 +28,7 @@ public partial class TaskSession : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         await LoadAssessment();
-        await OpenDialogAsync();
+        await OpenStartDialogAsync();
     }
 
     private async Task LoadAssessment()
@@ -36,7 +36,7 @@ public partial class TaskSession : ComponentBase
         _userAssessmentTask = await UserAssessmentTaskService.GetUserAssessmentTask(UserAssessmentTaskId);
         if (string.IsNullOrEmpty(_userAssessmentTask.ChatHistory))
         {
-            _chatHistory.AddSystemMessage(LanguageModelService.GetSystemPromptForPatient());
+            _chatHistory.AddSystemMessage(_userAssessmentTask.ClientSystemPrompt);
             return;
         }
 
@@ -47,7 +47,7 @@ public partial class TaskSession : ComponentBase
         }
         else
         {
-            _chatHistory.AddSystemMessage(LanguageModelService.GetSystemPromptForPatient());
+            _chatHistory.AddSystemMessage(_userAssessmentTask.ClientSystemPrompt);
         }
     }
 
@@ -91,30 +91,46 @@ public partial class TaskSession : ComponentBase
         await ProcessUserMessage(userMessage);
     }
 
-    private async Task EndAssessment()
+    private async Task EndAssessmentTask()
     {
-        StateHasChanged();
+        //StateHasChanged();
         await SaveChatHistory();
         await UserAssessmentTaskService.EndAssessmentTask(UserAssessmentTaskId);
-        await UserAssessmentTaskService.GenerateAssessmentTaskFeedback(UserAssessmentTaskId);
-        NavigationManager.NavigateTo($"/assessments/{UserAssessmentId}/feedback");
+        //await UserAssessmentTaskService.GenerateAssessmentTaskFeedback(UserAssessmentTaskId);
+        //NavigationManager.NavigateTo($"/assessments/{UserAssessmentId}");
     }
 
-    private async Task OpenDialogAsync()
+    private async Task OpenStartDialogAsync()
     {
 
         await DialogService.ShowDialogAsync<StartAssessmentTaskDialog>(_userAssessmentTask, new DialogParameters()
         {
             Title = "Start Assessment Task",
             PreventDismissOnOverlayClick = true,
-            OnDialogResult = DialogService.CreateDialogCallback(this, HandleDialog),
+            OnDialogResult = DialogService.CreateDialogCallback(this, HandleStartDialog),
             PrimaryAction = "Start",
             SecondaryAction = "Back",
+            ShowDismiss = false,
             Modal = true
         });
     }
 
-    private async Task HandleDialog(DialogResult result)
+    private async Task OpenEndDialogAsync()
+    {
+
+        await DialogService.ShowDialogAsync<EndAssessmentTaskDialog>(_userAssessmentTask, new DialogParameters()
+        {
+            Title = "Assessment Task Completed",
+            PreventDismissOnOverlayClick = true,
+            OnDialogResult = DialogService.CreateDialogCallback(this, HandleEndDialog),
+            PrimaryAction = "See Feedback",
+            SecondaryAction = "Back to Assessment",
+            ShowDismiss = false,
+            Modal = true
+        });
+    }
+
+    private async Task HandleStartDialog(DialogResult result)
     {
         if (result.Cancelled)
         {
@@ -122,7 +138,25 @@ public partial class TaskSession : ComponentBase
             return;
         }
 
-        await SaveChatHistory();
-        _chatContainerComponent.StartTimer(300);
+        await UserAssessmentTaskService.StartAssessmentTask(UserAssessmentTaskId);
+        _chatContainerComponent.StartTimer(120);
+    }
+
+    private Task HandleEndDialog(DialogResult result)
+    {
+        if (result.Cancelled)
+        {
+            NavigationManager.NavigateTo($"user/assessments/{UserAssessmentId}");
+            return Task.CompletedTask;
+        }
+
+        NavigationManager.NavigateTo($"user/assessments/{UserAssessmentId}/tasks/{UserAssessmentTaskId}/feedback");
+        return Task.CompletedTask;
+    }
+
+    private async Task HandleOnTimerElapsed()
+    {
+        await EndAssessmentTask();
+        await OpenEndDialogAsync();
     }
 }
