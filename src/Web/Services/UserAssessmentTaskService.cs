@@ -56,9 +56,9 @@ public class UserAssessmentTaskService : IUserAssessmentTaskService
         await _mediator.Send(command);
     }
 
-    public async Task GenerateAssessmentTaskFeedback(Guid userAssessmentTaskId)
+    public async Task<string> GenerateAssessmentTaskFeedback(Guid userAssessmentTaskId)
     {
         var command = new GenerateUserAssessmentTaskFeedbackCommand(userAssessmentTaskId);
-        await _mediator.Send(command);
+        return await _mediator.Send(command);
     }
 }

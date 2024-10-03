@@ -1,3 +1,21 @@
 ﻿@page "/user/assessments/{userAssessmentId:guid}/tasks/{userAssessmentTaskId:guid}/feedback"
 <PageTitle>Assessment Task Feedback</PageTitle>
-coming soon...
+<FluentStack>
+    <div class="session-column">
+        <div class="feedback-container">
+            <h3>Feedback</h3>
+            <div class="feedback-window">
+                <div class="feedback-message">
+                    @if (_feedback != null)
+                    {
+                        <MarkdownSection Content=@_feedback />
+                    }
+                    else
+                    {
+                        <p>Loading feedback...</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</FluentStack>

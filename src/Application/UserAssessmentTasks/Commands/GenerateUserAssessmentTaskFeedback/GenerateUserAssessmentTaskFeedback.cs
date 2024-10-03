@@ -2,7 +2,7 @@
 
 namespace Therasim.Application.UserAssessmentTasks.Commands.GenerateUserAssessmentTaskFeedback;
 
-public record GenerateUserAssessmentTaskFeedbackCommand(Guid UserAssessmentTaskId) : IRequest;
+public record GenerateUserAssessmentTaskFeedbackCommand(Guid UserAssessmentTaskId) : IRequest<string>;
 
 public class GenerateUserAssessmentTaskFeedbackCommandValidator : AbstractValidator<GenerateUserAssessmentTaskFeedbackCommand>
 {
@@ -11,7 +11,7 @@ public class GenerateUserAssessmentTaskFeedbackCommandValidator : AbstractValida
     }
 }
 
-public class GenerateUserAssessmentTaskFeedbackCommandHandler : IRequestHandler<GenerateUserAssessmentTaskFeedbackCommand>
+public class GenerateUserAssessmentTaskFeedbackCommandHandler : IRequestHandler<GenerateUserAssessmentTaskFeedbackCommand, string>
 {
     private readonly IApplicationDbContext _context;
     private readonly ILanguageModelService _languageModelService;
@@ -22,7 +22,7 @@ public class GenerateUserAssessmentTaskFeedbackCommandHandler : IRequestHandler<
         _languageModelService = languageModelService;
     }
 
-    public async Task Handle(GenerateUserAssessmentTaskFeedbackCommand request, CancellationToken cancellationToken)
+    public async Task<string> Handle(GenerateUserAssessmentTaskFeedbackCommand request, CancellationToken cancellationToken)
     {
         var userAssessmentTask = await _context.UserAssessmentTasks
             .Include(x => x.AssessmentTask.AssessmentTaskLanguages.Where(l=>l.Language == x.Language))
@@ -35,5 +35,7 @@ public class GenerateUserAssessmentTaskFeedbackCommandHandler : IRequestHandler<
 
         userAssessmentTask.Feedback = feedback;
         await _context.SaveChangesAsync(cancellationToken);
+
+        return feedback;
     }
 }

@@ -11,7 +11,6 @@ public partial class Feedback : ComponentBase
     [Inject] private IUserAssessmentService UserAssessmentService { get; set; } = null!;
     [Inject] private ILanguageModelService LanguageModelService { get; set; } = null!;
     [Parameter] public Guid UserAssessmentId { get; set; }
-    //private ChatContainer _chatContainerComponent = null!;
     private ChatHistory _chatHistory = [];
     private UserAssessmentDetailsDto _userAssessment = null!;
 
@@ -23,16 +22,5 @@ public partial class Feedback : ComponentBase
     private async Task LoadAssessment()
     {
         _userAssessment = await UserAssessmentService.GetUserAssessment(UserAssessmentId);
-        //if (string.IsNullOrEmpty(_userAssessment.ChatHistory))
-        //{
-        //    _chatHistory.AddSystemMessage(LanguageModelService.GetSystemPromptForPatient());
-        //    return;
-        //}
-
-        //var deserializedHistory = JsonSerializer.Deserialize<ChatHistory>(_assessment.ChatHistory);
-        //if (deserializedHistory is not null)
-        //{
-        //    _chatHistory = deserializedHistory;
-        //}
     }
 }

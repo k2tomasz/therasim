@@ -11,5 +11,5 @@ public interface IUserAssessmentTaskService
     Task SaveAssessmentTaskChatHistory(Guid userAssessmentTaskId, string chatHistory);
     Task StartAssessmentTask(Guid userAssessmentTaskId);
     Task EndAssessmentTask(Guid userAssessmentTaskId);
-    Task GenerateAssessmentTaskFeedback(Guid userAssessmentTaskId);
+    Task<string> GenerateAssessmentTaskFeedback(Guid userAssessmentTaskId);
 }
