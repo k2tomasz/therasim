@@ -7,11 +7,9 @@ public class AssessmentTaskDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
-    public string Instructions { get; set; } = null!;
     public string Scenario { get; set; } = null!;
     public string Challenge { get; set; } = null!;
     public string Skills { get; set; } = null!;
-    public string ClientPersona { get; set; } = null!;
     public Language Language { get; set; }
 
     private class Mapping : Profile
@@ -21,11 +19,9 @@ public class AssessmentTaskDto
             CreateMap<AssessmentTask, AssessmentTaskDto>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id))
                 .ForMember(d => d.Name, opt => opt.MapFrom(s => s.AssessmentTaskLanguages.First().Name))
-                .ForMember(d => d.Instructions, opt => opt.MapFrom(s => s.AssessmentTaskLanguages.First().Instructions))
                 .ForMember(d => d.Scenario, opt => opt.MapFrom(s => s.AssessmentTaskLanguages.First().Scenario))
                 .ForMember(d => d.Challenge, opt => opt.MapFrom(s => s.AssessmentTaskLanguages.First().Challenge))
                 .ForMember(d => d.Skills, opt => opt.MapFrom(s => s.AssessmentTaskLanguages.First().Skills))
-                .ForMember(d => d.ClientPersona, opt => opt.MapFrom(s => s.AssessmentTaskLanguages.First().ClientPersona))
                 .ForMember(d => d.Language, opt => opt.MapFrom(s => s.AssessmentTaskLanguages.First().Language));
         }
     }

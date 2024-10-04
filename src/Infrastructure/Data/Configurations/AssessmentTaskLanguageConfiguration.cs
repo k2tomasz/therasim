@@ -13,9 +13,6 @@ namespace Therasim.Infrastructure.Data.Configurations
             builder.Property(atl => atl.Name)
                 .IsRequired();
 
-            builder.Property(atl => atl.Instructions)
-                .IsRequired();
-
             builder.Property(atl => atl.Scenario)
                 .IsRequired();
 
@@ -24,8 +21,13 @@ namespace Therasim.Infrastructure.Data.Configurations
 
             builder.Property(atl => atl.Skills)
                 .IsRequired();
+            builder.Property(atl => atl.ClientInitialDialogue)
+                .IsRequired();
 
-            builder.Property(atl => atl.ClientPersona)
+            builder.Property(atl => atl.EffectiveResponse)
+                .IsRequired();
+
+            builder.Property(atl => atl.AssessmentCriteria)
                 .IsRequired();
 
             builder.Property(atl => atl.ClientSystemPrompt)
