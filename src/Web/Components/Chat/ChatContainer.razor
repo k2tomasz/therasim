@@ -31,7 +31,7 @@
                 <DataAnnotationsValidator/>
                 <FluentTextField Name="message" @bind-Value="@UserMessageModel.Message" Autofocus="true" Immediate="true" Placeholder="Type your message here..." Style="flex-grow: 1;" Required/>
                 <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Submit" Style="margin-left: 10px;" IconStart="@(new Icons.Regular.Size16.Send())">Send</FluentButton>
-                <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Button" Style="margin-left: 10px;" IconStart="@(_micIcon)" OnClick="StartSpeechRecognition"></FluentButton>
+                <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Button" Style="margin-left: 10px;" IconStart="@(_micIcon)" OnClick="StartSpeechRecognition">Use Voice</FluentButton>
             </div>
         </EditForm>
     }

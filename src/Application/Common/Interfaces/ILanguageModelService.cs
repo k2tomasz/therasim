@@ -6,9 +6,8 @@ namespace Therasim.Application.Common.Interfaces;
 public interface ILanguageModelService
 {
     Task<string> GenerateTranscript(string scenario, string challenge, Language language);
-    Task<string> GenerateTaskFeedback(string transcript, string taskName, string scenario, string challenge, string skills, string feedbackSystemPrompt, Language language);
     Task<string> GetChatMessageContentsAsync(ChatHistory chatHistory);
-    Task<string> GenerateAssessmentFeedback(string? transcript, string feedbackSystemPrompt);
+    Task<string> GenerateAssessmentTaskFeedback(string transcript, string scenario, string challenge, string skills, string assessmentCriteria, string feedbackSystemPrompt, Language language = Language.English);
     string GetSystemPromptForPatient();
     string GetSystemPromptForSessionFeedback();
     string GetSystemPromptForAssessmentFeedback();

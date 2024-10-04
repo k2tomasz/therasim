@@ -25,12 +25,13 @@ public class GetUserAssessmentTasksQueryHandler : IRequestHandler<GetUserAssessm
     public async Task<IList<UserAssessmentTaskDto>> Handle(GetUserAssessmentTasksQuery request, CancellationToken cancellationToken)
     {
         var userAssessmentTasks = await _context.UserAssessmentTasks
-            .Include(uat => uat.AssessmentTask.AssessmentTaskLanguages.Where(atl => atl.Language == uat.Language))
+            .Include(uat => uat.AssessmentTask.AssessmentTaskLanguages)
             .Where(uat => uat.UserAssessmentId == request.UserAssessmentId)
-            .ProjectTo<UserAssessmentTaskDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
 
-        return userAssessmentTasks;
+
+
+        return _mapper.Map<List<UserAssessmentTaskDto>>(userAssessmentTasks);
     }
 }

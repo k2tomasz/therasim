@@ -32,7 +32,7 @@ public class GenerateUserAssessmentFeedbackCommandHandler : IRequestHandler<Gene
 
         var transcript = string.Empty;
 
-        var feedback = await _languageModelService.GenerateAssessmentFeedback(transcript, userAssessment.Assessment.AssessmentLanguages.First().FeedbackSystemPrompt);
+        var feedback = string.Empty; // await _languageModelService.GenerateAssessmentTaskFeedback(transcript, userAssessment.Assessment.AssessmentLanguages.First().FeedbackSystemPrompt);
 
         userAssessment.Feedback = feedback;
         await _context.SaveChangesAsync(cancellationToken);

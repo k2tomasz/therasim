@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Text.Json;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -68,59 +67,23 @@ public class LanguageModelService(Kernel kernel) : ILanguageModelService
         return sb.ToString();
     }
 
-    public async Task<string> GenerateTaskFeedback(string transcript, string taskName, string scenario, string challenge, string skills, string feedbackSystemPrompt, Language language)
+    public async Task<string> GenerateAssessmentTaskFeedback(string transcript, string scenario, string challenge, string skills, string assessmentCriteria, string feedbackSystemPrompt, Language language = Language.English)
     {
-        var userMessageTask = language == Language.English
-            ? $"Task Name: {taskName}. Scenario: {scenario}. challenge: {challenge}. Skills to evaluate: {skills}"
-            : $"Nazwa zadania: {taskName}, Scenariusz: {scenario}. Wyzwanie: {challenge}. Umiejętności do oceny: {skills}";
-
-
-        var userMessageTranscript = language == Language.English
-            ? $"Psychotherapy session transcript: {transcript}"
-            : $"Transkrypcja sesji psychoterapeutycznej: {transcript}";
-
-        var chatHistory = new ChatHistory();
-        chatHistory.AddSystemMessage(feedbackSystemPrompt);
-        chatHistory.AddUserMessage(userMessageTask);
-        chatHistory.AddUserMessage(userMessageTranscript);
-
-        var response = await GetChatMessageContentsAsync(chatHistory);
-
-        return response;
-    }
-
-    public async Task<string> GenerateAssessmentFeedback(string? chatHistory, string feedbackSystemPrompt)
-    {
-        if (string.IsNullOrEmpty(chatHistory))
+        var arguments = new KernelArguments
         {
-            return string.Empty;
-        }
+            ["transcript"] = transcript,
+            ["scenario"] = scenario,
+            ["challenge"] = challenge,
+            ["skills"] = skills,
+            ["assessmentCriteria"] = assessmentCriteria
+        };
 
-        var deserializedHistory = JsonSerializer.Deserialize<ChatHistory>(chatHistory);
+        var promptTemplateFactory = new KernelPromptTemplateFactory();
+        string systemMessage = await promptTemplateFactory.Create(new PromptTemplateConfig(feedbackSystemPrompt)).RenderAsync(kernel, arguments);
+        string userMessage = await promptTemplateFactory.Create(new PromptTemplateConfig(GetUserPromptTemplateForFeedback())).RenderAsync(kernel, arguments);
 
-        if (deserializedHistory == null) return string.Empty;
-
-        //convert the chat history to a transcript in a format Student: message\nClient: message\n
-        var transcript = new StringBuilder();
-        transcript.Append("Transcript of Student skill practice session:");
-        foreach (var chatMessage in deserializedHistory)
-        {
-            if (chatMessage.Role == AuthorRole.User)
-            {
-                transcript.Append("Student: ");
-            }
-            else if (chatMessage.Role == AuthorRole.Assistant)
-            {
-                transcript.Append("Patient: ");
-            }
-
-            transcript.Append(chatMessage.Content);
-            transcript.Append("\n");
-        }
-
-        ChatHistory chatHistoryForFeedback = new();
-        chatHistoryForFeedback.AddSystemMessage(feedbackSystemPrompt);
-        chatHistoryForFeedback.AddUserMessage(transcript.ToString());
+        ChatHistory chatHistoryForFeedback = new(systemMessage);
+        chatHistoryForFeedback.AddUserMessage(userMessage);
         var response = await GetChatMessageContentsAsync(chatHistoryForFeedback);
 
         return response;
@@ -419,5 +382,14 @@ Fallback Instructions:
 2. Clarification Requests: If you’re unsure how to proceed, ask the Supervisor for guidance, but always in the context of your role as a therapist. Example: 'I’m not sure if my approach is correct here; let me consult the Supervisor to better assist you.'
 3. Handling Role Confusion: If you accidentally respond in a way that might sound like the client, immediately correct yourself. Example: 'I apologize for that response. As your therapist, I should focus on helping you explore your thoughts and feelings.'
 ";
+    }
+
+    private string GetUserPromptTemplateForFeedback(Language language = Language.English)
+    {
+        return @"Transcript: {{$transcript}}.
+                Scenario: {{$scenario}}.
+                Challenge: {{$challenge}}.
+                Key Skills Tested: {{$skills}}.
+                Assessment Focus: {{$assessmentFocus}}";
     }
 }

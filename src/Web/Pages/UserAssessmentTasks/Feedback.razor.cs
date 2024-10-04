@@ -10,6 +10,7 @@ public partial class Feedback : ComponentBase
 {
     [Inject] private IUserAssessmentTaskService UserAssessmentTaskService { get; set; } = null!;
     [Inject] private ILanguageModelService LanguageModelService { get; set; } = null!;
+    [Parameter] public Guid UserAssessmentId { get; set; }
     [Parameter] public Guid UserAssessmentTaskId { get; set; }
     private ChatHistory _chatHistory = [];
     private UserAssessmentTaskDetailsDto _userAssessmentTask = null!;

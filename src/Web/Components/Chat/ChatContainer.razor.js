@@ -8,10 +8,10 @@ export function initializeSpeechRecognition() {
     }
 }
 
-export function startContinuousRecognitionAsync(dotNetHelper) {
+export function startContinuousRecognitionAsync(dotNetHelper, language) {
     if (typeof recognizer === "undefined") {
         var speechConfig = SpeechSDK.SpeechConfig.fromSubscription("e3bb29e86fcd4aebaf96684a6893bcea", "swedencentral");
-        speechConfig.speechRecognitionLanguage = "en-US";
+        speechConfig.speechRecognitionLanguage = language;
         var audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
         recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
     }

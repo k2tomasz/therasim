@@ -17,9 +17,9 @@ public class UserAssessmentTaskDto
         {
             CreateMap<UserAssessmentTask, UserAssessmentTaskDto>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id))
-                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().Name))
-                .ForMember(d => d.Scenario, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().Scenario))
-                .ForMember(d => d.Challenge, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.First().Challenge))
+                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.Where(x=>x.Language == s.Language).First().Name))
+                .ForMember(d => d.Scenario, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.Where(x => x.Language == s.Language).First().Scenario))
+                .ForMember(d => d.Challenge, opt => opt.MapFrom(s => s.AssessmentTask.AssessmentTaskLanguages.Where(x => x.Language == s.Language).First().Challenge))
                 .ForMember(d => d.StartDate, opt => opt.MapFrom(s => s.StartDate))
                 .ForMember(d => d.EndDate, opt => opt.MapFrom(s => s.EndDate));
         }

@@ -24,14 +24,13 @@ public class GetUserAssessmentQueryHandler : IRequestHandler<GetUserAssessmentQu
     public async Task<UserAssessmentDetailsDto> Handle(GetUserAssessmentQuery request, CancellationToken cancellationToken)
     {
         var userAssessment = await _context.UserAssessments
-            .Include(a => a.Assessment.AssessmentLanguages.Where(l=>l.Language == a.Language))
+            .Include(a => a.Assessment.AssessmentLanguages)
             .Include(ua => ua.UserAssessmentTasks.Where(uat => uat.EndDate == null).OrderBy(uat => uat.Order).Take(1))
             .Where(a => a.Id == request.UserAssessmentId)
-            .ProjectTo<UserAssessmentDetailsDto>(_mapper.ConfigurationProvider)
             .SingleOrDefaultAsync(cancellationToken);
 
         if (userAssessment == null) throw new NotFoundException(request.UserAssessmentId.ToString(), "UserAssessment");
 
-        return userAssessment;
+        return _mapper.Map<UserAssessmentDetailsDto>(userAssessment);
     }
 }

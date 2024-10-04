@@ -11,10 +11,10 @@ public partial class Feedback : ComponentBase
 
     private string _feedback = string.Empty;
     private string _feedbackPrompt = string.Empty;
-    private string _taskName = "Alliance Rupture: Client Feels Unheard";
-    private string _taskScenario = "The client feels frustrated, believing that the therapist is not listening or grasping their main concerns.";
-    private string _taskChallenge = "The therapist must validate the client’s experience, acknowledge the rupture, and demonstrate effective repair to restore trust.";
-    private string _taskSkills = "Empathy, alliance rupture-repair, verbal fluency.";
+    private string _assessmentFocus = "The therapist’s paraphrase will be evaluated based on how well it captures the essence of the client’s concerns, organizes the scattered elements of the dialogue, and conveys empathy without distorting or minimizing the client’s feelings. The paraphrasing should help the client feel validated and understood, and ideally, create space for the client to expand on or clarify their thoughts.";
+    private string _taskScenario = "The client, a middle-aged individual, expresses feeling overwhelmed by several recent life events, including the death of a close family member, job insecurity, and health issues. The client begins to speak rapidly, sharing how everything is \"piling up\" and that they feel like they are \"drowning\" under the weight of it all. They mention feeling guilty for not \"holding it together\" and not being able to manage their emotions better, and they jump from one topic to another, describing their stress in a disorganized way.";
+    private string _taskChallenge = "The therapist must use paraphrasing to restate the client’s thoughts and feelings in a clear, concise way, demonstrating understanding and providing the client with a sense of being heard. The paraphrase should help the client feel more organized in their expression and open up space for deeper reflection or clarification.";
+    private string _taskSkills = "Active listening: Accurately picking up on the key points and emotional undertones of the client’s communication.\nClarification: Providing a restatement that helps organize the client’s scattered thoughts and emotions.\nEmpathy: Conveying understanding and nonjudgmental support through the paraphrase.";
     private string _transcript = string.Empty;
     private Language _language = Language.English;
     private bool _disableButtons;
@@ -41,8 +41,8 @@ public partial class Feedback : ComponentBase
     private async Task GenerateFeedback(MouseEventArgs obj)
     {
         _disableButtons = true;
-        _feedback = await LanguageModelService.GenerateTaskFeedback(_transcript, _taskName, _taskScenario,
-            _taskChallenge, _taskSkills, _feedbackPrompt, _language);
+        _feedback = await LanguageModelService.GenerateAssessmentTaskFeedback(_transcript, _taskScenario,
+            _taskChallenge, _taskSkills, _assessmentFocus, _feedbackPrompt, _language);
         _disableButtons = false;
         StateHasChanged();
     }

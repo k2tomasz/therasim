@@ -37,6 +37,7 @@ public partial class TaskSession : ComponentBase
         if (string.IsNullOrEmpty(_userAssessmentTask.ChatHistory))
         {
             _chatHistory.AddSystemMessage(_userAssessmentTask.ClientSystemPrompt);
+            _chatHistory.AddAssistantMessage(_userAssessmentTask.ClientInitialDialogue);
             return;
         }
 
@@ -48,6 +49,7 @@ public partial class TaskSession : ComponentBase
         else
         {
             _chatHistory.AddSystemMessage(_userAssessmentTask.ClientSystemPrompt);
+            _chatHistory.AddAssistantMessage(_userAssessmentTask.ClientInitialDialogue);
         }
     }
 
@@ -139,7 +141,7 @@ public partial class TaskSession : ComponentBase
         }
 
         await UserAssessmentTaskService.StartAssessmentTask(UserAssessmentTaskId);
-        _chatContainerComponent.StartTimer(120);
+        _chatContainerComponent.StartTimer(_userAssessmentTask.LengthInMinutes ?? 2);
     }
 
     private Task HandleEndDialog(DialogResult result)

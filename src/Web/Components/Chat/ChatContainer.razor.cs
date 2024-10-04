@@ -4,6 +4,7 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Microsoft.SemanticKernel.ChatCompletion;
 using System.Timers;
+using Therasim.Domain.Enums;
 using Therasim.Web.Models;
 
 namespace Therasim.Web.Components.Chat
@@ -15,6 +16,7 @@ namespace Therasim.Web.Components.Chat
         [Parameter] public EventCallback OnTimerElapsed { get; set; }
         [Parameter] public ChatHistory ChatHistory { get; set; } = [];
         [Parameter] public bool ReadOnly { get; set; } = false;
+        [Parameter] public Language Language { get; set; } = Language.English; 
         [SupplyParameterFromForm] private UserMessageModel UserMessageModel { get; set; } = new();
         [Inject] private IJSRuntime JS { get; set; } = null!;
         private DotNetObjectReference<ChatContainer>? _objRef;
@@ -23,7 +25,7 @@ namespace Therasim.Web.Components.Chat
         private Icon _micIcon = new Icons.Regular.Size16.Mic();
         private static System.Timers.Timer _timer = null!;
         private string _timeRemaining = string.Empty;
-        private int _timeInSeconds { get; set; }
+        private int _timeInSeconds;
 
         protected override void OnInitialized()
         {
@@ -58,15 +60,17 @@ namespace Therasim.Web.Components.Chat
         {
             if (_speechModule is null) return;
             _micOn = !_micOn;
-            var functionName = _micOn ? "startContinuousRecognitionAsync" : "stopContinuousRecognitionAsync";
+            var language = Language == Language.English ? "en-US" : "pl-PL";
+            if (_micOn) await _speechModule.InvokeVoidAsync("startContinuousRecognitionAsync", _objRef, language);
+            else await _speechModule.InvokeVoidAsync("stopContinuousRecognitionAsync", _objRef);
             _micIcon = _micOn ? new Icons.Filled.Size16.Mic() : new Icons.Regular.Size16.Mic();
-            await _speechModule.InvokeVoidAsync(functionName, _objRef);
         }
 
-        public void StartTimer(int timeInSeconds)
+        public void StartTimer(int timeInMinutes)
         {
-            if (timeInSeconds <= 0) return;
-            _timeInSeconds = timeInSeconds;
+
+            if (timeInMinutes <= 0) return;
+            _timeInSeconds = timeInMinutes * 60;
             _timer = new System.Timers.Timer(1000);
             _timer.Elapsed += CountDownTimer;
             _timer.Enabled = true;
