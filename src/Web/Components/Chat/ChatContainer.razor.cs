@@ -68,7 +68,6 @@ namespace Therasim.Web.Components.Chat
 
         public void StartTimer(int timeInMinutes)
         {
-
             if (timeInMinutes <= 0) return;
             _timeInSeconds = timeInMinutes * 60;
             _timer = new System.Timers.Timer(1000);

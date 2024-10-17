@@ -24,6 +24,7 @@ public partial class TaskSession : ComponentBase
     private RenderAvatar _renderAvatarComponent = null!;
     private ChatHistory _chatHistory = [];
     private UserAssessmentTaskDetailsDto _userAssessmentTask = null!;
+    private Guid _nextUserAssessmentTaskId;
 
     protected override async Task OnInitializedAsync()
     {
@@ -129,6 +130,21 @@ public partial class TaskSession : ComponentBase
         });
     }
 
+    private async Task OpenEndDialogForLastTaskAsync()
+    {
+
+        await DialogService.ShowDialogAsync<EndAssessmentTaskDialog>(_userAssessmentTask, new DialogParameters()
+        {
+            Title = "Assessment Completed",
+            PreventDismissOnOverlayClick = true,
+            OnDialogResult = DialogService.CreateDialogCallback(this, HandleEndDialog),
+            PrimaryAction = "Ok",
+            SecondaryAction = "Close",
+            ShowDismiss = false,
+            Modal = true
+        });
+    }
+
     private async Task HandleStartDialog(DialogResult result)
     {
         if (result.Cancelled)
@@ -138,27 +154,41 @@ public partial class TaskSession : ComponentBase
         }
 
         await UserAssessmentTaskService.StartAssessmentTask(UserAssessmentTaskId);
-        _chatContainerComponent.StartTimer(1);
+        _chatContainerComponent.StartTimer(_userAssessmentTask.LengthInMinutes ?? 5);
+
+        if (string.IsNullOrEmpty(_userAssessmentTask.ClientInitialDialogue)) return;
+        
+        await _renderAvatarComponent.MakeAvatarSpeak(_userAssessmentTask.ClientInitialDialogue);
     }
 
-    private async Task HandleEndDialog(DialogResult result)
+    private Task HandleEndDialog(DialogResult result)
     {
         if (result.Cancelled)
         {
             NavigationManager.NavigateTo($"user/assessments/{UserAssessmentId}");
+            return Task.CompletedTask;
         }
-
-        var nextUserAssessmentTaskId = await UserAssessmentTaskService.GetNextUserAssessmentTaskId(UserAssessmentId);
         
-        if (nextUserAssessmentTaskId != Guid.Empty)
-            NavigationManager.NavigateTo($"user/assessments/{UserAssessmentId}/tasks/{nextUserAssessmentTaskId}", true);
+        if (_nextUserAssessmentTaskId != Guid.Empty)
+            NavigationManager.NavigateTo($"user/assessments/{UserAssessmentId}/tasks/{_nextUserAssessmentTaskId}", true);
         else
             NavigationManager.NavigateTo($"user/assessments/{UserAssessmentId}");
+        return Task.CompletedTask;
     }
 
     private async Task HandleOnTimerElapsed()
     {
         await EndAssessmentTask();
-        await OpenEndDialogAsync();
+        
+        _nextUserAssessmentTaskId = await UserAssessmentTaskService.GetNextUserAssessmentTaskId(UserAssessmentId);
+        
+        if (_nextUserAssessmentTaskId != Guid.Empty)
+        {
+            await OpenEndDialogAsync();
+        }
+        else
+        {
+            await OpenEndDialogForLastTaskAsync();
+        }
     }
 }
