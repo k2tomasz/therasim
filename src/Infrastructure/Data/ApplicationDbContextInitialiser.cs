@@ -65,6 +65,38 @@ public class ApplicationDbContextInitialiser
         // Seed, if necessary
         if (!_context.Assessments.Any())
         {
+            #region Task0
+
+            var assessmentTask0LanguageEn = new AssessmentTaskLanguage
+            {
+                Language = Language.English,
+                Name = "Intruduction to simulated psychotherapy session.",
+                Scenario = "The client is a 35-year-old individual named Alex who has been experiencing moderate to severe depression for the past 6 months. The client feel hopeless, lack motivation, and struggle with daily tasks. Social anxiety compounds difficulties, leading to isolation. The client had negative past experiences with therapy.\n\n",
+                Challenge = "Get yourself familiar with the UI, check if speach recognision works. Ask few questions to see how to interact with the 'Client'.\n\n",
+                Skills = "Core Psychotherapy sklills",
+                ClientInitialDialogue = "I feel tired, I guess. It’s just hard to get out of bed most days. What’s the point, you know?",
+                AssessmentCriteria = "",
+
+            };
+
+            var assessmentTask0LanguagePl = new AssessmentTaskLanguage
+            {
+                Language = Language.Polish,
+                Name = "Wprowadzenie do symulowanej sesji psychoterapeutycznej",
+                Scenario = "Klientem jest 35-letni Alex, od 6 miesięcy cierpi na umiarkowaną lub ciężką depresję. Klient czuje się beznadziejny, brakuje mu motywacji i zmaga się z codziennymi zadaniami. Lęk społeczny pogłębia trudności, prowadząc do izolacji. Klient miał negatywne doświadczenia z terapią w przeszłości.\n\n",
+                Challenge = "Zapoznaj się z interfejsem użytkownika, sprawdź, czy działa rozpoznawanie mowy. Zadaj kilka pytań, aby zobaczyć, jak wchodzić w interakcję z „Klientem”\n\n",
+                Skills = "Podstawowe umiejętności psychoterapeutyczne",
+                ClientInitialDialogue = "Czuję się zmęczona. Przez większość dni trudno jest mi wstać z łóżka.",
+                AssessmentCriteria = "",
+            };
+
+            var assessmentTask0 = new AssessmentTask();
+            assessmentTask0.AssessmentTaskLanguages.Add(assessmentTask0LanguageEn);
+            assessmentTask0.AssessmentTaskLanguages.Add(assessmentTask0LanguagePl);
+            assessmentTask0.LengthInMinutes = 4;
+            assessmentTask0.Order = 0;
+
+            #endregion
 
             #region Task1
 
@@ -281,24 +313,15 @@ public class ApplicationDbContextInitialiser
             var assessmentLanguagePl = new AssessmentLanguage
             {
                 Language = Language.Polish,
-                Name = "Interaktywny Test Umiejętności Psychoterapeutycznych TheraSim",
-                Instructions = "### Zanim Zaczniesz\n1. **Przygotowanie:**\n- Upewnij się, że przebywasz w cichym i komfortowym miejscu, odpowiednim do przeprowadzenia oceny.\n- Przetestuj mikrofon i głośniki, aby upewnić się, że działają prawidłowo.\n- Zadbaj o stabilne połączenie internetowe, aby uniknąć przerw.\n2. **Zapoznanie:**\n- Zapoznaj się z formatem opisu postaci klienta, który zawiera dane demograficzne, problemy przedstawiane przez klienta oraz istotną historię. Zrozumienie tych informacji jest kluczowe dla efektywnej interakcji z symulowanym klientem.\n- Zapoznaj się z interfejsem, w tym z funkcjami uruchamiania, wstrzymywania i zatrzymywania zadań oceny.",
-
-                Description =
-                    "Interaktywny Test Umiejętności Psychoterapeutycznych TheraSim to narzędzie oceny oparte na sztucznej inteligencji, " +
-                    "zaprojektowane w celu sprawdzania efektywności interpersonalnej psychoterapeutów w trudnych momentach terapii. " +
-                    "Narzędzie to bada kluczowe umiejętności terapeuty, koncentrując się na tym, jak radzi sobie z emocjonalnie napiętymi scenariuszami, " +
-                    "takimi jak zerwanie przymierza terapeutycznego czy niestabilność emocjonalna klienta. Dzięki ustandaryzowanym, " +
-                    "interaktywnym symulacjom klientów, które odzwierciedlają realne rozmowy prowadzone w warunkach psychoterapeutycznych, " +
-                    "ocena zapewnia kontrolowane, a jednocześnie dynamiczne środowisko, aby mierzyć zdolność terapeuty do reagowania " +
-                    "na trudne sytuacje w takich kluczowych obszarach, jak empatia, płynność werbalna, zdolność naprawy relacji i inne.\n" +
-                    "Wynik tej oceny obejmuje ilościową ocenę opartą na kryteriach eksperckich oraz jakościową informację zwrotną wskazującą " +
-                    "na mocne strony terapeuty i obszary wymagające poprawy, co daje kompleksowy wgląd w jego efektywność interpersonalną.",
+                Name = "Interaktywny Test Umiejętności Psychoterapeutycznych TheraSim – wersja beta",
+                Instructions = "### Instrukcja wykonania testu:\r\n\r\n- Test trwa około 30 minut. Upewnij się, że przebywasz w cichym i komfortowym miejscu, w którym można swobodnie prowadzić konwersację.\r\n\r\n- Przetestuj mikrofon i głośniki, aby upewnić się, że działają prawidłowo. Jeśli wolisz, możesz korzystać ze słuchawek.\r\n\r\n- W trakcie całego zadania, Twój komputer powinien być podłączony do Internetu. Zadbaj o stabilne połączenie internetowe, aby uniknąć przerw.\r\n\r\n- Twoim zadaniem będzie wykonanie 6 modułów. Trzy z nich dotyczą podstawowych umiejętności (parafraza, pytania otwarte, odzwierciedlenie uczuć) i trwają po 4 minuty. Trzy pozostałe trwają po 6 minut i sprawdzają złożone umiejętności zareagowania na trudności w relacji terapeutycznej (klient czuje się niesłuchany, pacjent jest wrogi wobec terapeuty oraz pacjent jest niezadowolony z postępów terapii).\r\n\r\n- Na  początku każdego zadania otrzymasz szczegółową instrukcję.\r\n\r\n- Po zakończeniu jednego zadania, przejdź od razu do kolejnego zadania.\r\n\r\n- Aby przetestować formułę zadania, w pierwszej kolejności będzie zadanie testowe, które nie będzie uwzględniane w ocenie.\r\n\r\n- Jeśli jesteś gotowa/y, naciśnij przycisk START",
+                Description = "Interaktywny Test Umiejętności Psychoterapeutycznych (ITUP) TheraSim to narzędzie oparte na sztucznej inteligencji. Narzędzie to bada podstawowe umiejętności psychoterapeutyczne (takie jak odzwierciedlenie emocji i parafraza) oraz złożone umiejętności (takie jak zdolność do budowania przymierza terapeutycznego). Dzięki ustandaryzowanym, interaktywnym symulacjom klientów, które odzwierciedlają realne rozmowy prowadzone w warunkach psychoterapeutycznych, ocena zapewnia kontrolowane, a jednocześnie dynamiczne środowisko.\r\n\r\nUwaga: to jest wersja beta programu, co oznacza, że mogą się pojawić pewne błędy w oprogramowaniu. W przypadku pojawiania się takich niedociągnięć, staraj się odpowiadać, jak uważasz za trafne, gdy błędy te uniemożliwiają przeprowadzenie testu, po prostu poczekaj do jego zakończenia i przejdź do kolejnego modułu. Jeśli program nie reaguje, spróbuj ponownie za jakiś czas. Na końcu testu będzie również możliwość zgłoszenia błędów."
             };
 
             var assessment = new Assessment();
             assessment.AssessmentLanguages.Add(assessmentLanguageEn);
             assessment.AssessmentLanguages.Add(assessmentLanguagePl);
+            assessment.AssessmentTasks.Add(assessmentTask0);
             assessment.AssessmentTasks.Add(assessmentTask1);
             assessment.AssessmentTasks.Add(assessmentTask2);
             assessment.AssessmentTasks.Add(assessmentTask3);

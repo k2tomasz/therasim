@@ -1,13 +1,18 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Therasim.Domain.Enums;
 
 namespace Therasim.Web.Components.Avatar;
 
 public partial class RenderAvatar : ComponentBase, IAsyncDisposable, IDisposable
 {
     [Inject] private IJSRuntime JS { get; set; } = null!;
+    [Parameter] public Language Language { get; set; } = Language.English;
     private IJSObjectReference? _avatarModule;
     private DotNetObjectReference<RenderAvatar>? _objRef;
+    private string speechSynthesisLanguage = "en-US";
+    private string speechSynthesisVoiceName = "en-US-AvaMultilingualNeural";
+
 
     protected override void OnInitialized()
     {
@@ -17,9 +22,14 @@ public partial class RenderAvatar : ComponentBase, IAsyncDisposable, IDisposable
     {
         if (firstRender)
         {
+            if (Language == Language.Polish)
+            {
+                speechSynthesisLanguage = "pl-PL";
+                speechSynthesisVoiceName = "pl-PL-AgnieszkaNeural";
+            }
             _avatarModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/Avatar/RenderAvatar.razor.js");
             await _avatarModule.InvokeVoidAsync("initializeAvatar");
-            await _avatarModule.InvokeVoidAsync("startSession", _objRef);
+            await _avatarModule.InvokeVoidAsync("startSession", _objRef, speechSynthesisLanguage, speechSynthesisVoiceName);
         }
     }
     

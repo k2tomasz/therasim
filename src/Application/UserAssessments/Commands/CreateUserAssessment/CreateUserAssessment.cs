@@ -47,6 +47,7 @@ public class CreateUserAssessmentCommandHandler : IRequestHandler<CreateUserAsse
                 UserId = request.UserId,
                 AssessmentTaskId = assessmentTask.Id,
                 Language = request.Language,
+                Order = assessmentTask.Order,
                 UserAssessment = entity,
             });
         }

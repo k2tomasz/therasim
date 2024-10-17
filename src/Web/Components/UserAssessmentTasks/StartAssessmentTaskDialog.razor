@@ -1,5 +1,7 @@
-﻿<h3>@Content.Name</h3>
-@if (Content.LengthInMinutes.HasValue)
-{
-    <h4>This task will last @Content.LengthInMinutes.Value minutes</h4>
-}
+﻿<FluentStack Orientation="Orientation.Vertical">
+    <FluentLabel Typo="Typography.H3">@Content.Name</FluentLabel>
+    <FluentLabel Typo="Typography.H4">Scenario</FluentLabel>
+    <p>@Content.Scenario</p>
+    <FluentLabel Typo="Typography.H4">Challenge</FluentLabel>
+    <p>@Content.Challenge</p>
+</FluentStack>

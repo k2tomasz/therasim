@@ -95,11 +95,8 @@ public partial class TaskSession : ComponentBase
 
     private async Task EndAssessmentTask()
     {
-        //StateHasChanged();
         await SaveChatHistory();
         await UserAssessmentTaskService.EndAssessmentTask(UserAssessmentTaskId);
-        //await UserAssessmentTaskService.GenerateAssessmentTaskFeedback(UserAssessmentTaskId);
-        //NavigationManager.NavigateTo($"/assessments/{UserAssessmentId}");
     }
 
     private async Task OpenStartDialogAsync()
@@ -107,7 +104,7 @@ public partial class TaskSession : ComponentBase
 
         await DialogService.ShowDialogAsync<StartAssessmentTaskDialog>(_userAssessmentTask, new DialogParameters()
         {
-            Title = "Start Assessment Task",
+            Title = "Assessment Task",
             PreventDismissOnOverlayClick = true,
             OnDialogResult = DialogService.CreateDialogCallback(this, HandleStartDialog),
             PrimaryAction = "Start",
@@ -125,8 +122,8 @@ public partial class TaskSession : ComponentBase
             Title = "Assessment Task Completed",
             PreventDismissOnOverlayClick = true,
             OnDialogResult = DialogService.CreateDialogCallback(this, HandleEndDialog),
-            PrimaryAction = "See Feedback",
-            SecondaryAction = "Back to Assessment",
+            PrimaryAction = "Next Task",
+            SecondaryAction = "Close",
             ShowDismiss = false,
             Modal = true
         });
@@ -141,19 +138,22 @@ public partial class TaskSession : ComponentBase
         }
 
         await UserAssessmentTaskService.StartAssessmentTask(UserAssessmentTaskId);
-        _chatContainerComponent.StartTimer(_userAssessmentTask.LengthInMinutes ?? 2);
+        _chatContainerComponent.StartTimer(1);
     }
 
-    private Task HandleEndDialog(DialogResult result)
+    private async Task HandleEndDialog(DialogResult result)
     {
         if (result.Cancelled)
         {
             NavigationManager.NavigateTo($"user/assessments/{UserAssessmentId}");
-            return Task.CompletedTask;
         }
 
-        NavigationManager.NavigateTo($"user/assessments/{UserAssessmentId}/tasks/{UserAssessmentTaskId}/feedback");
-        return Task.CompletedTask;
+        var nextUserAssessmentTaskId = await UserAssessmentTaskService.GetNextUserAssessmentTaskId(UserAssessmentId);
+        
+        if (nextUserAssessmentTaskId != Guid.Empty)
+            NavigationManager.NavigateTo($"user/assessments/{UserAssessmentId}/tasks/{nextUserAssessmentTaskId}", true);
+        else
+            NavigationManager.NavigateTo($"user/assessments/{UserAssessmentId}");
     }
 
     private async Task HandleOnTimerElapsed()

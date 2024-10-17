@@ -22,7 +22,7 @@ public class UserAssessmentDetailsDto
                 .ForMember(d => d.Description, opt => opt.MapFrom(s => s.Assessment.AssessmentLanguages.Where(x => x.Language == s.Language).First().Description))
                 .ForMember(d => d.Instructions, opt => opt.MapFrom(s => s.Assessment.AssessmentLanguages.Where(x => x.Language == s.Language).First().Instructions))
                 .ForMember(d => d.Language, opt => opt.MapFrom(s => s.Assessment.AssessmentLanguages.Where(x => x.Language == s.Language).First().Language.ToString()))
-                .ForMember(d => d.NextUserAssessmentTaskId, opt => opt.MapFrom(s => s.UserAssessmentTasks.First().Id));
+                .ForMember(d => d.NextUserAssessmentTaskId, opt => opt.MapFrom(s => s.UserAssessmentTasks.Any() ? s.UserAssessmentTasks.First().Id : Guid.Empty));
         }
     }
 }

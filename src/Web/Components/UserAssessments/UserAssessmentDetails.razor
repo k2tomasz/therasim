@@ -1,27 +1,32 @@
 ﻿@if (_assessment != null)
 {
-    <FluentStack Orientation="Orientation.Vertical" Style="width: 1200px">
-        <FluentCard>
+    <FluentGrid>
+        <FluentGridItem md="12" xl="9">
             <FluentStack Orientation="Orientation.Vertical">
-                <FluentStack Class="assessment-name" Orientation="Orientation.Horizontal">
-                    <FluentLabel Typo="Typography.H3">@_assessment.Name</FluentLabel>
-                    <FluentSpacer/>
-                    <FluentButton Id="startButton" Appearance="Appearance.Accent" Type="ButtonType.Button" OnClick="StartNextTask" IconStart="@(new Icons.Regular.Size20.ArrowStepInRight())">Start Next Task</FluentButton>
-                </FluentStack>
-                <p>@_assessment.Description</p>
+                <FluentCard>
+                    <FluentStack Orientation="Orientation.Vertical">
+                        <FluentStack Class="assessment-name" Orientation="Orientation.Horizontal">
+                            <FluentLabel Typo="Typography.H3">@_assessment.Name</FluentLabel>
+                            @if (_assessment.NextUserAssessmentTaskId != Guid.Empty)
+                            {
+                                <FluentSpacer />
+                                <FluentButton Id="startButton" Appearance="Appearance.Accent" Type="ButtonType.Button" OnClick="StartNextTask" IconStart="@(new Icons.Regular.Size20.ArrowStepInRight())">Start</FluentButton>
+                            }
+                        </FluentStack>
+                        <p>@_assessment.Description</p>
+                    </FluentStack>
+                </FluentCard>
+                <FluentCard>
+                    <FluentStack Orientation="Orientation.Vertical">
+                        <MarkdownSection Content=@_assessment.Instructions />
+                    </FluentStack>
+                </FluentCard>
+                <FluentCard>
+                    <FluentStack Orientation="Orientation.Vertical">
+                        <UserAssessmentTaskList UserAssessmentId="UserAssessmentId" />
+                    </FluentStack>
+                </FluentCard>
             </FluentStack>
-        </FluentCard>
-        <FluentCard>
-            <FluentStack Orientation="Orientation.Vertical">
-                <FluentLabel Typo="Typography.H3">Instructions</FluentLabel>
-                <MarkdownSection Content=@_assessment.Instructions />
-            </FluentStack>
-        </FluentCard>
-        <FluentCard>
-            <FluentStack Orientation="Orientation.Vertical">
-                <FluentLabel Typo="Typography.H3">Tasks</FluentLabel>
-                <UserAssessmentTaskList UserAssessmentId="UserAssessmentId" />
-            </FluentStack>
-        </FluentCard>
-    </FluentStack>
+        </FluentGridItem>
+    </FluentGrid>
 }

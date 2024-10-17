@@ -176,12 +176,13 @@ export function makeBackgroundTransparent(timestamp) {
 
     window.requestAnimationFrame(makeBackgroundTransparent);
 }
-export function startSession(dotNetHelper) {
+export function startSession(dotNetHelper, language, voice) {
     const cogSvcRegion = "swedencentral";
     const cogSvcSubKey = "e3bb29e86fcd4aebaf96684a6893bcea";
 
     let speechSynthesisConfig = SpeechSDK.SpeechConfig.fromSubscription(cogSvcSubKey, cogSvcRegion);
-
+    speechSynthesisConfig.speechSynthesisLanguage = language;
+    speechSynthesisConfig.speechSynthesisVoiceName = voice;   
     const videoFormat = new SpeechSDK.AvatarVideoFormat();
     let videoCropTopLeftX = 600;
     let videoCropBottomRightX = 1320;
