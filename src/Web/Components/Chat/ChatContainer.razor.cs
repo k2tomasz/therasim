@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Microsoft.SemanticKernel.ChatCompletion;
-using System.Timers;
 using Therasim.Domain.Enums;
 using Therasim.Web.Models;
 
@@ -23,9 +22,6 @@ namespace Therasim.Web.Components.Chat
         private IJSObjectReference? _speechModule;
         private bool _micOn;
         private Icon _micIcon = new Icons.Regular.Size16.Mic();
-        private static System.Timers.Timer _timer = null!;
-        private string _timeRemaining = string.Empty;
-        private int _timeInSeconds;
 
         protected override void OnInitialized()
         {
@@ -66,41 +62,29 @@ namespace Therasim.Web.Components.Chat
             _micIcon = _micOn ? new Icons.Filled.Size16.Mic() : new Icons.Regular.Size16.Mic();
         }
 
-        public void StartTimer(int timeInMinutes)
+        public async Task StartTimer(int timeInMinutes)
         {
             if (timeInMinutes <= 0) return;
-            _timeInSeconds = timeInMinutes * 60;
-            _timer = new System.Timers.Timer(1000);
-            _timer.Elapsed += CountDownTimer;
-            _timer.Enabled = true;
+            if (_speechModule is not null)
+            {
+                await _speechModule.InvokeVoidAsync("startTimer", _objRef, timeInMinutes);
+            }
         }
 
-        private void CountDownTimer(object? source, ElapsedEventArgs e)
+        [JSInvokable]
+        public async Task OnTimerElapsedCallback()
         {
-            if (_timeInSeconds > 0)
+            if (OnTimerElapsed.HasDelegate)
             {
-                _timeInSeconds -= 1;
-
-                var minutes = _timeInSeconds / 60;
-                var seconds = _timeInSeconds % 60;
-                var time = new TimeOnly(0, minutes, seconds);
-                _timeRemaining = time.ToString("mm:ss");
+                await OnTimerElapsed.InvokeAsync();
             }
-            else
-            {
-                _timer.Enabled = false;
-                if (OnTimerElapsed.HasDelegate)
-                {
-                    _ = InvokeAsync(async () => await OnTimerElapsed.InvokeAsync());
-                }
-            }
-            _ = InvokeAsync(StateHasChanged);
         }
 
         async ValueTask IAsyncDisposable.DisposeAsync()
         {
-            if (_speechModule is not null)
+            if (_speechModule != null)
             {
+                await _speechModule.InvokeVoidAsync("stopTimer");
                 await _speechModule.DisposeAsync();
                 _objRef?.Dispose();
             }

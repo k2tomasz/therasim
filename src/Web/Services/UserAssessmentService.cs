@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Therasim.Application.UserAssessments.Commands.CreateUserAssessment;
 using Therasim.Application.UserAssessments.Commands.GenerateUserAssessmentFeedback;
+using Therasim.Application.UserAssessments.Queries.GetCompletedAssessments;
 using Therasim.Application.UserAssessments.Queries.GetUserAssessment;
 using Therasim.Application.UserAssessments.Queries.GetUserAssessments;
 using Therasim.Domain.Enums;
@@ -46,5 +47,12 @@ public class UserAssessmentService : IUserAssessmentService
     {
         var command = new GenerateUserAssessmentFeedbackCommand(userAssessmentId);
         await _mediator.Send(command);
+    }
+
+    public async Task<IQueryable<CompletedAssessmentDto>> GetCompletedAssessments()
+    {
+        var query = new GetCompletedAssessmentsQuery();
+        var result = await _mediator.Send(query);
+        return result.AsQueryable();
     }
 }

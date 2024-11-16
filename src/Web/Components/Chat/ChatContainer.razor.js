@@ -13,6 +13,7 @@ export function startContinuousRecognitionAsync(dotNetHelper, language) {
         var speechConfig = SpeechSDK.SpeechConfig.fromSubscription("e3bb29e86fcd4aebaf96684a6893bcea", "swedencentral");
         speechConfig.speechRecognitionLanguage = language;
         var audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
+        audioConfig.setProperty("Speech_SegmentationSilenceTimeoutMs", 3000);
         recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
     }
 
@@ -62,5 +63,30 @@ export function stopContinuousRecognitionAsync(dotNetHelper) {
                 console.error("Error stopping recognition: " + err);
             }
         );
+    }
+}
+
+let timerId;
+let timeInSeconds;
+
+export function startTimer(dotNetHelper, timeInMinutes) {
+    timeInSeconds = timeInMinutes * 60;
+    timerId = setInterval(() => {
+        if (timeInSeconds > 0) {
+            timeInSeconds -= 1;
+            const minutes = Math.floor(timeInSeconds / 60);
+            const seconds = timeInSeconds % 60;
+            const timeRemaining = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timeRemaining').innerText = timeRemaining;
+        } else {
+            clearInterval(timerId);
+            dotNetHelper.invokeMethodAsync('OnTimerElapsedCallback');
+        }
+    }, 1000);
+}
+
+export function stopTimer() {
+    if (timerId) {
+        clearInterval(timerId);
     }
 }

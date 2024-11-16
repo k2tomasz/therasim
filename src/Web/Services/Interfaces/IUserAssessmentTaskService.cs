@@ -1,5 +1,6 @@
 ﻿using Therasim.Application.UserAssessmentTasks.Queries.GetUserAssessmentTask;
 using Therasim.Application.UserAssessmentTasks.Queries.GetUserAssessmentTasks;
+using Therasim.Application.UserAssessmentTasks.Queries.GetUserAssessmentTasksFeedback;
 
 namespace Therasim.Web.Services.Interfaces;
 
@@ -12,4 +13,5 @@ public interface IUserAssessmentTaskService
     Task StartAssessmentTask(Guid userAssessmentTaskId);
     Task EndAssessmentTask(Guid userAssessmentTaskId);
     Task<string> GenerateAssessmentTaskFeedback(Guid userAssessmentTaskId);
+    Task<IList<UserAssessmentTaskFeedbackDto>> GetAssessmentTasksFeedback(Guid userAssessmentId);
 }

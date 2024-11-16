@@ -17,7 +17,7 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 
 builder.Services.AddAzureOpenAIChatCompletion(
-    deploymentName: "gpt-4o",
+    deploymentName: "gpt-4o-mini",
     apiKey: builder.Configuration["AzureOpenAI:Key"]!,
     endpoint: builder.Configuration["AzureOpenAI:Endpoint"]!
 );
@@ -49,6 +49,11 @@ builder.Services.AddFluentUIComponents();
 builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
 {
     ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
+});
+
+builder.Services.Configure<Microsoft.AspNetCore.Components.Server.CircuitOptions>(options =>
+{
+    options.DetailedErrors = true;
 });
 
 var app = builder.Build();

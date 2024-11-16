@@ -65,7 +65,8 @@ public class GenerateUserAssessmentTaskFeedbackCommandHandler : IRequestHandler<
             taskDetails.Challenge, 
             taskDetails.Skills, 
             taskDetails.AssessmentCriteria, 
-            taskDetails.FeedbackSystemPrompt);
+            taskDetails.FeedbackSystemPrompt,
+            taskDetails.Language);
 
         userAssessmentTask.Feedback = feedback;
         await _context.SaveChangesAsync(cancellationToken);

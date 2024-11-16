@@ -1,17 +1,32 @@
 ﻿@page "/user/assessments/{userAssessmentId:guid}/feedback"
 <PageTitle>Assessment Feedback</PageTitle>
-<FluentStack>
-    <div class="session-column">
-        <div class="feedback-container">
-            <h3>Feedback</h3>
-            <div class="feedback-window">
-                <div class="feedback-message">
-                    @if (_userAssessment?.Feedback != null)
-                    {
-                        <MarkdownSection Content=@_userAssessment.Feedback />
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-</FluentStack>
+<FluentAccordion Style="width: 100%">
+    @foreach (var assessmentTask in _userAssessmentTasks)
+    {
+        <FluentAccordionItem Expanded="false" Style="width: 100%">
+            <HeadingTemplate><FluentLabel Typo="Typography.H3">@assessmentTask.Name</FluentLabel></HeadingTemplate>
+            <ChildContent>
+                <FluentGrid AdaptiveRendering="true">
+                    <FluentGridItem xs="12" md="6">
+                        <div class="session-column">
+                            <ChatContainer ChatHistory="assessmentTask.GetChatHistory()" ReadOnly="true" />
+                        </div>
+                    </FluentGridItem>
+                    <FluentGridItem xs="12" md="6">
+                        <div class="feedback-container">
+                            <h3>Feedback</h3>
+                            <div class="feedback-window">
+                                <div class="feedback-message">
+                                    @if (assessmentTask.Feedback != null)
+                                    {
+                                        <MarkdownSection Content=@assessmentTask.Feedback />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </FluentGridItem>
+                </FluentGrid>
+            </ChildContent>
+        </FluentAccordionItem>
+    }
+</FluentAccordion>

@@ -79,10 +79,10 @@ public class LanguageModelService(Kernel kernel) : ILanguageModelService
         };
 
         var promptTemplateFactory = new KernelPromptTemplateFactory();
-        string systemMessage = await promptTemplateFactory.Create(new PromptTemplateConfig(feedbackSystemPrompt)).RenderAsync(kernel, arguments);
-        string userMessage = await promptTemplateFactory.Create(new PromptTemplateConfig(GetUserPromptTemplateForFeedback())).RenderAsync(kernel, arguments);
+        //string systemMessage = await promptTemplateFactory.Create(new PromptTemplateConfig(feedbackSystemPrompt)).RenderAsync(kernel, arguments);
+        string userMessage = await promptTemplateFactory.Create(new PromptTemplateConfig(GetUserPromptTemplateForFeedback(language))).RenderAsync(kernel, arguments);
 
-        ChatHistory chatHistoryForFeedback = new(systemMessage);
+        ChatHistory chatHistoryForFeedback = new(feedbackSystemPrompt);
         chatHistoryForFeedback.AddUserMessage(userMessage);
         var response = await GetChatMessageContentsAsync(chatHistoryForFeedback);
 
@@ -386,10 +386,19 @@ Fallback Instructions:
 
     private string GetUserPromptTemplateForFeedback(Language language = Language.English)
     {
-        return @"Transcript: {{$transcript}}.
+        if (language == Language.English)
+        {
+            return @"Transcript: {{$transcript}}.
                 Scenario: {{$scenario}}.
                 Challenge: {{$challenge}}.
                 Key Skills Tested: {{$skills}}.
                 Assessment Focus: {{$assessmentFocus}}";
+        }
+
+        return @"Transkrypcja: {{$transcript}}.
+                Scenariusz: {{$scenario}}.
+                Wyzwanie: {{$challenge}}.
+                Testowane kluczowe umiejętności: {{$skills}}.
+                Cel oceny: {{$assessmentFocus}}";
     }
 }

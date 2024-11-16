@@ -133,7 +133,7 @@ public partial class TaskSession : ComponentBase
     private async Task OpenEndDialogForLastTaskAsync()
     {
 
-        await DialogService.ShowDialogAsync<EndAssessmentTaskDialog>(_userAssessmentTask, new DialogParameters()
+        await DialogService.ShowDialogAsync<EndAssessmentDialog>(_userAssessmentTask, new DialogParameters()
         {
             Title = "Assessment Completed",
             PreventDismissOnOverlayClick = true,
@@ -154,7 +154,7 @@ public partial class TaskSession : ComponentBase
         }
 
         await UserAssessmentTaskService.StartAssessmentTask(UserAssessmentTaskId);
-        _chatContainerComponent.StartTimer(_userAssessmentTask.LengthInMinutes ?? 5);
+        await _chatContainerComponent.StartTimer(_userAssessmentTask.LengthInMinutes ?? 5);
 
         if (string.IsNullOrEmpty(_userAssessmentTask.ClientInitialDialogue)) return;
         

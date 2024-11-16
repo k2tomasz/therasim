@@ -46,4 +46,10 @@
   <ItemGroup>
     <UpToDateCheckInput Remove="Components\Session\SessionControls.razor" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Components\UserAssessmentTasks\EndAssessmentDialog.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
 </Project>

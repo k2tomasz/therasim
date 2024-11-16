@@ -6,6 +6,7 @@ using Therasim.Application.UserAssessmentTasks.Commands.StartUserAssessmentTask;
 using Therasim.Application.UserAssessmentTasks.Queries.GetNextUserAssessmentTask;
 using Therasim.Application.UserAssessmentTasks.Queries.GetUserAssessmentTask;
 using Therasim.Application.UserAssessmentTasks.Queries.GetUserAssessmentTasks;
+using Therasim.Application.UserAssessmentTasks.Queries.GetUserAssessmentTasksFeedback;
 using Therasim.Web.Services.Interfaces;
 
 namespace Therasim.Web.Services;
@@ -59,6 +60,12 @@ public class UserAssessmentTaskService : IUserAssessmentTaskService
     public async Task<string> GenerateAssessmentTaskFeedback(Guid userAssessmentTaskId)
     {
         var command = new GenerateUserAssessmentTaskFeedbackCommand(userAssessmentTaskId);
+        return await _mediator.Send(command);
+    }
+
+    public async Task<IList<UserAssessmentTaskFeedbackDto>> GetAssessmentTasksFeedback(Guid userAssessmentId)
+    {
+        var command = new GetUserAssessmentTasksFeedbackQuery(userAssessmentId);
         return await _mediator.Send(command);
     }
 }
