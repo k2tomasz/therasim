@@ -1,4 +1,5 @@
 ﻿using Therasim.Application.Common.Interfaces;
+using Therasim.Application.UserAssessmentTasks.Commands.GenerateUserAssessmentTaskFeedback;
 
 namespace Therasim.Application.UserAssessments.Commands.GenerateUserAssessmentFeedback;
 
@@ -14,27 +15,28 @@ public class GenerateUserAssessmentFeedbackCommandHandler : IRequestHandler<Gene
 {
     private readonly IApplicationDbContext _context;
     private readonly ILanguageModelService _languageModelService;
+    private readonly IMediator _mediator;
 
-    public GenerateUserAssessmentFeedbackCommandHandler(IApplicationDbContext context, ILanguageModelService languageModelService)
+    public GenerateUserAssessmentFeedbackCommandHandler(IApplicationDbContext context, ILanguageModelService languageModelService, IMediator mediator)
     {
         _context = context;
         _languageModelService = languageModelService;
+        _mediator = mediator;
     }
 
     public async Task Handle(GenerateUserAssessmentFeedbackCommand request, CancellationToken cancellationToken)
     {
-        var userAssessment = await _context.UserAssessments
-            .Include(x => x.Assessment.AssessmentLanguages.Where(l => l.Language == x.Language))
-            .Where(x => x.Id == request.UserAssessmentId)
-            .SingleOrDefaultAsync(cancellationToken);
 
-        if (userAssessment == null) throw new NotFoundException(request.UserAssessmentId.ToString(), "UserAssessment");
+        var userAssessmentTasks = await _context.UserAssessmentTasks
+            .Include(uat => uat.AssessmentTask.AssessmentTaskLanguages)
+            .Where(uat => uat.UserAssessmentId == request.UserAssessmentId && uat.Order > 0)
+            .ToListAsync(cancellationToken);
 
-        var transcript = string.Empty;
-
-        var feedback = string.Empty; // await _languageModelService.GenerateAssessmentTaskFeedback(transcript, userAssessment.Assessment.AssessmentLanguages.First().FeedbackSystemPrompt);
-
-        userAssessment.Feedback = feedback;
-        await _context.SaveChangesAsync(cancellationToken);
+        foreach (var userAssessmentTask in userAssessmentTasks)
+        {
+            if (!string.IsNullOrEmpty(userAssessmentTask.Feedback)) continue;
+            var command = new GenerateUserAssessmentTaskFeedbackCommand(userAssessmentTask.Id);
+            await _mediator.Send(command);
+        }
     }
 }

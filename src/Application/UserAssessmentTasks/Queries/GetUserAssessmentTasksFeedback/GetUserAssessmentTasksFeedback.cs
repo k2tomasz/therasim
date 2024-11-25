@@ -26,7 +26,7 @@ public class GetUserAssessmentTasksFeedbackQueryHandler : IRequestHandler<GetUse
     {
         var userAssessmentTasks = await _context.UserAssessmentTasks
             .Include(uat => uat.AssessmentTask.AssessmentTaskLanguages)
-            .Where(uat => uat.UserAssessmentId == request.UserAssessmentId)
+            .Where(uat => uat.UserAssessmentId == request.UserAssessmentId && uat.Order > 0)
             .ToListAsync(cancellationToken);
 
 

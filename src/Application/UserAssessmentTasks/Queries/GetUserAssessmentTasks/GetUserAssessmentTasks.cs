@@ -29,9 +29,6 @@ public class GetUserAssessmentTasksQueryHandler : IRequestHandler<GetUserAssessm
             .Where(uat => uat.UserAssessmentId == request.UserAssessmentId)
             .ToListAsync(cancellationToken);
 
-
-
-
         return _mapper.Map<List<UserAssessmentTaskDto>>(userAssessmentTasks);
     }
 }

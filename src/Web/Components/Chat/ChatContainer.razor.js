@@ -1,5 +1,8 @@
 var SpeechSDK;
 var recognizer;
+let messageQueue = [];
+let messageTimerId;
+let isProcessingQueue = false;
 
 export function initializeSpeechRecognition() {
     if (!!window.SpeechSDK) {
@@ -13,7 +16,6 @@ export function startContinuousRecognitionAsync(dotNetHelper, language) {
         var speechConfig = SpeechSDK.SpeechConfig.fromSubscription("e3bb29e86fcd4aebaf96684a6893bcea", "swedencentral");
         speechConfig.speechRecognitionLanguage = language;
         var audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
-        audioConfig.setProperty("Speech_SegmentationSilenceTimeoutMs", 3000);
         recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
     }
 
@@ -24,7 +26,7 @@ export function startContinuousRecognitionAsync(dotNetHelper, language) {
     recognizer.recognized = function (s, e) {
         if (e.result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
             console.log(`RECOGNIZED: Text=${e.result.text}`);
-            dotNetHelper.invokeMethodAsync("AddUserMessageFromSpeech", e.result.text);
+            addUserMessageFromSpeech(dotNetHelper, e.result.text);
         } else if (e.result.reason === SpeechSDK.ResultReason.NoMatch) {
             console.log("NOMATCH: Speech could not be recognized.");
         }
@@ -63,6 +65,32 @@ export function stopContinuousRecognitionAsync(dotNetHelper) {
                 console.error("Error stopping recognition: " + err);
             }
         );
+    }
+}
+
+function addUserMessageFromSpeech(dotNetHelper, message) {
+    if (message.trim() === "") return;
+    messageQueue.push(message);
+    if (!isProcessingQueue) {
+        if (messageTimerId) {
+            clearTimeout(messageTimerId);
+        }
+        messageTimerId = setTimeout(() => {
+            processMessageQueue(dotNetHelper);
+        }, 3000);
+    }
+}
+
+function processMessageQueue(dotNetHelper) {
+    isProcessingQueue = true;
+    if (messageQueue.length > 0) {
+        const concatenatedMessage = messageQueue.join(" ");
+        messageQueue = [];
+        dotNetHelper.invokeMethodAsync("AddUserMessageFromSpeech", concatenatedMessage).then(() => {
+            isProcessingQueue = false;
+        });
+    } else {
+        isProcessingQueue = false;
     }
 }
 

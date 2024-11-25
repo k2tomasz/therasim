@@ -124,7 +124,7 @@ export function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential
                 if (cancellationDetails.reason === SpeechSDK.CancellationReason.Error) {
                     console.log(cancellationDetails.errorDetails)
                 };
-                log("Unable to start avatar: " + cancellationDetails.errorDetails);
+                console.log("Unable to start avatar: " + cancellationDetails.errorDetails);
             }
         }
     }).catch(
@@ -225,23 +225,29 @@ export function stopSession() {
     avatarSynthesizer.close();
 }
 export function speak(textToSpeak) {
-    mediaPlayer.muted = false;
-    avatarSynthesizer.speakTextAsync(textToSpeak).then(
-        (result) => {
-            if (result.reason === SpeechSDK.ResultReason.SynthesizingAudioCompleted) {
-                console.log("Speech and avatar synthesized to video stream.")
-            } else {
-                console.log("Unable to speak. Result ID: " + result.resultId)
-                if (result.reason === SpeechSDK.ResultReason.Canceled) {
-                    let cancellationDetails = SpeechSDK.CancellationDetails.fromResult(result)
-                    console.log(cancellationDetails.reason)
-                    if (cancellationDetails.reason === SpeechSDK.CancellationReason.Error) {
-                        console.log(cancellationDetails.errorDetails)
+    try {
+        mediaPlayer.muted = false;
+        avatarSynthesizer.speakTextAsync(textToSpeak).then(
+            (result) => {
+                if (result.reason === SpeechSDK.ResultReason.SynthesizingAudioCompleted) {
+                    console.log("Speech and avatar synthesized to video stream.");
+                } else {
+                    console.log("Unable to speak. Result ID: " + result.resultId);
+                    if (result.reason === SpeechSDK.ResultReason.Canceled) {
+                        let cancellationDetails = SpeechSDK.CancellationDetails.fromResult(result);
+                        console.log(cancellationDetails.reason);
+                        if (cancellationDetails.reason === SpeechSDK.CancellationReason.Error) {
+                            console.log(cancellationDetails.errorDetails);
+                        }
                     }
                 }
-            }
-        }).catch((error) => {
-            console.log(error)
-            avatarSynthesizer.close()
-        });
+            }).catch((error) => {
+                console.log(error);
+                avatarSynthesizer.close();
+            });
+    }
+    catch (error) {
+        console.log(error);
+        avatarSynthesizer.close();
+    }
 }

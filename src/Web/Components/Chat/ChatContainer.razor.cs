@@ -15,7 +15,7 @@ namespace Therasim.Web.Components.Chat
         [Parameter] public EventCallback OnTimerElapsed { get; set; }
         [Parameter] public ChatHistory ChatHistory { get; set; } = [];
         [Parameter] public bool ReadOnly { get; set; } = false;
-        [Parameter] public Language Language { get; set; } = Language.English; 
+        [Parameter] public Language Language { get; set; } = Language.English;
         [SupplyParameterFromForm] private UserMessageModel UserMessageModel { get; set; } = new();
         [Inject] private IJSRuntime JS { get; set; } = null!;
         private DotNetObjectReference<ChatContainer>? _objRef;
