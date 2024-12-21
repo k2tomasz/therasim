@@ -19,6 +19,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<AssessmentTask> AssessmentTasks => Set<AssessmentTask>();
     public DbSet<UserAssessment> UserAssessments => Set<UserAssessment>();
     public DbSet<UserAssessmentTask> UserAssessmentTasks => Set<UserAssessmentTask>();
+    public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

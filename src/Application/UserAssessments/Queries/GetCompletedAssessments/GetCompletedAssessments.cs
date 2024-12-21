@@ -31,6 +31,17 @@ public class GetCompletedAssessmentsQueryHandler : IRequestHandler<GetCompletedA
             .Where(a => a.UserAssessmentTasks.All(uat=>uat.EndDate != null))
             .ToListAsync(cancellationToken);
 
-        return _mapper.Map<List<CompletedAssessmentDto>>(assessments);
+        var dto = _mapper.Map<List<CompletedAssessmentDto>>(assessments);
+
+        foreach (var assessment in dto)
+        {
+            var userProfile = await _context.UserProfiles.Where(up => up.UserId == assessment.UserId).FirstOrDefaultAsync(cancellationToken);
+            if (userProfile != null)
+            {
+                assessment.Email = userProfile.Email;
+            }
+        }
+
+        return dto;
     }
 }

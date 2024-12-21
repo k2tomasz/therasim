@@ -12,6 +12,7 @@ public interface IApplicationDbContext
     DbSet<AssessmentTask> AssessmentTasks { get; }
     DbSet<UserAssessment> UserAssessments { get; }
     DbSet<UserAssessmentTask> UserAssessmentTasks { get; }
+    DbSet<UserProfile> UserProfiles { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
