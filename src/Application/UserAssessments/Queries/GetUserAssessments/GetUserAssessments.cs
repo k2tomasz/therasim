@@ -26,7 +26,7 @@ public class GetAssessmentsQueryHandler : IRequestHandler<GetUserAssessmentsQuer
     {
         var assessments = await _context.UserAssessments
             .Include(ua => ua.Assessment.AssessmentLanguages)
-            .Include(ua=>ua.UserAssessmentTasks.Where(uat=>uat.EndDate == null).OrderBy(uat=>uat.Order).Take(1))
+            .Include(ua=>ua.UserAssessmentTasks)
             .Where(a => a.UserId == request.UserId)
             .ToListAsync(cancellationToken);
 

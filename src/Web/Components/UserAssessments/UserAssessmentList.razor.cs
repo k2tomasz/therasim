@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Therasim.Application.UserAssessments.Queries.GetCompletedAssessments;
 using Therasim.Application.UserAssessments.Queries.GetUserAssessments;
 using Therasim.Web.Services.Interfaces;
 
@@ -46,8 +47,8 @@ public partial class UserAssessmentList : ComponentBase
         NavigationManager.NavigateTo($"/user/assessments/{assessment.Id}");
     }
 
-    private void StartNextAssessmentTask(UserAssessmentDto context)
+    private void GoToAssessmentFeedback(UserAssessmentDto assessment)
     {
-        NavigationManager.NavigateTo($"/user/assessments/{context.Id}/tasks/{context.NextUserAssessmentTaskId}");
+        NavigationManager.NavigateTo($"/user/assessments/{assessment.Id}/feedback");
     }
 }

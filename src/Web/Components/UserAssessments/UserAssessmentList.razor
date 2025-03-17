@@ -10,9 +10,9 @@
                     <PropertyColumn Property="@(p => p.Language)" />
                     <TemplateColumn>
                         <FluentButton @onclick="@(() => GoToAssessment(context))" IconStart="@(new Icons.Regular.Size20.CalendarAgenda())">Details</FluentButton>
-                        @if (context.NextUserAssessmentTaskId != Guid.Empty)
+                        @if(context.IsCompleted)
                         {
-                            <FluentButton Appearance="Appearance.Accent" @onclick="@(() => StartNextAssessmentTask(context))" IconStart="@(new Icons.Regular.Size20.ArrowStepInRight())">Start</FluentButton>
+                            <FluentButton @onclick="@(() => GoToAssessmentFeedback(context))" IconStart="@(new Icons.Regular.Size20.CalendarAgenda())">Feedback</FluentButton>
                         }
                     </TemplateColumn>
                 </ChildContent>
