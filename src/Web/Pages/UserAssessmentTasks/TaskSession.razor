@@ -1,0 +1,13 @@
+﻿@page "/user/assessments/{userAssessmentId:guid}/tasks/{userAssessmentTaskId:guid}"
+<PageTitle>Assessment Task Session</PageTitle>
+@if(_userAssessmentTask != null)
+{
+    <FluentStack Style="height: 100%">
+        <div class="session-column-avatar">
+            <RenderAvatar @ref="_renderAvatarComponent" />
+        </div>
+        <div class="session-column">
+            <ChatContainer @ref="_chatContainerComponent" OnUserMessageSend="HandleUserMessageSend" OnTimerElapsed="HandleOnTimerElapsed" OnSpeechRecognized="HandleSpeechRecognized" ChatHistory="_chatHistory" Language="_userAssessmentTask.Language" />
+        </div>
+    </FluentStack>
+}

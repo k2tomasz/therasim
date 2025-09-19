@@ -24,17 +24,12 @@ public class GetSkillsQueryHandler : IRequestHandler<GetSkillsQuery, IList<Skill
         _mapper = mapper;
     }
 
-    public Task<IList<SkillDto>> Handle(GetSkillsQuery request, CancellationToken cancellationToken)
+    public async Task<IList<SkillDto>> Handle(GetSkillsQuery request, CancellationToken cancellationToken)
     {
-        // var skills = await _context.Skills
-        //     .ProjectTo<SkillDto>(_mapper.ConfigurationProvider)
-        //     .ToListAsync(cancellationToken);
+        var skills = await _context.Skills
+            .ProjectTo<SkillDto>(_mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
 
-        var skills = new List<SkillDto>
-        {
-            new SkillDto { Name = "Communication", Id = Guid.NewGuid() },
-            new SkillDto { Name = "Empathy", Id = Guid.NewGuid() },
-        };
-        return Task.FromResult<IList<SkillDto>>(skills);
+        return skills;
     }
 }

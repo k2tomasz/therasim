@@ -1,0 +1,22 @@
+﻿.feedback-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-width: 500px;
+}
+
+.feedback-window {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    width: 100%;
+}
+
+.feedback-message {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}

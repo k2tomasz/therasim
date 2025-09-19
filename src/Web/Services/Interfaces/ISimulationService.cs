@@ -1,9 +1,11 @@
 ﻿using Therasim.Application.Simulations.Queries.GetSimulations;
+using Therasim.Web.Models;
 
 namespace Therasim.Web.Services.Interfaces;
 
 public interface ISimulationService
 {
-    Task<IList<SimulationDto>> GetSimulations(string userId);
-    Task<Guid> CreateSimulation(string userId, Guid personaId, Guid skillId, Guid psychProblemId);
+    Task<IQueryable<SimulationDto>> GetSimulations(string userId);
+    Task<Guid> CreateSimulation(CreateSimulationModel createSimulationModel);
+    Task<bool> DeleteSimulation(Guid simulationId);
 }

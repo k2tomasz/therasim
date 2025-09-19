@@ -1,0 +1,20 @@
+﻿@page "/a/completed-assessments"
+<PageTitle>Completed Assessments</PageTitle>
+<FluentGrid>
+    <FluentGridItem md="12" xl="9">
+        <FluentLabel Typo="Typography.H3">Completed Assessment</FluentLabel>
+        @if (CompletedAssessments.Any())
+        {
+            <FluentDataGrid Items="@CompletedAssessments">
+                <ChildContent>
+                    <PropertyColumn Property="@(p => p.Email)" />
+                    <PropertyColumn Property="@(p => p.Name)" />
+                    <PropertyColumn Property="@(p => p.Language)" />
+                    <TemplateColumn>
+                        <FluentButton @onclick="@(() => GoToAssessmentFeedback(context))" IconStart="@(new Icons.Regular.Size20.CalendarAgenda())">Feedback</FluentButton>
+                    </TemplateColumn>
+                </ChildContent>
+            </FluentDataGrid>
+        }
+    </FluentGridItem>
+</FluentGrid>

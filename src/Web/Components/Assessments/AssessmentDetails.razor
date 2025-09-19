@@ -1,0 +1,37 @@
+﻿@using Therasim.Domain.Enums
+@if (_assessment != null)
+{
+    <FluentGrid>
+        <FluentGridItem md="12" xl="9">
+            <FluentStack Orientation="Orientation.Vertical">
+                <FluentCard>
+                    <FluentStack Orientation="Orientation.Vertical">
+                        <FluentStack Class="assessment-name" Orientation="Orientation.Horizontal">
+                            <FluentSpacer />
+                            <FluentSelect TOption="Language">
+                                <FluentOption OnSelect="@(async()  => await LanguageChanged(Language.English))" Value=@(Language.English.ToString()) Selected=@(_language == Language.English)>@Language.English.ToString()</FluentOption>
+                                <FluentOption OnSelect="@(async()  => await LanguageChanged(Language.Polish))" Value=@(Language.Polish.ToString()) Selected=@(_language == Language.Polish)>@Language.Polish.ToString()</FluentOption>
+                            </FluentSelect>
+                            <FluentButton Id="addButton" Type="ButtonType.Button" OnClick="AddToMyAssessments" IconStart="@(new Icons.Regular.Size20.Add())">Add</FluentButton>
+                            <FluentTooltip Anchor="addButton">Add to my assessments</FluentTooltip>
+                            <FluentButton Id="addAndStartButton" Appearance="Appearance.Accent" Type="ButtonType.Button" OnClick="StartAssessment" IconStart="@(new Icons.Regular.Size20.ArrowStepInRight())">Start</FluentButton>
+                            <FluentTooltip Anchor="addAndStartButton">Add to my assessments and start</FluentTooltip>
+                        </FluentStack>
+                        <FluentLabel Typo="Typography.H3">@_assessment.Name</FluentLabel>
+                        <p>@_assessment.Description</p>
+                    </FluentStack>
+                </FluentCard>
+                <FluentCard>
+                    <FluentStack Orientation="Orientation.Vertical">
+                        <MarkdownSection Content=@_assessment.Instructions />
+                    </FluentStack>
+                </FluentCard>
+                <FluentCard>
+                    <FluentStack Orientation="Orientation.Vertical">
+                        <AssessmentTaskList AssessmentId="AssessmentId" Language="_language" />
+                    </FluentStack>
+                </FluentCard>
+            </FluentStack>
+        </FluentGridItem>
+    </FluentGrid>
+}

@@ -1,6 +1,9 @@
 ﻿using MediatR;
 using Therasim.Application.Simulations.Commands.CreateSimulation;
+using Therasim.Application.Simulations.Commands.DeleteSimulation;
 using Therasim.Application.Simulations.Queries.GetSimulations;
+using Therasim.Domain.Enums;
+using Therasim.Web.Models;
 using Therasim.Web.Services.Interfaces;
 
 namespace Therasim.Web.Services;
@@ -13,21 +16,30 @@ public class SimulationService : ISimulationService
     {
         _mediator = mediator;
     }
-
-    public Task<IList<SimulationDto>> GetSimulations(string userId)
+    public async Task<IQueryable<SimulationDto>> GetSimulations(string userId)
     {
         var query = new GetSimulationsQuery { UserId = userId };
-        return _mediator.Send(query);
+        var result = await _mediator.Send(query);
+
+        return result.AsQueryable();
     }
 
-    public Task<Guid> CreateSimulation(string userId, Guid personaId, Guid skillId, Guid psychProblemId)
+    public async Task<Guid> CreateSimulation(CreateSimulationModel model)
     {
         var command = new CreateSimulationCommand
         {
-            UserId = userId, PersonaId = personaId, SkillId = skillId, PsychProblemId = psychProblemId
+            UserId = model.UserId,
+            PersonaId = Guid.Parse(model.PersonaId), 
+            Language = Enum.Parse<Language>(model.Language),
+            FeedbackType = Enum.Parse<FeedbackType>(model.FeedbackType)
         };
-        return _mediator.Send(command);
+
+        return await _mediator.Send(command);
     }
 
-    
+    public async Task<bool> DeleteSimulation(Guid simulationId)
+    {
+        var command = new DeleteSimulationCommand(simulationId);
+        return await _mediator.Send(command);
+    }
 }

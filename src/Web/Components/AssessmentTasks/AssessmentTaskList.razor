@@ -1,0 +1,11 @@
+﻿<FluentAccordion Style="width: 100%">
+    @foreach (var assessmentTask in _assessmentTasks)
+    {
+        <FluentAccordionItem Expanded="false" Style="width: 100%">
+            <HeadingTemplate><FluentLabel Typo="Typography.H3">@assessmentTask.Name</FluentLabel></HeadingTemplate>
+            <ChildContent>
+                <AssessmentTaskDetails AssessmentTask="assessmentTask" />
+            </ChildContent>
+        </FluentAccordionItem>
+    }
+</FluentAccordion>

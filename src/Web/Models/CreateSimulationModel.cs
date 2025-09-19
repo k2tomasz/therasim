@@ -1,9 +1,17 @@
-﻿namespace Therasim.Web.Models;
+﻿
+using System.ComponentModel.DataAnnotations;
+
+namespace Therasim.Web.Models;
 
 public class CreateSimulationModel
 {
+    public string UserId { get; set; } = null!;
+    [Required(ErrorMessage = "Persona is Required")]
     public string PersonaId { get; set; } = null!;
-    public string PsychProblemId { get; set; } = null!;
-    public string SkillId { get; set; } = null!;
-    public int FeedbackType { get; set; }
+
+    [Required(ErrorMessage = "Feedback is Required")]
+    public string FeedbackType { get; set; } = null!;
+
+    [Required(ErrorMessage = "Language is Required")]
+    public string Language { get; set; } = null!;
 }

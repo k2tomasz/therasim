@@ -1,0 +1,56 @@
+﻿@page "/testing/feedback-old-old-old"
+@using Therasim.Domain.Enums
+<FluentGrid>
+    <FluentGridItem xs="12">
+        <FluentLabel>How to use this: Select Language and then click Load Default Prompt (you can edit it to as well). Add/edit task details (Name, Scenario etc). Add transcript or generate it using AI. Once all is done click Generate Feedback</FluentLabel>
+    </FluentGridItem>
+    <FluentGridItem xs="12">
+        <FluentStack>
+            <FluentSelect TOption="Language" Placeholder="Language">
+                <FluentOption OnSelect="@(() => LanguageChanged(Language.English))" Value=@(Language.English.ToString()) Selected=@(_language == Language.English)>@Language.English.ToString()</FluentOption>
+                <FluentOption OnSelect="@(() => LanguageChanged(Language.Polish))" Value=@(Language.Polish.ToString()) Selected=@(_language == Language.Polish)>@Language.Polish.ToString()</FluentOption>
+            </FluentSelect>
+            <FluentButton Disabled="_disableButtons" Appearance="Appearance.Accent" Type="ButtonType.Button" OnClick="LoadDefaultFeedbackPrompt">Load Default Prompt</FluentButton>
+            <FluentButton Disabled="_disableButtons" Appearance="Appearance.Accent" Type="ButtonType.Button" OnClick="GenerateTranscript">Generate Transcript</FluentButton>
+            <FluentButton Disabled="_disableButtons" Appearance="Appearance.Accent" Type="ButtonType.Button" OnClick="GenerateFeedback">Generate Feedback</FluentButton>
+            @if(_disableButtons)
+            {
+                <FluentLabel>Generating...</FluentLabel>
+            }
+        </FluentStack>
+    </FluentGridItem>
+    <FluentGridItem xs="6">
+        <FluentStack Orientation="Orientation.Vertical">
+            <FluentLabel>Scenario</FluentLabel>
+            <FluentTextArea @bind-Value=_taskScenario style="width: 100%;"></FluentTextArea>
+            <FluentLabel>Challenge</FluentLabel>
+            <FluentTextArea @bind-Value=_taskChallenge style="width: 100%;"></FluentTextArea>
+        </FluentStack>
+    </FluentGridItem>
+    <FluentGridItem xs="6">
+        <FluentStack Orientation="Orientation.Vertical">
+            <FluentLabel>Skills Tested</FluentLabel>
+            <FluentTextArea @bind-Value=_taskSkills style="width: 100%;"></FluentTextArea>
+            <FluentLabel>Assessment Focus</FluentLabel>
+            <FluentTextArea @bind-Value=_assessmentFocus style="width: 100%;"></FluentTextArea>
+        </FluentStack>
+    </FluentGridItem>
+    <FluentGridItem xs="6">
+        <FluentStack Orientation="Orientation.Vertical">
+            <FluentLabel>Transcript</FluentLabel>
+            <FluentTextArea @bind-Value=_transcript style="width: 100%;" Rows="20"></FluentTextArea>
+        </FluentStack>
+    </FluentGridItem>
+    <FluentGridItem xs="6">
+        <FluentStack Orientation="Orientation.Vertical">
+            <FluentLabel>Feedback Prompt</FluentLabel>
+            <FluentTextArea @bind-Value=_feedbackPrompt style="width: 100%;" Rows="20"></FluentTextArea>
+        </FluentStack>
+    </FluentGridItem>
+    <FluentGridItem xs="12">
+        <FluentStack Orientation="Orientation.Vertical">
+            <FluentLabel Typo="Typography.H4">Feedback</FluentLabel>
+            <MarkdownSection Content=@_feedback/>
+        </FluentStack>
+    </FluentGridItem>
+</FluentGrid>

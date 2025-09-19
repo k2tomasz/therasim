@@ -1,0 +1,10 @@
+namespace Therasim.Domain.Entities;
+public class UserAssessment : BaseAuditableEntity
+{
+    public string UserId { get; set; } = null!;
+    public Guid AssessmentId { get; set; }
+    public Assessment Assessment { get; set; } = null!;
+    public Language Language { get; set; }
+    public string? Feedback { get; set; }
+    public IList<UserAssessmentTask> UserAssessmentTasks { get; private set; } = new List<UserAssessmentTask>();
+}

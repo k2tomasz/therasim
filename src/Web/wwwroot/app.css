@@ -8,6 +8,10 @@ body {
     margin: 0;
 }
 
+.app-header {
+    background-color: #1c1e60ff !important;
+}
+
 .navmenu-icon {
     display: none;
 }

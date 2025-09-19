@@ -1,0 +1,23 @@
+﻿<FluentAccordion Style="width: 100%">
+    @foreach (var userAssessmentTask in _userAssessmentTasks)
+    {
+        <FluentAccordionItem Expanded="false" Style="width: 100%" >
+            <HeadingTemplate>
+                <FluentStack Orientation="Orientation.Horizontal">
+                    <FluentLabel Typo="Typography.H3">
+                        @userAssessmentTask.Name
+                        @if (userAssessmentTask.EndDate.HasValue)
+                        {
+                            <FluentIcon Color="Color.Success" Value="@(new Icons.Regular.Size24.Checkmark())" />
+                        }
+                    </FluentLabel>
+                </FluentStack>
+            </HeadingTemplate>
+            <ChildContent>
+                <FluentStack Orientation="Orientation.Vertical">
+                    <UserAssessmentTaskDetails UserAssessmentTask="userAssessmentTask"/>
+                </FluentStack>
+            </ChildContent>
+        </FluentAccordionItem>
+    }
+</FluentAccordion>

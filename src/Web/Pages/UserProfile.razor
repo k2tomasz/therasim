@@ -1,0 +1,15 @@
+﻿@page "/profile"
+
+@if (_userProfile == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p>User Profile Created:</p>
+
+    <ul>
+        <li> Email: @_userProfile.Email </li>
+    </ul>
+}
+

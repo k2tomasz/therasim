@@ -1,0 +1,15 @@
+﻿@using Microsoft.SemanticKernel.ChatCompletion
+<div class="feedback-container">
+    <h3>Feedback</h3>
+    <div class="feedback-window">
+        @foreach (var message in _feedbackHistory)
+        {
+            if (message.Role == AuthorRole.Assistant)
+            {
+                <div class="feedback-message">
+                    <MarkdownSection Content=@message.Content/>
+                </div>
+            }
+        }
+    </div>
+</div>

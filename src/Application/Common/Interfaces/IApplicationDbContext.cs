@@ -4,11 +4,15 @@ namespace Therasim.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {
-    DbSet<Simulation> Assessments { get; }
+    DbSet<Simulation> Simulations { get; }
     DbSet<Persona> Personas { get; }
-    DbSet<Conversation> Conversations { get; }
+    DbSet<Session> Sessions { get; }
     DbSet<Skill> Skills { get; }
-    DbSet<PsychProblem> PsychProblems { get; }
+    DbSet<Assessment> Assessments { get; }
+    DbSet<AssessmentTask> AssessmentTasks { get; }
+    DbSet<UserAssessment> UserAssessments { get; }
+    DbSet<UserAssessmentTask> UserAssessmentTasks { get; }
+    DbSet<UserProfile> UserProfiles { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

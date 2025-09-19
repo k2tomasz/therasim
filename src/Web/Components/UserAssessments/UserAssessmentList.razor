@@ -1,0 +1,29 @@
+﻿<FluentGrid>
+    <FluentGridItem md="12" xl="9">
+        <FluentLabel Typo="Typography.H3">My Assessments</FluentLabel>
+        @if (UserAssessments.Any())
+        {
+            <FluentDataGrid Items="@UserAssessments">
+                <ChildContent>
+                    <PropertyColumn Property="@(p => p.Name)" />
+                    <PropertyColumn Property="@(p => p.Description)" />
+                    <PropertyColumn Property="@(p => p.Language)" />
+                    <TemplateColumn>
+                        <FluentButton @onclick="@(() => GoToAssessment(context))" IconStart="@(new Icons.Regular.Size20.CalendarAgenda())">Details</FluentButton>
+                        @if(context.IsCompleted)
+                        {
+                            <FluentButton @onclick="@(() => GoToAssessmentFeedback(context))" IconStart="@(new Icons.Regular.Size20.CalendarAgenda())">Feedback</FluentButton>
+                        }
+                    </TemplateColumn>
+                </ChildContent>
+            </FluentDataGrid>
+        }
+        else
+        {
+            <FluentStack Orientation="Orientation.Vertical" Width="100%" HorizontalAlignment="HorizontalAlignment.Center">
+                <FluentLabel Typo="Typography.H4">You have no assessments assigned yet. Browse our assessment catalog to get started.</FluentLabel>
+                <FluentButton Appearance="Appearance.Accent" @onclick="GoToAssessmentCatalog" IconStart="@(new Icons.Regular.Size20.AppsListDetail())">Assessment Catalog</FluentButton>
+            </FluentStack>
+        }
+    </FluentGridItem>
+</FluentGrid>

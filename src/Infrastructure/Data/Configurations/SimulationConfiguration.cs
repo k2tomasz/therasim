@@ -9,27 +9,14 @@ public class SimulationConfiguration : IEntityTypeConfiguration<Simulation>
     public void Configure(EntityTypeBuilder<Simulation> builder)
     {
         builder.ToTable("Simulations");
-
         builder.HasKey(a => a.Id);
-
         builder.Property(a => a.UserId).IsRequired();
-
         builder.Property(a => a.PersonaId).IsRequired();
         builder.HasOne(a => a.Persona)
             .WithMany(a => a.Simulations)
             .HasForeignKey(a => a.PersonaId);
-
-        builder.Property(a => a.SkillId).IsRequired();
-        builder.HasOne(a => a.Skill)
-            .WithMany(a => a.Simulations)
-            .HasForeignKey(a => a.SkillId);
-
         builder.Property(a => a.FeedbackType).IsRequired();
-
-        builder.Property(a => a.ChatAssistantId).IsRequired();
-        builder.Property(a => a.FeedbackAssistantId).IsRequired();
-
-        builder.HasMany(a => a.Conversations)
+        builder.HasMany(a => a.Sessions)
             .WithOne(a => a.Simulation)
             .HasForeignKey(c => c.SimulationId);
     }
