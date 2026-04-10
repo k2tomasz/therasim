@@ -50,7 +50,6 @@ To get the project up and running on your local machine, follow these steps:
 - **User Profiles**: Track your progress and review your assessment history.
 - **Customizable Scenarios**: Create and customize simulation scenarios to target specific skills.
 
-## Prompts
-
-The application uses a set of predefined prompts to guide the AI in generating responses during simulations and assessments. These prompts are designed to ensure that the AI behaves in a manner consistent with therapeutic practices.
-Prompts can be found in the AssessmentTaskLanguage DB table.
+## Contributors
+Dr hab. Rafał Styła, prof. ucz.
+Wydział Psychologii, Uniwersytet Warszawski
